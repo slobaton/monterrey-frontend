@@ -1,37 +1,35 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { LazyLoadEvent } from 'primeng/api';
+import { DataTableDefinition } from 'src/app/@core/models/common/data-table-definition';
+import { IFetchPaginatedData } from 'src/app/@core/services/interfaces/fetch-paginated-data';
 
 @Component({
   selector: 'app-data-table',
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.scss']
 })
-export class DataTableComponent {
+export class DataTableComponent<TEntity> implements OnInit {
 
-  products = [
-    {
-      code: '001',
-      name: 'product1',
-      price: 25,
-      quantity: 10
-    },
-    {
-      code: '002',
-      name: 'product2',
-      price: 35,
-      quantity: 5
-    },
-    {
-      code: '003',
-      name: 'product3',
-      price: 15,
-      quantity: 2
-    },
-    {
-      code: '004',
-      name: 'product4',
-      price: 55,
-      quantity: 0
-    },
-  ];
+  @Input() tableDefinition!: DataTableDefinition<TEntity>;
+  @Input() sourceData!: IFetchPaginatedData<TEntity>;
 
+  isLoading: boolean = false;
+
+  data: Array<TEntity> = [];
+  totalRecords: number = 0;
+
+  constructor() { }
+
+  ngOnInit(): void {
+    console.log(this.tableDefinition);
+  }
+
+  loadData($event: LazyLoadEvent) {
+    this.isLoading = true;
+
+    setTimeout(() => {
+      console.log($event);
+      this.sourceData.fetchPaginatedResource({ filter: '', page: $event.first ?? 0 + 1, pageSize: $event.rows ?? 10, sort: $event.sortField ?? '', sortOrder: $event.sortOrder?.toString() ?? '' })
+    }, 1000);
+  }
 }

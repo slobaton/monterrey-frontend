@@ -1,18 +1,28 @@
-<p-table [value]="products">
-  <ng-template pTemplate="header">
+<p-table
+  [columns]="tableDefinition.columns"
+  [value]="data"
+  styleClass="p-datatable-sm"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [lazy]="true"
+  (onLazyLoad)="loadData($event)"
+  dataKey="id"
+  [paginator]="true"
+  [rows]="10"
+  [totalRecords]="totalRecords"
+  [loading]="isLoading"
+>
+  <ng-template pTemplate="header" let-columns>
     <tr>
-      <th>Cod</th>
-      <th>Name</th>
-      <th>Price</th>
-      <th>Quantity</th>
+      <th *ngFor="let col of columns">
+        {{ col.title }}
+      </th>
     </tr>
   </ng-template>
-  <ng-template pTemplate="body" let-product>
+  <ng-template pTemplate="body" let-rowData let-columns="columns">
     <tr>
-      <td>{{ product.code }}</td>
-      <td>{{ product.name }}</td>
-      <td>{{ product.price }} $</td>
-      <td>{{ product.quantity }}</td>
+      <td *ngFor="let col of columns">
+        {{ rowData[col.propertyRef] }}
+      </td>
     </tr>
   </ng-template>
 </p-table>
