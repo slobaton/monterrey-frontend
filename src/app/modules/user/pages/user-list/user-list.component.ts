@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DataTableDefinition, DataTableSelectionType } from 'src/app/@core/models/common/data-table-definition';
+import { DataTableActionStatus, DataTableDefinition, DataTableSelectionType } from 'src/app/@core/models/common/data-table-definition';
 import { User } from 'src/app/@core/models/user';
 import { UserService } from 'src/app/@core/services/rest/user.service';
 
@@ -13,11 +13,20 @@ export class UserListComponent {
   public tableDef: DataTableDefinition<User> = {
     columns: [
       { title: 'Id', propertyRef: 'id', sortable: true, filterable: false },
-      { title: 'Username', propertyRef: 'username', sortable: true, filterable: false },
+      { title: 'Username', propertyRef: 'username', sortable: false, filterable: false },
       { title: 'Email', propertyRef: 'email', sortable: true, filterable: false },
     ],
     selectionType: DataTableSelectionType.SINGLE,
-    actions: []
+    actions: [
+      {
+        tooltip: 'Editar',
+        icon: 'clone',
+        status: DataTableActionStatus.WARNING,
+        callback: (id) => {
+          console.log(id);
+        }
+      }
+    ]
   };
 
   constructor(public userService: UserService) { }

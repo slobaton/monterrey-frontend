@@ -23,11 +23,11 @@ export class DataTableActionProps {
 }
 
 export enum DataTableActionStatus {
-  PRIMARY,
-  SUCCESS,
-  WARNING,
-  INFO,
-  DANGER
+  PRIMARY = 'primary',
+  SUCCESS = 'success',
+  WARNING = 'warning',
+  INFO = 'info',
+  DANGER = 'danger'
 }
 
 export enum DataTableSelectionType {

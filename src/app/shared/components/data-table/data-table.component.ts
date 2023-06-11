@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { LazyLoadEvent } from 'primeng/api';
-import { DataTableDefinition } from 'src/app/@core/models/common/data-table-definition';
+import { DataTableActionProps, DataTableDefinition } from 'src/app/@core/models/common/data-table-definition';
 import { IFetchPaginatedData } from 'src/app/@core/services/interfaces/fetch-paginated-data';
 
 @Component({
@@ -21,15 +21,45 @@ export class DataTableComponent<TEntity> implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.tableDefinition);
+    this.isLoading = true;
   }
 
-  loadData($event: LazyLoadEvent) {
+  loadData(event: LazyLoadEvent) {
     this.isLoading = true;
 
+    const pageCurrentIndex = (event.first ?? 0);
+    const pageSize = event.rows ?? 10;
+    const page = (pageCurrentIndex / pageSize) + 1;
+    const sort = event.sortField ?? '';
+    const sortOrder = event.sortOrder?.toString() === '1' ? 'asc' : 'desc';
+
     setTimeout(() => {
-      console.log($event);
-      this.sourceData.fetchPaginatedResource({ filter: '', page: $event.first ?? 0 + 1, pageSize: $event.rows ?? 10, sort: $event.sortField ?? '', sortOrder: $event.sortOrder?.toString() ?? '' })
+      this.sourceData.fetchPaginatedResource({ filter: '', page, pageSize, sort, sortOrder })
+        .then((res) => {
+          this.data = res.data;
+          this.totalRecords = res.totalCount;
+        })
+        .finally(() => {
+          this.isLoading = false;
+        });
     }, 1000);
+  }
+
+  hasActions(): boolean {
+    return this.tableDefinition.actions && this.tableDefinition.actions.length > 0;
+  }
+
+  generateActionColor(action: DataTableActionProps): string {
+    const baseClassName = 'p-button-rounded p-button-';
+    const defaultName = 'success';
+
+    return baseClassName.concat(action.status ?? defaultName);
+  }
+
+  generateActionIcon(action: DataTableActionProps): string {
+    const baseIconClassName = 'pi pi-';
+    const defaultName = 'eye';
+
+    return baseIconClassName.concat(action.icon ?? defaultName);
   }
 }

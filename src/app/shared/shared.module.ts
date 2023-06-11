@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 
 import { DataTableComponent } from './components/data-table/data-table.component';
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
 
 
 
@@ -12,7 +14,9 @@ import { DataTableComponent } from './components/data-table/data-table.component
   ],
   imports: [
     CommonModule,
-    TableModule
+    TableModule,
+    ButtonModule,
+    RippleModule
   ],
   exports: [
     DataTableComponent

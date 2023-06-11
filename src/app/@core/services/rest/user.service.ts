@@ -17,6 +17,7 @@ export class UserService extends BaseService implements IUserService, IFetchPagi
   }
 
   fetchPaginatedResource(request: PaginatedRequest): Promise<PaginatedResponse<User>> {
+    console.log(request);
     var users: Array<User> = [
       {
         id: '11111111111111',

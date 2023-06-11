@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment as env } from './../../../../environments/environment';
+import { environment } from './../../../../environments/environment';
 
 @Injectable()
 export class BaseService {
 
   private headers!: HttpHeaders;
-  private baseUrl: env.apiUrl;
+  private baseUrl: string = environment.apiUrl;
 
   constructor(private _http: HttpClient) { }
 
@@ -48,17 +48,5 @@ export class BaseService {
     this.headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('X-Requested-With', 'XMLHttpRequest');
-  }
-
-  protected createParams<TParams>(params: TParams): HttpParams {
-    let httpParams = new HttpParams();
-    const keys = Object.keys(params);
-    keys.forEach((key) => {
-      if (params[key]) {
-        httpParams = httpParams.set(key, params[key])
-      }
-    });
-
-    return httpParams;
   }
 }
