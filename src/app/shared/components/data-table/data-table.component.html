@@ -1,4 +1,5 @@
 <p-table
+  #dataTableRef
   [columns]="tableConfig.columns"
   [value]="data"
   styleClass="p-datatable-sm"
@@ -6,6 +7,7 @@
   [lazy]="true"
   (onLazyLoad)="loadData($event)"
   [paginator]="true"
+  [rowsPerPageOptions]="[10, 25, 50, 100]"
   [rows]="10"
   [totalRecords]="totalRecords"
   [loading]="isLoading"
@@ -13,7 +15,7 @@
   [showCurrentPageReport]="true"
   [selectionMode]="getSelectionMode()"
   [(selection)]="selectedRecords"
-  [dataKey]="tableConfig.identifierName"
+  [dataKey]="tableConfig.identifierPropRef"
 >
   <ng-template pTemplate="caption">
     <div class="flex align-items-center justify-content-between">
@@ -32,7 +34,13 @@
       </div>
       <span class="p-input-icon-left">
         <i class="pi pi-search"></i>
-        <input pInputText type="text" placeholder="Buscar..." />
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="searchFilter"
+          (ngModelChange)="filterData()"
+          placeholder="Buscar..."
+        />
       </span>
     </div>
   </ng-template>
@@ -83,7 +91,10 @@
             'p-button-sm p-button-rounded mx-1 ' + generateActionColor(action)
           "
           (click)="
-            executeActionCallback(action, rowData[tableConfig.identifierName])
+            executeActionCallback(
+              action,
+              rowData[tableConfig.identifierPropRef]
+            )
           "
           [pTooltip]="action.tooltip ?? ''"
         ></button>

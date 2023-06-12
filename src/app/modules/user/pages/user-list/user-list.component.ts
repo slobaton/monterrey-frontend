@@ -15,7 +15,7 @@ export class UserListComponent {
       { title: 'Username', propertyRef: 'username', sortable: true },
       { title: 'Email', propertyRef: 'email', sortable: true },
     ],
-    identifierName: 'id',
+    identifierPropRef: 'id',
     selectionType: DataTableSelectionType.SINGLE,
     actions: [
       {

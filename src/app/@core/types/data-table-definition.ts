@@ -1,6 +1,6 @@
 export type DataTableConfiguration = {
   columns: Array<DataTableColumnProps>;
-  identifierName: string,
+  identifierPropRef: string,
   selectionType?: DataTableSelectionType;
   actions?: Array<DataTableActionProps>;
 }

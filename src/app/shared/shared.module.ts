@@ -8,6 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { DataTableComponent } from './components/data-table/data-table.component';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -17,6 +18,7 @@ import { DataTableComponent } from './components/data-table/data-table.component
   ],
   imports: [
     CommonModule,
+    FormsModule,
     TableModule,
     ButtonModule,
     RippleModule,

@@ -1,7 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { LazyLoadEvent } from 'primeng/api';
 import { DataTableActionProps, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { IFetchPaginatedData } from 'src/app/@core/services/interfaces/fetch-paginated-data';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-data-table',
@@ -13,10 +15,15 @@ export class DataTableComponent<TEntity> implements OnInit {
   @Input() tableConfig!: DataTableConfiguration;
   @Input() sourceDataService!: IFetchPaginatedData<TEntity>;
 
+  @ViewChild('dataTableRef') dataTable!: Table;
+
   public isLoading: boolean = false;
 
   public data: Array<TEntity> = [];
   public totalRecords: number = 0;
+
+  public searchFilter: string = '';
+  private searchFilterChanged = new Subject<string>();
 
   public selectedRecords?: any;
 
@@ -24,18 +31,26 @@ export class DataTableComponent<TEntity> implements OnInit {
 
   ngOnInit(): void {
     this.isLoading = true;
+
+    this.searchFilterChanged.pipe(
+      debounceTime(400),
+      distinctUntilChanged())
+      .subscribe(value => {
+        this.dataTable.filterGlobal(value, 'contains');
+      });
   }
 
   loadData(event: LazyLoadEvent): void {
     this.isLoading = true;
 
+    const searchFilter = event.filters !== undefined && event.filters['global'] ? event.filters['global']?.value : '';
     const pageCurrentIndex = (event.first ?? 0);
     const pageSize = event.rows ?? 10;
     const page = (pageCurrentIndex / pageSize) + 1;
     const sort = event.sortField ?? '';
     const sortOrder = event.sortOrder?.toString() === '1' ? 'asc' : 'desc';
 
-    this.sourceDataService.fetchPaginatedResource({ filter: '', page, pageSize, sort, sortOrder })
+    this.sourceDataService.fetchPaginatedResource({ filter: searchFilter, page, pageSize, sort, sortOrder })
       .then((res) => {
         this.data = res.data;
         this.totalRecords = res.totalCount;
@@ -43,6 +58,10 @@ export class DataTableComponent<TEntity> implements OnInit {
       .finally(() => {
         this.isLoading = false;
       });
+  }
+
+  filterData(): void {
+    this.searchFilterChanged.next(this.searchFilter);
   }
 
   executeActionCallback(action: DataTableActionProps, selectedId?: string): void {
@@ -58,12 +77,12 @@ export class DataTableComponent<TEntity> implements OnInit {
 
     if (this.isMultipleSelection()) {
       const selectedRows = this.selectedRecords ?? [];
-      const selectedIds = selectedRows.map((record: any) => record[this.tableConfig.identifierName]);
+      const selectedIds = selectedRows.map((record: any) => record[this.tableConfig.identifierPropRef]);
       action.callback(selectedIds);
       return;
     }
 
-    const selectedIds = [this.selectedRecords[this.tableConfig.identifierName] ?? ''];
+    const selectedIds = [this.selectedRecords[this.tableConfig.identifierPropRef] ?? ''];
     action.callback(selectedIds);
   }
 
