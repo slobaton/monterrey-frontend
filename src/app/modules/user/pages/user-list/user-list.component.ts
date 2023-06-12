@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { DataTableActionStatus, DataTableDefinition, DataTableSelectionType } from 'src/app/@core/models/common/data-table-definition';
-import { User } from 'src/app/@core/models/user';
+import { DataTableActionStatus, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { UserService } from 'src/app/@core/services/rest/user.service';
 
 @Component({
@@ -10,22 +9,44 @@ import { UserService } from 'src/app/@core/services/rest/user.service';
 })
 export class UserListComponent {
 
-  public tableDef: DataTableDefinition<User> = {
+  public tableConfig: DataTableConfiguration = {
     columns: [
-      { title: 'Id', propertyRef: 'id', sortable: true, filterable: false },
-      { title: 'Username', propertyRef: 'username', sortable: false, filterable: false },
-      { title: 'Email', propertyRef: 'email', sortable: true, filterable: false },
+      { title: 'Id', propertyRef: 'id', sortable: true },
+      { title: 'Username', propertyRef: 'username', sortable: true },
+      { title: 'Email', propertyRef: 'email', sortable: true },
     ],
+    identifierName: 'id',
     selectionType: DataTableSelectionType.SINGLE,
     actions: [
       {
-        tooltip: 'Editar',
+        title: 'Editar',
+        tooltip: 'Editar Usuario',
         icon: 'clone',
         status: DataTableActionStatus.WARNING,
-        callback: (id) => {
-          console.log(id);
+        requireSelectedRows: true,
+        callback: (selectedIds) => {
+          console.log(selectedIds);
         }
-      }
+      },
+      {
+        title: 'Eliminar',
+        tooltip: 'Eliminar Usuario',
+        icon: 'trash',
+        status: DataTableActionStatus.DANGER,
+        requireSelectedRows: true,
+        callback: (selectedIds) => {
+          console.log(selectedIds);
+        }
+      },
+      {
+        title: 'Exportar',
+        tooltip: 'Exportar Usuarios',
+        icon: 'file',
+        status: DataTableActionStatus.INFO,
+        callback: () => {
+          console.log('export');
+        }
+      },
     ]
   };
 

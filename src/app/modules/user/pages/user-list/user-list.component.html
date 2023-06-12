@@ -3,8 +3,8 @@
     <div class="card mb-0">
       <h5>User list</h5>
       <app-data-table
-        [tableDefinition]="tableDef"
-        [sourceData]="userService"
+        [tableConfig]="tableConfig"
+        [sourceDataService]="userService"
       ></app-data-table>
     </div>
   </div>

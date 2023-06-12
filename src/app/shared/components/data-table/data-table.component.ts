@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { LazyLoadEvent } from 'primeng/api';
-import { DataTableActionProps, DataTableDefinition } from 'src/app/@core/models/common/data-table-definition';
+import { DataTableActionProps, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { IFetchPaginatedData } from 'src/app/@core/services/interfaces/fetch-paginated-data';
 
 @Component({
@@ -10,13 +10,15 @@ import { IFetchPaginatedData } from 'src/app/@core/services/interfaces/fetch-pag
 })
 export class DataTableComponent<TEntity> implements OnInit {
 
-  @Input() tableDefinition!: DataTableDefinition<TEntity>;
-  @Input() sourceData!: IFetchPaginatedData<TEntity>;
+  @Input() tableConfig!: DataTableConfiguration;
+  @Input() sourceDataService!: IFetchPaginatedData<TEntity>;
 
-  isLoading: boolean = false;
+  public isLoading: boolean = false;
 
-  data: Array<TEntity> = [];
-  totalRecords: number = 0;
+  public data: Array<TEntity> = [];
+  public totalRecords: number = 0;
+
+  public selectedRecords?: any;
 
   constructor() { }
 
@@ -24,7 +26,7 @@ export class DataTableComponent<TEntity> implements OnInit {
     this.isLoading = true;
   }
 
-  loadData(event: LazyLoadEvent) {
+  loadData(event: LazyLoadEvent): void {
     this.isLoading = true;
 
     const pageCurrentIndex = (event.first ?? 0);
@@ -33,24 +35,68 @@ export class DataTableComponent<TEntity> implements OnInit {
     const sort = event.sortField ?? '';
     const sortOrder = event.sortOrder?.toString() === '1' ? 'asc' : 'desc';
 
-    setTimeout(() => {
-      this.sourceData.fetchPaginatedResource({ filter: '', page, pageSize, sort, sortOrder })
-        .then((res) => {
-          this.data = res.data;
-          this.totalRecords = res.totalCount;
-        })
-        .finally(() => {
-          this.isLoading = false;
-        });
-    }, 1000);
+    this.sourceDataService.fetchPaginatedResource({ filter: '', page, pageSize, sort, sortOrder })
+      .then((res) => {
+        this.data = res.data;
+        this.totalRecords = res.totalCount;
+      })
+      .finally(() => {
+        this.isLoading = false;
+      });
+  }
+
+  executeActionCallback(action: DataTableActionProps, selectedId?: string): void {
+    if (!this.requireSelectedRows(action)) {
+      action.callback([]);
+      return;
+    }
+
+    if (!this.isSelectionEnabled() && selectedId) {
+      action.callback([selectedId]);
+      return;
+    }
+
+    if (this.isMultipleSelection()) {
+      const selectedRows = this.selectedRecords ?? [];
+      const selectedIds = selectedRows.map((record: any) => record[this.tableConfig.identifierName]);
+      action.callback(selectedIds);
+      return;
+    }
+
+    const selectedIds = [this.selectedRecords[this.tableConfig.identifierName] ?? ''];
+    action.callback(selectedIds);
   }
 
   hasActions(): boolean {
-    return this.tableDefinition.actions && this.tableDefinition.actions.length > 0;
+    const actions = this.tableConfig.actions ?? [];
+
+    return actions && actions.length > 0;
+  }
+
+  requireSelectedRows(action: DataTableActionProps): boolean {
+    return action.requireSelectedRows ?? false;
+  }
+
+  isSelectionEnabled(): boolean {
+    const selectionType = this.tableConfig.selectionType ?? DataTableSelectionType.NONE;
+
+    return selectionType === DataTableSelectionType.SINGLE || selectionType === DataTableSelectionType.MULTIPLE;
+  }
+
+  isMultipleSelection(): boolean {
+    const selectionType = this.tableConfig.selectionType ?? DataTableSelectionType.SINGLE;
+
+    return selectionType === DataTableSelectionType.MULTIPLE;
+  }
+
+  getSelectionMode(): string {
+    const selectionType = this.tableConfig.selectionType ?? DataTableSelectionType.NONE;
+
+    return selectionType;
   }
 
   generateActionColor(action: DataTableActionProps): string {
-    const baseClassName = 'p-button-rounded p-button-';
+    const baseClassName = 'p-button-';
     const defaultName = 'success';
 
     return baseClassName.concat(action.status ?? defaultName);
