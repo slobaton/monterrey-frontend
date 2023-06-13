@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import { BaseService } from './base.service';
 import { IUserService } from '../interfaces/user-service';
 import { IFetchPaginatedData } from '../interfaces/fetch-paginated-data';
@@ -16,43 +17,20 @@ export class UserService extends BaseService implements IUserService, IFetchPagi
     super(_http);
   }
 
-  fetchPaginatedResource(request: PaginatedRequest): Promise<PaginatedResponse<User>> {
-    console.log(request);
-    var users: Array<User> = [
-      {
-        id: '11111111111111',
-        username: 'topx777',
-        email: 'topx777@gmail.com'
-      },
-      {
-        id: '11122222222222',
-        username: 'topx222',
-        email: 'topx222@gmail.com'
-      },
-      {
-        id: '33333333333333',
-        username: 'topx333',
-        email: 'topx333@gmail.com'
-      },
-      {
-        id: '44444444444444',
-        username: 'topx444',
-        email: 'topx444@gmail.com'
-      },
-      {
-        id: '55555555555555',
-        username: 'topx555',
-        email: 'topx555@gmail.com'
-      },
-    ];
+  async fetchPaginatedResource(request: PaginatedRequest): Promise<PaginatedResponse<User>> {
+    try {
+      const sortOrder = request.sortOrder === 'desc' ? '-' : '';
+      const params = new HttpParams()
+        .append('filter', request.filter)
+        .append('page[size]', request.pageSize)
+        .append('page[number]', request.page)
+        .append('sort', `${sortOrder}${request.sort}`);
 
-    var response: PaginatedResponse<User> = {
-      data: users,
-      totalCount: 100,
-      pages: 4,
-      currentPage: 1
-    };
+      const response = await firstValueFrom(this.get<PaginatedResponse<User>>('users', params));
 
-    return Promise.resolve(response);
+      return response;
+    } catch (error) {
+      return this.handleError(error);
+    }
   }
 }

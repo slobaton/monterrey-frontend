@@ -47,13 +47,14 @@ export class DataTableComponent<TEntity> implements OnInit {
     const pageCurrentIndex = (event.first ?? 0);
     const pageSize = event.rows ?? 10;
     const page = (pageCurrentIndex / pageSize) + 1;
-    const sort = event.sortField ?? this.tableConfig.identifierPropRef;
+    const sort = event.sortField ?? '';
     const sortOrder = event.sortOrder?.toString() === '1' ? 'asc' : 'desc';
 
     this.sourceDataService.fetchPaginatedResource({ filter: searchFilter, page, pageSize, sort, sortOrder })
       .then((res) => {
+        console.log(res);
         this.data = res.data;
-        this.totalRecords = res.totalCount;
+        this.totalRecords = res.meta.total;
       })
       .finally(() => {
         this.isLoading = false;

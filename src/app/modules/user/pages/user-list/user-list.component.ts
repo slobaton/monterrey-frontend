@@ -11,9 +11,12 @@ export class UserListComponent {
 
   public tableConfig: DataTableConfiguration = {
     columns: [
-      { title: 'Id', propertyRef: 'id', sortable: true }, // TODO => DefaultSort, Visible
+      { title: 'Id', propertyRef: 'id', sortable: true, visible: false },
       { title: 'Username', propertyRef: 'username' },
       { title: 'Email', propertyRef: 'email', sortable: true },
+      { title: 'Name', propertyRef: 'name', sortable: true },
+      { title: 'Paternal Surname', propertyRef: 'paternal_surname' },
+      { title: 'Maternal Surname', propertyRef: 'maternal_surname' }
     ],
     identifierPropRef: 'id',
     selectionType: DataTableSelectionType.MULTIPLE,
