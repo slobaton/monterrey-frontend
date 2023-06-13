@@ -1,9 +1,9 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { LazyLoadEvent } from 'primeng/api';
+import { Table } from 'primeng/table';
 import { DataTableActionProps, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { IFetchPaginatedData } from 'src/app/@core/services/interfaces/fetch-paginated-data';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
-import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-data-table',
@@ -47,7 +47,7 @@ export class DataTableComponent<TEntity> implements OnInit {
     const pageCurrentIndex = (event.first ?? 0);
     const pageSize = event.rows ?? 10;
     const page = (pageCurrentIndex / pageSize) + 1;
-    const sort = event.sortField ?? '';
+    const sort = event.sortField ?? this.tableConfig.identifierPropRef;
     const sortOrder = event.sortOrder?.toString() === '1' ? 'asc' : 'desc';
 
     this.sourceDataService.fetchPaginatedResource({ filter: searchFilter, page, pageSize, sort, sortOrder })
@@ -93,7 +93,32 @@ export class DataTableComponent<TEntity> implements OnInit {
   }
 
   requireSelectedRows(action: DataTableActionProps): boolean {
-    return action.requireSelectedRows ?? false;
+    const selectionConfig = action.selectionConfig;
+
+    return selectionConfig?.isRequired ?? true;
+  }
+
+  isActionEnabled(action: DataTableActionProps): boolean {
+    const selectionConfig = action.selectionConfig;
+    const requiredMinSelectionCount = selectionConfig?.minSelectedRows ?? 1;
+    const requiredMaxSelectionCount = selectionConfig?.maxSelectedRows ?? Number.MAX_VALUE;
+
+    if (!this.requireSelectedRows(action)) {
+      return true;
+    }
+
+    if (!this.isSelectionEnabled()) {
+      return true;
+    }
+
+    if (this.isMultipleSelection()) {
+      const selectedRows = this.selectedRecords ?? [];
+      const selectedCount = (selectedRows as []).length;
+
+      return selectedCount >= requiredMinSelectionCount && selectedCount <= requiredMaxSelectionCount;
+    }
+
+    return this.selectedRecords;
   }
 
   isSelectionEnabled(): boolean {

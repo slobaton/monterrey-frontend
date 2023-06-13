@@ -11,19 +11,21 @@ export class UserListComponent {
 
   public tableConfig: DataTableConfiguration = {
     columns: [
-      { title: 'Id', propertyRef: 'id', sortable: true },
-      { title: 'Username', propertyRef: 'username', sortable: true },
+      { title: 'Id', propertyRef: 'id', sortable: true }, // TODO => DefaultSort, Visible
+      { title: 'Username', propertyRef: 'username' },
       { title: 'Email', propertyRef: 'email', sortable: true },
     ],
     identifierPropRef: 'id',
-    selectionType: DataTableSelectionType.SINGLE,
+    selectionType: DataTableSelectionType.MULTIPLE,
     actions: [
       {
         title: 'Editar',
         tooltip: 'Editar Usuario',
         icon: 'clone',
         status: DataTableActionStatus.WARNING,
-        requireSelectedRows: true,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
         callback: (selectedIds) => {
           console.log(selectedIds);
         }
@@ -33,7 +35,9 @@ export class UserListComponent {
         tooltip: 'Eliminar Usuario',
         icon: 'trash',
         status: DataTableActionStatus.DANGER,
-        requireSelectedRows: true,
+        selectionConfig: {
+          minSelectedRows: 2
+        },
         callback: (selectedIds) => {
           console.log(selectedIds);
         }
@@ -43,6 +47,9 @@ export class UserListComponent {
         tooltip: 'Exportar Usuarios',
         icon: 'file',
         status: DataTableActionStatus.INFO,
+        selectionConfig: {
+          isRequired: false
+        },
         callback: () => {
           console.log('export');
         }

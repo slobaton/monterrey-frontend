@@ -8,7 +8,8 @@ export type DataTableConfiguration = {
 export type DataTableColumnProps = {
   title: string;
   propertyRef: string;
-  sortable: boolean;
+  visible?: boolean;
+  sortable?: boolean;
 }
 
 export type DataTableActionProps = {
@@ -16,8 +17,14 @@ export type DataTableActionProps = {
   tooltip?: string,
   icon?: string,
   status?: DataTableActionStatus,
-  requireSelectedRows?: boolean,
+  selectionConfig?: DataTableActionSelectionConfig,
   callback: (selectedIds: Array<string>) => void
+}
+
+export type DataTableActionSelectionConfig = {
+  isRequired?: boolean,
+  minSelectedRows?: number
+  maxSelectedRows?: number
 }
 
 export enum DataTableActionStatus {
