@@ -16,6 +16,8 @@
   [selectionMode]="getSelectionMode()"
   [(selection)]="selectedRecords"
   [dataKey]="tableConfig.identifierPropRef"
+  [scrollable]="true"
+  scrollHeight="60vh"
 >
   <ng-template pTemplate="caption">
     <div class="flex align-items-center justify-content-between">

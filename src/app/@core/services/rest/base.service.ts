@@ -1,3 +1,4 @@
+import { PaginatedRequest } from './../../models/request/paginated-request';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -42,6 +43,15 @@ export class BaseService {
 
   protected handleError(error: any): Promise<any> {
     return Promise.reject(error);
+  }
+
+  protected getPaginationParams(request: PaginatedRequest) {
+    const sortOrder = request.sortOrder === 'desc' ? '-' : '';
+    return new HttpParams()
+      .append(`filter[all]`, request.filter)
+      .append('page[size]', request.pageSize)
+      .append('page[number]', request.page)
+      .append('sort', `${sortOrder}${request.sort}`);
   }
 
   private setHeaders() {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { BaseService } from './base.service';
 import { IUserService } from '../interfaces/user-service';
@@ -19,14 +19,7 @@ export class UserService extends BaseService implements IUserService, IFetchPagi
 
   async fetchPaginatedResource(request: PaginatedRequest): Promise<PaginatedResponse<User>> {
     try {
-      const sortOrder = request.sortOrder === 'desc' ? '-' : '';
-      const params = new HttpParams()
-        .append(`filter[all]`, request.filter)
-        .append('page[size]', request.pageSize)
-        .append('page[number]', request.page)
-        .append('sort', `${sortOrder}${request.sort}`);
-
-      const response = await firstValueFrom(this.get<PaginatedResponse<User>>('users', params));
+      const response = await firstValueFrom(this.get<PaginatedResponse<User>>('users', this.getPaginationParams(request)));
 
       return response;
     } catch (error) {
