@@ -1,0 +1,111 @@
+<p-table
+  #dataTableRef
+  [columns]="tableConfig.columns"
+  [value]="data"
+  styleClass="p-datatable-sm"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [lazy]="true"
+  (onLazyLoad)="loadData($event)"
+  [paginator]="true"
+  [rowsPerPageOptions]="[10, 25, 50, 100]"
+  [rows]="10"
+  [totalRecords]="totalRecords"
+  [loading]="isLoading"
+  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+  [showCurrentPageReport]="true"
+  [selectionMode]="getSelectionMode()"
+  [(selection)]="selectedRecords"
+  [dataKey]="tableConfig.identifierPropRef"
+  [scrollable]="true"
+  scrollHeight="60vh"
+>
+  <ng-template pTemplate="caption">
+    <div class="flex align-items-center justify-content-between">
+      <div class="table-actions_container">
+        <ng-container *ngIf="hasActions()">
+          <ng-container *ngFor="let action of tableConfig.actions">
+            <p-button
+              *ngIf="isSelectionEnabled() || !requireSelectedRows(action)"
+              [styleClass]="'p-button-sm mx-1 ' + generateActionColor(action)"
+              [icon]="generateActionIcon(action)"
+              [label]="action.title ?? ''"
+              [disabled]="!isActionEnabled(action)"
+              (onClick)="executeActionCallback(action)"
+            ></p-button>
+          </ng-container>
+        </ng-container>
+      </div>
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          type="text"
+          [(ngModel)]="searchFilter"
+          (ngModelChange)="filterData()"
+          placeholder="Buscar..."
+        />
+      </span>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <ng-container *ngFor="let col of columns">
+        <ng-container *ngIf="col.visible ?? true">
+          <th
+            *ngIf="col.sortable; else nonSortableColumn"
+            [pSortableColumn]="col.propertyRef"
+            style="width: 20%"
+          >
+            {{ col.title }} <p-sortIcon [field]="col.propertyRef"></p-sortIcon>
+          </th>
+          <ng-template #nonSortableColumn>
+            <th>
+              {{ col.title }}
+            </th>
+          </ng-template>
+        </ng-container>
+      </ng-container>
+
+      <th *ngIf="hasActions() && !isSelectionEnabled()">Acciones</th>
+    </tr>
+  </ng-template>
+
+  <ng-template
+    pTemplate="body"
+    let-rowData
+    let-rowIndex="rowIndex"
+    let-columns="columns"
+  >
+    <tr
+      [pSelectableRowDisabled]="!isSelectionEnabled()"
+      [pSelectableRow]="rowData"
+      [pSelectableRowIndex]="rowIndex"
+    >
+      <ng-container *ngFor="let col of columns">
+        <td *ngIf="col.visible ?? true">
+          {{ rowData[col.propertyRef] }}
+        </td>
+      </ng-container>
+
+      <td *ngIf="hasActions() && !isSelectionEnabled()">
+        <button
+          *ngFor="let action of tableConfig.actions"
+          pButton
+          pRipple
+          [icon]="generateActionIcon(action)"
+          [ngClass]="
+            'p-button-sm p-button-rounded mx-1 ' + generateActionColor(action)
+          "
+          (click)="
+            executeActionCallback(
+              action,
+              rowData[tableConfig.identifierPropRef]
+            )
+          "
+          [pTooltip]="action.tooltip ?? ''"
+        ></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
