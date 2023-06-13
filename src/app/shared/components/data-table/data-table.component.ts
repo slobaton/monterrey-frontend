@@ -52,7 +52,6 @@ export class DataTableComponent<TEntity> implements OnInit {
 
     this.sourceDataService.fetchPaginatedResource({ filter: searchFilter, page, pageSize, sort, sortOrder })
       .then((res) => {
-        console.log(res);
         this.data = res.data;
         this.totalRecords = res.meta.total;
       })

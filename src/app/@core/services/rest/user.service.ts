@@ -21,7 +21,7 @@ export class UserService extends BaseService implements IUserService, IFetchPagi
     try {
       const sortOrder = request.sortOrder === 'desc' ? '-' : '';
       const params = new HttpParams()
-        .append('filter', request.filter)
+        .append(`filter[all]`, request.filter)
         .append('page[size]', request.pageSize)
         .append('page[number]', request.page)
         .append('sort', `${sortOrder}${request.sort}`);
