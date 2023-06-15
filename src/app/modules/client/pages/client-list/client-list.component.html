@@ -1,1 +1,11 @@
-<p>client-list works!</p>
+<div class="grid">
+  <div class="col-12">
+    <div class="card mb-0">
+      <h5>Client List</h5>
+      <app-data-table
+        [tableConfig]="tableConfig"
+        [sourceDataService]="clientService"
+      ></app-data-table>
+    </div>
+  </div>
+</div>
