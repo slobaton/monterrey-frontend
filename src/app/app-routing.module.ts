@@ -18,6 +18,7 @@ import { authGuard } from './@core/auth/auth.guard';
           { path: 'blocks', loadChildren: () => import('./demo/components/primeblocks/primeblocks.module').then(m => m.PrimeBlocksModule) },
           { path: 'pages', loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule) },
           { path: 'users', loadChildren: () => import('./modules/user/user.module').then(m => m.UserModule) },
+          { path: 'clients', loadChildren: () => import('./modules/client/client.module').then(m => m.ClientModule) },
           { path: '', redirectTo: 'inicio', pathMatch: 'full' }
         ]
       },
