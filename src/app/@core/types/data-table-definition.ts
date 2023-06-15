@@ -10,6 +10,7 @@ export type DataTableColumnProps = {
   propertyRef: string;
   visible?: boolean;
   sortable?: boolean;
+  type?: DataTableColumnType;
 }
 
 export type DataTableActionProps = {
@@ -39,4 +40,11 @@ export enum DataTableSelectionType {
   NONE = 'none',
   SINGLE = 'single',
   MULTIPLE = 'multiple'
+}
+
+export enum DataTableColumnType {
+  TEXT,
+  BOOLEAN,
+  DATE,
+  DATETIME
 }

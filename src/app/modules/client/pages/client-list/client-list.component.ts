@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ClientService } from 'src/app/@core/services/rest/client.service';
-import { DataTableActionStatus, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
+import { DataTableActionStatus, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 
 @Component({
   selector: 'app-client-list',
@@ -18,9 +18,9 @@ export class ClientListComponent {
       { title: 'Ap. Materno', propertyRef: 'maternal_surname', sortable: true },
       { title: 'Telefono', propertyRef: 'phone' },
       { title: 'Celular', propertyRef: 'cellphone' },
-      { title: 'Activo', propertyRef: 'is_active' },
-      { title: 'Creado', propertyRef: 'created_at', sortable: true },
-      { title: 'Actualizado', propertyRef: 'updated_at', sortable: true },
+      { title: 'Activo', propertyRef: 'is_active', type: DataTableColumnType.BOOLEAN },
+      { title: 'Creado', propertyRef: 'created_at', sortable: true, type: DataTableColumnType.DATETIME },
+      { title: 'Actualizado', propertyRef: 'updated_at', sortable: true, type: DataTableColumnType.DATETIME },
     ],
     identifierPropRef: 'id',
     selectionType: DataTableSelectionType.MULTIPLE,

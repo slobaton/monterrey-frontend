@@ -6,9 +6,10 @@ import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
+import { FormsModule } from '@angular/forms';
+import { CheckboxModule } from 'primeng/checkbox';
 
 import { DataTableComponent } from './components/data-table/data-table.component';
-import { FormsModule } from '@angular/forms';
 
 
 
@@ -23,7 +24,8 @@ import { FormsModule } from '@angular/forms';
     ButtonModule,
     RippleModule,
     InputTextModule,
-    TooltipModule
+    TooltipModule,
+    CheckboxModule
   ],
   exports: [
     DataTableComponent
