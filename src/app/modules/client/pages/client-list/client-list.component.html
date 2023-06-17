@@ -2,7 +2,13 @@
   <div class="col-12">
     <div class="card mb-0">
       <h5>Client List</h5>
+      <app-confirm-dialog
+        id="confirmDelete"
+        title="Eliminar Cliente"
+        message="¿Estas seguro de eliminar el cliente?"
+      ></app-confirm-dialog>
       <app-data-table
+        #clientTable
         [tableConfig]="tableConfig"
         [sourceDataService]="clientService"
       ></app-data-table>

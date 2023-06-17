@@ -1,13 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { Client } from 'src/app/@core/models/client';
 import { ClientService } from 'src/app/@core/services/rest/client.service';
 import { DataTableActionStatus, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
+import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
 
 @Component({
   selector: 'app-client-list',
   templateUrl: './client-list.component.html',
-  styleUrls: ['./client-list.component.scss']
+  styleUrls: ['./client-list.component.scss'],
+  providers: [ConfirmationService, MessageService]
 })
 export class ClientListComponent {
+
+  @ViewChild('clientTable') table!: DataTableComponent<Client>;
 
   public tableConfig: DataTableConfiguration = {
     columns: [
@@ -23,18 +29,30 @@ export class ClientListComponent {
       { title: 'Actualizado', propertyRef: 'updated_at', sortable: true, type: DataTableColumnType.DATETIME },
     ],
     identifierPropRef: 'id',
-    selectionType: DataTableSelectionType.MULTIPLE,
+    selectionType: DataTableSelectionType.SINGLE,
     actions: [
       {
+        title: 'Nuevo',
+        tooltip: 'Nuevo Cliente',
+        icon: 'plus',
+        status: DataTableActionStatus.SUCCESS,
+        selectionConfig: {
+          isRequired: false
+        },
+        callback: () => {
+          console.log('create client!');
+        }
+      },
+      {
         title: 'Editar',
-        tooltip: 'Editar Usuario',
-        icon: 'clone',
+        tooltip: 'Editar Cliente',
+        icon: 'pencil',
         status: DataTableActionStatus.WARNING,
         selectionConfig: {
           maxSelectedRows: 1
         },
         callback: (selectedIds) => {
-          console.log(selectedIds);
+          console.log('Editar cliente ' + selectedIds[0]);
         }
       },
       {
@@ -43,27 +61,32 @@ export class ClientListComponent {
         icon: 'trash',
         status: DataTableActionStatus.DANGER,
         selectionConfig: {
-          minSelectedRows: 2
+          maxSelectedRows: 1
         },
         callback: (selectedIds) => {
-          console.log(selectedIds);
+          const clientId = selectedIds[0];
+          this.confirmationService.confirm({
+            key: 'confirmDelete',
+            accept: () => {
+              this.clientService.deleteClient(clientId)
+                .then(() => {
+                  this.messageService.add({ key: 'confirmDelete', severity: 'success', summary: 'Eliminado!', detail: 'El cliente ha sido eliminado!.' });
+                  this.table.reset();
+                })
+                .catch((err) => {
+                  console.error(err);
+                  this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' })
+                });
+            },
+            reject: () => {
+              this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' })
+            }
+          });
         }
-      },
-      {
-        title: 'Exportar',
-        tooltip: 'Exportar Usuarios',
-        icon: 'file',
-        status: DataTableActionStatus.INFO,
-        selectionConfig: {
-          isRequired: false
-        },
-        callback: () => {
-          console.log('export');
-        }
-      },
+      }
     ]
   };
 
-  constructor(public clientService: ClientService) { }
+  constructor(public clientService: ClientService, private confirmationService: ConfirmationService, private messageService: MessageService) { }
 
 }

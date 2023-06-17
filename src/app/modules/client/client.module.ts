@@ -10,7 +10,7 @@ import { ClientListComponent } from './pages/client-list/client-list.component';
   imports: [
     CommonModule,
     ClientRoutingModule,
-    SharedModule
+    SharedModule,
   ],
   declarations: [
     ClientListComponent

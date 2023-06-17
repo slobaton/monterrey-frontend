@@ -44,6 +44,10 @@ export class DataTableComponent<TEntity> implements OnInit {
       });
   }
 
+  reset(): void {
+    this.loadData(this.dataTable.createLazyLoadMetadata());
+  }
+
   loadData(event: LazyLoadEvent): void {
     this.isLoading = true;
 

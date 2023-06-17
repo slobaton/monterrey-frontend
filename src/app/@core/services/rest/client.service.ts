@@ -26,4 +26,12 @@ export class ClientService extends BaseService implements IClientService, IFetch
       return this.handleError(error);
     }
   }
+
+  async deleteClient(id: string): Promise<void> {
+    try {
+      await firstValueFrom(this.delete(`clients/${id}`));
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
 }
