@@ -156,4 +156,16 @@ export class DataTableComponent<TEntity> implements OnInit {
 
     return baseIconClassName.concat(action.icon ?? defaultName);
   }
+
+  getColumnStyleByType(type: DataTableColumnType): string {
+    let classStyles = '';
+
+    switch (type) {
+      case DataTableColumnType.BOOLEAN:
+        classStyles = 'text-center'
+        break;
+    }
+
+    return classStyles;
+  }
 }

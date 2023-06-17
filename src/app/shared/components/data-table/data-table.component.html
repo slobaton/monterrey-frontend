@@ -87,7 +87,10 @@
       [pSelectableRowIndex]="rowIndex"
     >
       <ng-container *ngFor="let col of columns">
-        <td *ngIf="col.visible ?? true">
+        <td
+          *ngIf="col.visible ?? true"
+          [class]="getColumnStyleByType(col.type)"
+        >
           <container-element [ngSwitch]="col.type ?? columnType.TEXT">
             <ng-container *ngSwitchCase="columnType.TEXT">
               {{ rowData[col.propertyRef] }}
