@@ -31,8 +31,6 @@
               [label]="action.title ?? ''"
               [disabled]="!isActionEnabled(action)"
               (onClick)="executeActionCallback(action)"
-              [pTooltip]="action.tooltip ?? ''"
-              tooltipPosition="top"
             ></p-button>
           </ng-container>
         </ng-container>
