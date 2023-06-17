@@ -10,12 +10,16 @@ import { FormsModule } from '@angular/forms';
 import { CheckboxModule } from 'primeng/checkbox';
 
 import { DataTableComponent } from './components/data-table/data-table.component';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
 
 
 
 @NgModule({
   declarations: [
-    DataTableComponent
+    DataTableComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     CommonModule,
@@ -25,10 +29,13 @@ import { DataTableComponent } from './components/data-table/data-table.component
     RippleModule,
     InputTextModule,
     TooltipModule,
-    CheckboxModule
+    CheckboxModule,
+    ConfirmDialogModule,
+    ToastModule
   ],
   exports: [
-    DataTableComponent
+    DataTableComponent,
+    ConfirmDialogComponent
   ]
 })
 export class SharedModule { }

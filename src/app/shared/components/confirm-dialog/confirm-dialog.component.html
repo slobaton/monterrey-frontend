@@ -1,0 +1,16 @@
+<p-toast
+  [key]="id"
+  position="top-right"
+  [preventOpenDuplicates]="true"
+></p-toast>
+
+<p-confirmDialog
+  [key]="id"
+  [header]="title ?? '¿Estás seguro?'"
+  [message]="message ?? '¿Realmente deseas continuar?'"
+  [icon]="icon"
+  acceptLabel="Aceptar"
+  acceptButtonStyleClass="success"
+  rejectLabel="Cancelar"
+  rejectButtonStyleClass="danger"
+></p-confirmDialog>
