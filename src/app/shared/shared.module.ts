@@ -6,24 +6,31 @@ import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CheckboxModule } from 'primeng/checkbox';
 
 import { DataTableComponent } from './components/data-table/data-table.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
+import { FormInputComponent } from './components/form-input/form-input.component';
+import { FormComponent } from './components/form/form.component';
+import { RouterModule } from '@angular/router';
 
 
 
 @NgModule({
   declarations: [
     DataTableComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    FormInputComponent,
+    FormComponent
   ],
   imports: [
     CommonModule,
+    RouterModule,
     FormsModule,
+    ReactiveFormsModule,
     TableModule,
     ButtonModule,
     RippleModule,
@@ -35,7 +42,9 @@ import { ToastModule } from 'primeng/toast';
   ],
   exports: [
     DataTableComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    FormInputComponent,
+    FormComponent
   ]
 })
 export class SharedModule { }
