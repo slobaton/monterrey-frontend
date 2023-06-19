@@ -43,11 +43,15 @@ export class AuthService extends BaseService implements IAuthService {
 
   async logout(): Promise<void> {
     try {
-      await firstValueFrom(this.post<AuthUser>('logout'));
+      await firstValueFrom(this.post('logout'));
       localStorage.removeItem('authUser');
       this.userSubject.next(null);
     } catch (error) {
       return this.handleError(error);
     }
+  }
+
+  getToken(): string {
+    return this.authenticatedUser?.token.access_token || '';
   }
 }
