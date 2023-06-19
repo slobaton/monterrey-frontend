@@ -15,7 +15,10 @@
         <p-button
           type="submit"
           styleClass="p-button-sm p-button-success"
+          icon="pi pi-send"
           [disabled]="!form.valid || isProcessing"
+          [label]="submitLabel"
+          [loading]="isProcessing"
         >
         </p-button>
       </div>

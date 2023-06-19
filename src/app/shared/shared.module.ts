@@ -1,21 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { InputTextModule } from 'primeng/inputtext';
 import { TooltipModule } from 'primeng/tooltip';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CheckboxModule } from 'primeng/checkbox';
+import { ToastModule } from 'primeng/toast';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 import { DataTableComponent } from './components/data-table/data-table.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ToastModule } from 'primeng/toast';
-import { FormInputComponent } from './components/form-input/form-input.component';
 import { FormComponent } from './components/form/form.component';
-import { RouterModule } from '@angular/router';
 
 
 
@@ -23,7 +22,6 @@ import { RouterModule } from '@angular/router';
   declarations: [
     DataTableComponent,
     ConfirmDialogComponent,
-    FormInputComponent,
     FormComponent
   ],
   imports: [
@@ -38,12 +36,11 @@ import { RouterModule } from '@angular/router';
     TooltipModule,
     CheckboxModule,
     ConfirmDialogModule,
-    ToastModule
+    ToastModule,
   ],
   exports: [
     DataTableComponent,
     ConfirmDialogComponent,
-    FormInputComponent,
     FormComponent
   ]
 })

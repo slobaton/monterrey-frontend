@@ -2,8 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ClientRoutingModule } from './client-routing.module';
+import { InputTextModule } from 'primeng/inputtext';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
 
 import { ClientListComponent } from './pages/client-list/client-list.component';
+import { UpsertClientFormComponent } from './components/upsert-client-form/upsert-client-form.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -11,9 +15,14 @@ import { ClientListComponent } from './pages/client-list/client-list.component';
     CommonModule,
     ClientRoutingModule,
     SharedModule,
+    FormsModule,
+    ReactiveFormsModule,
+    InputTextModule,
+    DynamicDialogModule
   ],
   declarations: [
-    ClientListComponent
+    ClientListComponent,
+    UpsertClientFormComponent
   ]
 })
 export class ClientModule { }

@@ -1,19 +1,23 @@
 import { Component, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Client } from 'src/app/@core/models/client';
 import { ClientService } from 'src/app/@core/services/rest/client.service';
 import { DataTableActionStatus, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
+import { UpsertClientFormComponent } from '../../components/upsert-client-form/upsert-client-form.component';
 
 @Component({
   selector: 'app-client-list',
   templateUrl: './client-list.component.html',
   styleUrls: ['./client-list.component.scss'],
-  providers: [ConfirmationService, MessageService]
+  providers: [ConfirmationService, MessageService, DialogService]
 })
 export class ClientListComponent {
 
   @ViewChild('clientTable') table!: DataTableComponent<Client>;
+
+  ref: DynamicDialogRef | undefined;
 
   public tableConfig: DataTableConfiguration = {
     columns: [
@@ -41,6 +45,7 @@ export class ClientListComponent {
         },
         callback: () => {
           console.log('create client!');
+          this.ref = this.dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente' });
         }
       },
       {
@@ -87,6 +92,10 @@ export class ClientListComponent {
     ]
   };
 
-  constructor(public clientService: ClientService, private confirmationService: ConfirmationService, private messageService: MessageService) { }
+  constructor(
+    public clientService: ClientService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService,
+    private dialogService: DialogService) { }
 
 }

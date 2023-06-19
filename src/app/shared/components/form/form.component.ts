@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -8,9 +8,10 @@ import { FormGroup } from '@angular/forms';
 })
 export class FormComponent implements OnInit {
   @Input() form!: FormGroup;
-  @Input() private onProcessCompleted!: EventEmitter<boolean>;
+  @Input() onProcessCompleted!: EventEmitter<boolean>;
   @Input() redirectBackRoute?: string;
-  @Input() onSubmit: EventEmitter<any> = new EventEmitter();
+  @Input() submitLabel: string = 'Enviar';
+  @Output() onSubmit: EventEmitter<any> = new EventEmitter();
 
   isProcessing: boolean = false;
 
@@ -27,5 +28,4 @@ export class FormComponent implements OnInit {
   onSubmitForm(): void {
     this.onSubmit.emit(this.form.value);
   }
-
 }

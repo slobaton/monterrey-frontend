@@ -1,5 +1,10 @@
 import { NgModule } from '@angular/core';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppLayoutModule } from './layout/app.layout.module';
@@ -11,7 +16,6 @@ import { EventService } from './demo/service/event.service';
 import { IconService } from './demo/service/icon.service';
 import { NodeService } from './demo/service/node.service';
 import { PhotoService } from './demo/service/photo.service';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './@core/interceptors/auth-interceptor';
 
 @NgModule({
@@ -20,11 +24,13 @@ import { AuthInterceptor } from './@core/interceptors/auth-interceptor';
   ],
   imports: [
     AppRoutingModule,
-    AppLayoutModule
+    AppLayoutModule,
+    ToastModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: LocationStrategy, useClass: HashLocationStrategy },
+    MessageService,
     CountryService, CustomerService, EventService, IconService, NodeService,
     PhotoService, ProductService
   ],
