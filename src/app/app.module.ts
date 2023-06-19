@@ -11,20 +11,23 @@ import { EventService } from './demo/service/event.service';
 import { IconService } from './demo/service/icon.service';
 import { NodeService } from './demo/service/node.service';
 import { PhotoService } from './demo/service/photo.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './@core/interceptors/auth-interceptor';
 
 @NgModule({
-    declarations: [
-        AppComponent, NotfoundComponent
-    ],
-    imports: [
-        AppRoutingModule,
-        AppLayoutModule
-    ],
-    providers: [
-        { provide: LocationStrategy, useClass: HashLocationStrategy },
-        CountryService, CustomerService, EventService, IconService, NodeService,
-        PhotoService, ProductService
-    ],
-    bootstrap: [AppComponent]
+  declarations: [
+    AppComponent, NotfoundComponent
+  ],
+  imports: [
+    AppRoutingModule,
+    AppLayoutModule
+  ],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
+    CountryService, CustomerService, EventService, IconService, NodeService,
+    PhotoService, ProductService
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
