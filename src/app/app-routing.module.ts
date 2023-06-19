@@ -21,7 +21,8 @@ import { authGuard } from './@core/auth/auth.guard';
           { path: '', redirectTo: 'inicio', pathMatch: 'full' }
         ]
       },
-      { path: 'auth', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },
+      { path: 'auth', loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule) },
+      { path: 'authold', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },
       { path: 'landing', loadChildren: () => import('./demo/components/landing/landing.module').then(m => m.LandingModule) },
       { path: 'notfound', component: NotfoundComponent },
       { path: '**', redirectTo: '/notfound' },

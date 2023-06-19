@@ -1,6 +1,6 @@
-import { AuthToken } from "../auth-token";
+import { AuthToken } from "./auth-token";
 
-export class LoginResponse {
+export class AuthUser {
   constructor(
     public id: string,
     public name: string,

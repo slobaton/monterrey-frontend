@@ -1,8 +1,7 @@
 import { LoginRequest } from "../../models/request/login-request";
-import { LoginResponse } from "../../models/response/login-response";
+import { AuthUser } from "../../models/auth-user";
 
 export interface IAuthService {
-  isLoggedIn: boolean;
-  login(request: LoginRequest): Promise<LoginResponse>
+  login(request: LoginRequest): Promise<AuthUser>
   logout(): Promise<void>
 }

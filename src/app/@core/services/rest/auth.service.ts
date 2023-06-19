@@ -1,30 +1,41 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 
 import { IAuthService } from '../interfaces/auth-service';
 import { BaseService } from './base.service';
 import { LoginRequest } from '../../models/request/login-request';
-import { LoginResponse } from '../../models/response/login-response';
+import { AuthUser } from '../../models/auth-user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService extends BaseService implements IAuthService {
 
-  isLoggedIn: boolean = false;
-  redirectUrl: string | null = 'inicio';
+  redirectUrl: string = 'inicio';
+
+  private userSubject: BehaviorSubject<AuthUser | null>;
+  public user: Observable<AuthUser | null>;
+
 
   constructor(_http: HttpClient) {
     super(_http);
+    this.userSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('authUser')!));
+    this.user = this.userSubject.asObservable();
   }
 
-  async login(request: LoginRequest): Promise<LoginResponse> {
-    try {
-      const response = await firstValueFrom(this.post<LoginResponse>('login', request));
+  public get authenticatedUser() {
+    return this.userSubject.value;
+  }
 
-      return response;
+  async login(request: LoginRequest): Promise<AuthUser> {
+    try {
+      const authUser = await firstValueFrom(this.post<AuthUser>('login', request));
+      localStorage.setItem('authUser', JSON.stringify(authUser));
+      this.userSubject.next(authUser);
+
+      return authUser;
     } catch (error) {
       return this.handleError(error);
     }
@@ -32,7 +43,9 @@ export class AuthService extends BaseService implements IAuthService {
 
   async logout(): Promise<void> {
     try {
-      await firstValueFrom(this.post<LoginResponse>('logout'));
+      await firstValueFrom(this.post<AuthUser>('logout'));
+      localStorage.removeItem('authUser');
+      this.userSubject.next(null);
     } catch (error) {
       return this.handleError(error);
     }
