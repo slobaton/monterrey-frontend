@@ -3,7 +3,8 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -17,6 +18,7 @@ import { IconService } from './demo/service/icon.service';
 import { NodeService } from './demo/service/node.service';
 import { PhotoService } from './demo/service/photo.service';
 import { AuthInterceptor } from './@core/interceptors/auth-interceptor';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -25,12 +27,13 @@ import { AuthInterceptor } from './@core/interceptors/auth-interceptor';
   imports: [
     AppRoutingModule,
     AppLayoutModule,
+    SharedModule,
     ToastModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: LocationStrategy, useClass: HashLocationStrategy },
-    MessageService,
+    MessageService, ConfirmationService, DialogService,
     CountryService, CustomerService, EventService, IconService, NodeService,
     PhotoService, ProductService
   ],

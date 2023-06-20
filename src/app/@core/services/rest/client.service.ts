@@ -36,6 +36,14 @@ export class ClientService extends BaseService implements IClientService, IFetch
     }
   }
 
+  async updateClient(id: string, request: ClientUpsertRequest): Promise<Client> {
+    try {
+      return await firstValueFrom(this.put<Client>(`clients/${id}`, request));
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
   async deleteClient(id: string): Promise<void> {
     try {
       await firstValueFrom(this.delete(`clients/${id}`));

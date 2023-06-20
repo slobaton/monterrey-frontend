@@ -14,7 +14,7 @@
   currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
   [showCurrentPageReport]="true"
   [selectionMode]="getSelectionMode()"
-  [(selection)]="selectedRecords"
+  [(selection)]="selectedRows"
   [dataKey]="tableConfig.identifierPropRef"
   [scrollable]="true"
   scrollHeight="60vh"
@@ -121,12 +121,7 @@
           [ngClass]="
             'p-button-sm p-button-rounded mx-1 ' + generateActionColor(action)
           "
-          (click)="
-            executeActionCallback(
-              action,
-              rowData[tableConfig.identifierPropRef]
-            )
-          "
+          (click)="executeActionCallback(action, rowData)"
           [pTooltip]="action.tooltip ?? ''"
         ></button>
       </td>

@@ -8,6 +8,7 @@ export class ClientUpsertRequest {
     public phone?: string,
     public cellphone?: string,
     public observations?: string,
+    public is_active?: boolean,
     public id?: string,
   ) { }
 }

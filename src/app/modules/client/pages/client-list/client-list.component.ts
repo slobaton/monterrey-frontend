@@ -11,7 +11,6 @@ import { UpsertClientFormComponent } from '../../components/upsert-client-form/u
   selector: 'app-client-list',
   templateUrl: './client-list.component.html',
   styleUrls: ['./client-list.component.scss'],
-  providers: [ConfirmationService, MessageService, DialogService]
 })
 export class ClientListComponent {
 
@@ -44,8 +43,12 @@ export class ClientListComponent {
           isRequired: false
         },
         callback: () => {
-          console.log('create client!');
           this.ref = this.dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente' });
+          this.ref.onClose.subscribe((result) => {
+            if (result) {
+              this.table.reset();
+            }
+          });
         }
       },
       {
@@ -56,8 +59,14 @@ export class ClientListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedIds) => {
-          console.log('Editar cliente ' + selectedIds[0]);
+        callback: (selectedRows) => {
+          const client = selectedRows[0];
+          this.ref = this.dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente', data: { client } });
+          this.ref.onClose.subscribe((result) => {
+            if (result) {
+              this.table.reset();
+            }
+          });
         }
       },
       {
@@ -68,8 +77,8 @@ export class ClientListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedIds) => {
-          const clientId = selectedIds[0];
+        callback: (selectedRows) => {
+          const clientId = selectedRows[0].id;
           this.confirmationService.confirm({
             key: 'confirmDelete',
             accept: () => {

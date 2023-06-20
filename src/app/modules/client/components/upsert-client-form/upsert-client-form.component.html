@@ -2,65 +2,73 @@
   [form]="clientForm"
   [onProcessCompleted]="formProcessEvent"
   (onSubmit)="onSubmitForm($event)"
-  class="form-container p-fluid"
 >
   <ng-container [formGroup]="clientForm">
-    <div class="field">
-      <label htmlFor="nit">NIT</label>
-      <input pInputText id="nit" formControlName="nit" type="text" />
-    </div>
-    <div class="field">
-      <label htmlFor="name">Nombre</label>
-      <input pInputText id="name" formControlName="name" type="text" />
-    </div>
-    <div class="field">
-      <label htmlFor="paternal_surname">Apellido Paterno</label>
-      <input
-        pInputText
-        id="paternal_surname"
-        formControlName="paternal_surname"
-        type="text"
-      />
-    </div>
-    <div class="field">
-      <label htmlFor="maternal_surname">Apellido Materno</label>
-      <input
-        pInputText
-        id="maternal_surname"
-        formControlName="maternal_surname"
-        type="text"
-      />
-    </div>
-    <div class="field">
-      <label htmlFor="address">Direccion</label>
-      <input
-        pInputText
-        id="address"
-        [formControlName]="'address'"
-        type="text"
-      />
-    </div>
-    <div class="field">
-      <label htmlFor="phone">Telefono</label>
-      <input pInputText id="phone" formControlName="phone" type="text" />
-    </div>
-    <div class="field">
-      <label htmlFor="cellphone">Celular</label>
-      <input
-        pInputText
-        id="cellphone"
-        formControlName="cellphone"
-        type="text"
-      />
-    </div>
-    <div class="field">
-      <label htmlFor="observations">Observaciones</label>
-      <input
-        pInputText
-        id="observations"
-        formControlName="observations"
-        type="text"
-      />
+    <div class="form-container p-fluid p-formgrid grid">
+      <div class="field col-6">
+        <label htmlFor="nit">NIT</label>
+        <input pInputText id="nit" formControlName="nit" type="text" />
+      </div>
+      <div class="field col-6">
+        <label htmlFor="name">Nombre</label>
+        <input pInputText id="name" formControlName="name" type="text" />
+      </div>
+      <div class="field col-6">
+        <label htmlFor="paternal_surname">Apellido Paterno</label>
+        <input
+          pInputText
+          id="paternal_surname"
+          formControlName="paternal_surname"
+          type="text"
+        />
+      </div>
+      <div class="field col-6">
+        <label htmlFor="maternal_surname">Apellido Materno</label>
+        <input
+          pInputText
+          id="maternal_surname"
+          formControlName="maternal_surname"
+          type="text"
+        />
+      </div>
+      <div class="field col-12">
+        <label htmlFor="address">Direccion</label>
+        <textarea
+          pInputTextarea
+          id="address"
+          formControlName="address"
+          type="text"
+        ></textarea>
+      </div>
+      <div class="field col-6">
+        <label htmlFor="phone">Telefono</label>
+        <input pInputText id="phone" formControlName="phone" type="text" />
+      </div>
+      <div class="field col-6">
+        <label htmlFor="cellphone">Celular</label>
+        <input
+          pInputText
+          id="cellphone"
+          formControlName="cellphone"
+          type="text"
+        />
+      </div>
+      <div class="field col-12">
+        <label htmlFor="observations">Observaciones</label>
+        <textarea
+          pInputTextarea
+          id="observations"
+          formControlName="observations"
+          type="text"
+        ></textarea>
+      </div>
+      <div class="col-12 text-center">
+        <h6>Es Cliente Activo</h6>
+        <p-inputSwitch
+          inputId="is_active"
+          formControlName="is_active"
+        ></p-inputSwitch>
+      </div>
     </div>
   </ng-container>
 </app-form>
