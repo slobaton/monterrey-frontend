@@ -44,8 +44,7 @@ export class AuthService extends BaseService implements IAuthService {
   async logout(): Promise<void> {
     try {
       await firstValueFrom(this.post('logout'));
-      localStorage.removeItem('authUser');
-      this.userSubject.next(null);
+      this.cleanSession();
     } catch (error) {
       return this.handleError(error);
     }
@@ -53,5 +52,10 @@ export class AuthService extends BaseService implements IAuthService {
 
   getToken(): string {
     return this.authenticatedUser?.token.access_token || '';
+  }
+
+  cleanSession(): void {
+    localStorage.removeItem('authUser');
+    this.userSubject.next(null);
   }
 }

@@ -5,4 +5,5 @@ export interface IAuthService {
   login(request: LoginRequest): Promise<AuthUser>
   logout(): Promise<void>
   getToken(): string;
+  cleanSession(): void;
 }

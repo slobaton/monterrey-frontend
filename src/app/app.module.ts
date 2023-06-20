@@ -19,6 +19,7 @@ import { NodeService } from './demo/service/node.service';
 import { PhotoService } from './demo/service/photo.service';
 import { AuthInterceptor } from './@core/interceptors/auth-interceptor';
 import { SharedModule } from './shared/shared.module';
+import { ErrorInterceptor } from './@core/interceptors/error-interceptor';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { SharedModule } from './shared/shared.module';
     ToastModule
   ],
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     MessageService, ConfirmationService, DialogService,
