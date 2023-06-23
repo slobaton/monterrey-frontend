@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { LazyLoadEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { DataTableActionProps, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
+import { DataTableActionProps, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { IFetchPaginatedData } from 'src/app/@core/services/interfaces/fetch-paginated-data';
 
 @Component({
@@ -25,7 +25,11 @@ export class DataTableComponent<TEntity> implements OnInit {
   public searchFilter: string = '';
   private searchFilterChanged = new Subject<string>();
 
-  public selectedRecords?: any;
+  public selectedRows?: any;
+
+  public columnType = DataTableColumnType;
+
+  public checked: boolean = true;
 
   constructor() { }
 
@@ -38,6 +42,11 @@ export class DataTableComponent<TEntity> implements OnInit {
       .subscribe(value => {
         this.dataTable.filterGlobal(value, 'contains');
       });
+  }
+
+  reset(): void {
+    this.selectedRows = null;
+    this.loadData(this.dataTable.createLazyLoadMetadata());
   }
 
   loadData(event: LazyLoadEvent): void {
@@ -64,26 +73,24 @@ export class DataTableComponent<TEntity> implements OnInit {
     this.searchFilterChanged.next(this.searchFilter);
   }
 
-  executeActionCallback(action: DataTableActionProps, selectedId?: string): void {
+  executeActionCallback(action: DataTableActionProps, selectedRow?: string): void {
     if (!this.requireSelectedRows(action)) {
       action.callback([]);
       return;
     }
 
-    if (!this.isSelectionEnabled() && selectedId) {
-      action.callback([selectedId]);
+    if (!this.isSelectionEnabled() && selectedRow) {
+      action.callback([selectedRow]);
       return;
     }
 
     if (this.isMultipleSelection()) {
-      const selectedRows = this.selectedRecords ?? [];
-      const selectedIds = selectedRows.map((record: any) => record[this.tableConfig.identifierPropRef]);
-      action.callback(selectedIds);
+      const selectedRows = this.selectedRows ?? [];
+      action.callback(selectedRows);
       return;
     }
 
-    const selectedIds = [this.selectedRecords[this.tableConfig.identifierPropRef] ?? ''];
-    action.callback(selectedIds);
+    action.callback([this.selectedRows]);
   }
 
   hasActions(): boolean {
@@ -112,13 +119,13 @@ export class DataTableComponent<TEntity> implements OnInit {
     }
 
     if (this.isMultipleSelection()) {
-      const selectedRows = this.selectedRecords ?? [];
+      const selectedRows = this.selectedRows ?? [];
       const selectedCount = (selectedRows as []).length;
 
       return selectedCount >= requiredMinSelectionCount && selectedCount <= requiredMaxSelectionCount;
     }
 
-    return this.selectedRecords;
+    return this.selectedRows;
   }
 
   isSelectionEnabled(): boolean {
@@ -151,5 +158,17 @@ export class DataTableComponent<TEntity> implements OnInit {
     const defaultName = 'eye';
 
     return baseIconClassName.concat(action.icon ?? defaultName);
+  }
+
+  getColumnStyleByType(type: DataTableColumnType): string {
+    let classStyles = '';
+
+    switch (type) {
+      case DataTableColumnType.BOOLEAN:
+        classStyles = 'text-center'
+        break;
+    }
+
+    return classStyles;
   }
 }

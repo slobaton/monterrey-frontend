@@ -14,7 +14,7 @@
   currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
   [showCurrentPageReport]="true"
   [selectionMode]="getSelectionMode()"
-  [(selection)]="selectedRecords"
+  [(selection)]="selectedRows"
   [dataKey]="tableConfig.identifierPropRef"
   [scrollable]="true"
   scrollHeight="60vh"
@@ -55,9 +55,13 @@
           <th
             *ngIf="col.sortable; else nonSortableColumn"
             [pSortableColumn]="col.propertyRef"
-            style="width: 20%"
           >
-            {{ col.title }} <p-sortIcon [field]="col.propertyRef"></p-sortIcon>
+            <div
+              class="flex justify-content-between align-content-center align-items-center"
+            >
+              {{ col.title }}
+              <p-sortIcon [field]="col.propertyRef"></p-sortIcon>
+            </div>
           </th>
           <ng-template #nonSortableColumn>
             <th>
@@ -83,8 +87,28 @@
       [pSelectableRowIndex]="rowIndex"
     >
       <ng-container *ngFor="let col of columns">
-        <td *ngIf="col.visible ?? true">
-          {{ rowData[col.propertyRef] }}
+        <td
+          *ngIf="col.visible ?? true"
+          [class]="getColumnStyleByType(col.type)"
+        >
+          <container-element [ngSwitch]="col.type ?? columnType.TEXT">
+            <ng-container *ngSwitchCase="columnType.TEXT">
+              {{ rowData[col.propertyRef] }}
+            </ng-container>
+            <ng-container *ngSwitchCase="columnType.BOOLEAN">
+              <p-checkbox
+                [readonly]="true"
+                [ngModel]="rowData[col.propertyRef]"
+                [binary]="true"
+              ></p-checkbox>
+            </ng-container>
+            <ng-container *ngSwitchCase="columnType.DATE">
+              {{ rowData[col.propertyRef] | date : "dd/MM/YYYY" }}
+            </ng-container>
+            <ng-container *ngSwitchCase="columnType.DATETIME">
+              {{ rowData[col.propertyRef] | date : "dd/MM/YYYY HH:mm:ss" }}
+            </ng-container>
+          </container-element>
         </td>
       </ng-container>
 
@@ -97,12 +121,7 @@
           [ngClass]="
             'p-button-sm p-button-rounded mx-1 ' + generateActionColor(action)
           "
-          (click)="
-            executeActionCallback(
-              action,
-              rowData[tableConfig.identifierPropRef]
-            )
-          "
+          (click)="executeActionCallback(action, rowData)"
           [pTooltip]="action.tooltip ?? ''"
         ></button>
       </td>

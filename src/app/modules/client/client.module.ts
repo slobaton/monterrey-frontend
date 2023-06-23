@@ -1,0 +1,33 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+import { InputTextModule } from 'primeng/inputtext';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
+
+import { ClientRoutingModule } from './client-routing.module';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { ClientListComponent } from './pages/client-list/client-list.component';
+import { UpsertClientFormComponent } from './components/upsert-client-form/upsert-client-form.component';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+
+
+@NgModule({
+  imports: [
+    CommonModule,
+    ClientRoutingModule,
+    SharedModule,
+    FormsModule,
+    ReactiveFormsModule,
+    InputTextModule,
+    InputTextareaModule,
+    InputSwitchModule,
+    DynamicDialogModule
+  ],
+  declarations: [
+    ClientListComponent,
+    UpsertClientFormComponent
+  ]
+})
+export class ClientModule { }

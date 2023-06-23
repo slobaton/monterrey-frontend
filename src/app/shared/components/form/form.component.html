@@ -1,0 +1,27 @@
+<form [formGroup]="form" (ngSubmit)="onSubmitForm()" autocomplete="off">
+  <ng-content></ng-content>
+  <div class="grid p-fluid">
+    <div class="col-12 mt-2">
+      <div class="flex flex-row justify-content-end">
+        <a
+          *ngIf="redirectBackRoute"
+          class="p-button-sm p-button-plain"
+          [routerLink]="redirectBackRoute"
+          pButton
+          icon="pi-arrow-circle-left"
+          label="Atrás"
+        >
+        </a>
+        <p-button
+          type="submit"
+          styleClass="p-button-sm p-button-success"
+          icon="pi pi-send"
+          [disabled]="!form.valid || isProcessing"
+          [label]="submitLabel"
+          [loading]="isProcessing"
+        >
+        </p-button>
+      </div>
+    </div>
+  </div>
+</form>
