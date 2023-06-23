@@ -10,7 +10,6 @@ export class Client {
     public address: string,
     public observations: string,
     public is_active: boolean,
-    public user_id: string,
     public created_at: string,
     public updated_at: string
   ) { }

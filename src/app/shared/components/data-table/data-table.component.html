@@ -98,7 +98,7 @@
             <ng-container *ngSwitchCase="columnType.BOOLEAN">
               <p-checkbox
                 [readonly]="true"
-                [ngModel]="rowData[col.propertyRef] === 1"
+                [ngModel]="rowData[col.propertyRef]"
                 [binary]="true"
               ></p-checkbox>
             </ng-container>

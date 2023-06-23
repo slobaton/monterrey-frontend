@@ -46,7 +46,7 @@ export class UpsertClientFormComponent implements OnInit {
       cellphone: new FormControl<string>(existingClient?.cellphone ?? ''),
       observations: new FormControl<string>(existingClient?.observations ?? ''),
       is_active: new FormControl<boolean>({
-        value: (existingClient?.is_active && existingClient?.is_active === 1) ?? true,
+        value: existingClient?.is_active ?? true,
         disabled: !this.isExistingClient
       })
     });
