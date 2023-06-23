@@ -16,6 +16,12 @@ import { DataTableComponent } from './components/data-table/data-table.component
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { FormComponent } from './components/form/form.component';
 import { MessageService } from 'primeng/api';
+import { FormInputTextComponent } from './components/form-input-text/form-input-text.component';
+import { FormTextareaComponent } from './components/form-textarea/form-textarea.component';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { FormSwitchComponent } from './components/form-switch/form-switch.component';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { FormLabelComponent } from './components/form-label/form-label.component';
 
 
 
@@ -23,7 +29,11 @@ import { MessageService } from 'primeng/api';
   declarations: [
     DataTableComponent,
     ConfirmDialogComponent,
-    FormComponent
+    FormComponent,
+    FormInputTextComponent,
+    FormTextareaComponent,
+    FormSwitchComponent,
+    FormLabelComponent
   ],
   imports: [
     CommonModule,
@@ -38,11 +48,17 @@ import { MessageService } from 'primeng/api';
     CheckboxModule,
     ConfirmDialogModule,
     ToastModule,
+    InputTextareaModule,
+    InputSwitchModule
   ],
   exports: [
     DataTableComponent,
     ConfirmDialogComponent,
-    FormComponent
+    FormComponent,
+    FormInputTextComponent,
+    FormTextareaComponent,
+    FormSwitchComponent,
+    FormLabelComponent
   ]
 })
 export class SharedModule { }
