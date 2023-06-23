@@ -20,10 +20,11 @@ import { PhotoService } from './demo/service/photo.service';
 import { AuthInterceptor } from './@core/interceptors/auth-interceptor';
 import { SharedModule } from './shared/shared.module';
 import { ErrorInterceptor } from './@core/interceptors/error-interceptor';
+import { UpsertEffectFormComponent } from './modules/effect/components/upsert-effect-form/upsert-effect-form.component';
 
 @NgModule({
   declarations: [
-    AppComponent, NotfoundComponent
+    AppComponent, NotfoundComponent, UpsertEffectFormComponent
   ],
   imports: [
     AppRoutingModule,
