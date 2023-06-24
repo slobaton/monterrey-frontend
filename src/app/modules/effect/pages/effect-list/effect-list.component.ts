@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-// import { Effect } from 'src/app/@core/models/effect';
+import { Effect } from 'src/app/@core/models/effect';
 import {
   DataTableActionStatus,
   DataTableColumnType,
