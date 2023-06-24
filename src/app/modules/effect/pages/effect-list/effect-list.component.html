@@ -1,1 +1,17 @@
-<p>effect-list works!</p>
+<div class="grid">
+  <div class="col-12">
+    <div class="card mb-0">
+      <h5>Client List</h5>
+      <app-confirm-dialog
+        id="confirmDelete"
+        title="Eliminar Efecto"
+        message="¿Estas seguro de eliminar el efecto?"
+      ></app-confirm-dialog>
+      <app-data-table
+        #effectTable
+        [tableConfig]="tableConfig"
+        [sourceDataService]="effectService"
+      ></app-data-table>
+    </div>
+  </div>
+</div>
