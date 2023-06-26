@@ -43,7 +43,7 @@ export class EffectListComponent {
           isRequired: false
         },
         callback: () => {
-          this.ref = this.dialogService.open(UpsertEffectFormComponent, { header: 'Crear nuevo Cliente' });
+          this.ref = this.dialogService.open(UpsertEffectFormComponent, { header: 'Crear nuevo efecto' });
           this.ref.onClose.subscribe((result) => {
             if (result) {
               this.table.reset();
@@ -53,15 +53,15 @@ export class EffectListComponent {
       },
       {
         title: 'Editar',
-        tooltip: 'Editar Cliente',
+        tooltip: 'Editar efecto',
         icon: 'pencil',
         status: DataTableActionStatus.WARNING,
         selectionConfig: {
           maxSelectedRows: 1
         },
         callback: (selectedRows) => {
-          const client = selectedRows[0];
-          this.ref = this.dialogService.open(UpsertEffectFormComponent, { header: 'Crear nuevo Cliente', data: { client } });
+          const effect = selectedRows[0];
+          this.ref = this.dialogService.open(UpsertEffectFormComponent, { header: 'Crear nuevo efecto', data: { effect } });
           this.ref.onClose.subscribe((result) => {
             if (result) {
               this.table.reset();
@@ -78,11 +78,11 @@ export class EffectListComponent {
           maxSelectedRows: 1
         },
         callback: (selectedRows) => {
-          const clientId = selectedRows[0].id;
+          const effectId = selectedRows[0].id;
           this.confirmationService.confirm({
             key: 'confirmDelete',
             accept: () => {
-              this.effectService.deleteEffect(clientId)
+              this.effectService.deleteEffect(effectId)
                 .then(() => {
                   this.messageService.add({ key: 'confirmDelete', severity: 'success', summary: 'Eliminado!', detail: 'El efecto ha sido eliminado!.' });
                   this.table.reset();
