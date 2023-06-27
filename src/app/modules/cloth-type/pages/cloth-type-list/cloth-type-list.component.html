@@ -1,0 +1,17 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card mb-0">
+      <h5>Lista Tipos de Ropa</h5>
+      <app-confirm-dialog
+        id="confirmDelete"
+        title="Eliminar Tipo de Ropa"
+        message="¿Estas seguro de eliminar el tipo de ropa?"
+      ></app-confirm-dialog>
+      <app-data-table
+        #clothTypeTable
+        [tableConfig]="tableConfig"
+        [sourceDataService]="clothTypeService"
+      ></app-data-table>
+    </div>
+  </div>
+</div>

@@ -21,7 +21,8 @@ export class AppMenuComponent implements OnInit {
           { label: 'Users', icon: 'pi pi-fw pi-user', routerLink: ['/users'] },
           { label: 'Clients', icon: 'pi pi-fw pi-database', routerLink: ['/clients'] },
           { label: 'Tipos Lavado', icon: 'pi pi-fw pi-sync', routerLink: ['/wash-types'] },
-          { label: 'Effects', icon: 'pi pi-fw pi-filter-fill', routerLink: ['/effects'] }
+          { label: 'Effects', icon: 'pi pi-fw pi-filter-fill', routerLink: ['/effects'] },
+          { label: 'Tipos de Ropa', icon: 'pi pi-fw pi-shopping-bag', routerLink: ['/cloth-types'] },
         ]
       },
       {
