@@ -20,6 +20,7 @@ import { authGuard } from './@core/auth/auth.guard';
           { path: 'users', loadChildren: () => import('./modules/user/user.module').then(m => m.UserModule) },
           { path: 'clients', loadChildren: () => import('./modules/client/client.module').then(m => m.ClientModule) },
           { path: 'wash-types', loadChildren: () => import('./modules/wash-type/wash-type.module').then(m => m.WashTypeModule) },
+          { path: 'effects', loadChildren: () => import('./modules/effect/effect.module').then(m => m.EffectModule) },
           { path: '', redirectTo: 'inicio', pathMatch: 'full' }
         ]
       },

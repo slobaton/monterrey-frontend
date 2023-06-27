@@ -1,0 +1,43 @@
+<app-form
+  [form]="effectForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-6">
+      <app-form-label id="name" text="Nombre" [required]="true" />
+      <app-form-input-text
+        [form]="effectForm"
+        id="name"
+        controlName="name"
+        placeholder="Ingrese el nombre del efecto..."
+      />
+    </div>
+    <div class="col-6">
+      <app-form-label id="price" text="Precio" />
+      <app-form-input-text
+        [form]="effectForm"
+        id="price"
+        controlName="price"
+        placeholder="Ingrese el costo del efecto..."
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label id="description" text="Descripción" />
+      <app-form-textarea
+        [form]="effectForm"
+        id="description"
+        controlName="description"
+        placeholder="Ingrese una breve descripción sobre el efecto..."
+      ></app-form-textarea>
+    </div>
+    <div class="col-12 text-center">
+      <h6>¿Es un efecto activo?</h6>
+      <app-form-switch
+        [form]="effectForm"
+        id="is_active"
+        controlName="is_active"
+      ></app-form-switch>
+    </div>
+  </div>
+</app-form>
