@@ -11,6 +11,7 @@ import {
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
 import { UpsertEffectFormComponent } from '../../components/upsert-effect-form/upsert-effect-form.component';
 import { EffectService } from 'src/app/@core/services/rest/effect.service';
+import { Role } from 'src/app/@core/enums/role.enum';
 
 @Component({
   selector: 'app-effect-list',
@@ -20,6 +21,7 @@ import { EffectService } from 'src/app/@core/services/rest/effect.service';
 export class EffectListComponent {
   @ViewChild('effectTable') table!: DataTableComponent<Effect>;
   ref: DynamicDialogRef | undefined;
+  role = Role;
 
   public tableConfig: DataTableConfiguration = {
     columns: [
@@ -106,5 +108,5 @@ export class EffectListComponent {
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private dialogService: DialogService
-  ){}
+  ) { }
 }

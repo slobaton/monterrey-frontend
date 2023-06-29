@@ -8,6 +8,7 @@
         message="¿Estas seguro de eliminar el efecto?"
       ></app-confirm-dialog>
       <app-data-table
+        *appUserRole="[role.ADMIN]"
         #effectTable
         [tableConfig]="tableConfig"
         [sourceDataService]="effectService"
