@@ -7,6 +7,8 @@ import { IAuthService } from '../interfaces/auth-service';
 import { BaseService } from './base.service';
 import { LoginRequest } from '../../models/request/login-request';
 import { AuthUser } from '../../models/auth-user';
+import { AuthRole } from '../../models/auth-role';
+import { Role } from '../../enums/role.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +54,16 @@ export class AuthService extends BaseService implements IAuthService {
 
   getToken(): string {
     return this.authenticatedUser?.token.access_token || '';
+  }
+
+  getRoles(): Array<AuthRole> {
+    return this.authenticatedUser?.roles || [];
+  }
+
+  hasRole(role: Role): boolean {
+    const userRoles = this.getRoles();
+
+    return userRoles.some(r => r.name === role);
   }
 
   cleanSession(): void {
