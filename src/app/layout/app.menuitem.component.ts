@@ -10,7 +10,7 @@ import { LayoutService } from './service/app.layout.service';
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: '[app-menuitem]',
   template: `
-		<ng-container>
+		<ng-container *appUserRole="item.roles ?? []">
       <div *ngIf="root && item.visible !== false" class="layout-menuitem-root-text">{{item.label}}</div>
 			<a
         *ngIf="(!item.routerLink || item.items) && item.visible !== false"

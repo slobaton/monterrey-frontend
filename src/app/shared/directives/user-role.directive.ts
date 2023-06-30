@@ -12,7 +12,7 @@ export class UserRoleDirective implements OnInit {
   @Input()
   set appUserRole(roles: Array<Role>) {
     if (!roles || !roles.length) {
-      throw new Error('Roles value is empty or missed');
+      this.userRoles = [];
     }
 
     this.userRoles = roles;
@@ -27,7 +27,11 @@ export class UserRoleDirective implements OnInit {
   ngOnInit(): void {
     let hasAccess = false;
 
-    if (this.authService.authenticatedUser && this.userRoles) {
+    if (this.userRoles && this.userRoles.length == 0) {
+      hasAccess = true;
+    }
+
+    if (this.authService.authenticatedUser && this.userRoles && this.userRoles.length > 0) {
       hasAccess = this.userRoles.some(r => this.authService.hasRole(r));
     }
 
