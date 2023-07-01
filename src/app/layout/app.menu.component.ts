@@ -1,6 +1,7 @@
 import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { LayoutService } from './service/app.layout.service';
+import { Role } from '../@core/enums/role.enum';
 
 @Component({
   selector: 'app-menu',
@@ -18,9 +19,9 @@ export class AppMenuComponent implements OnInit {
         label: 'Home',
         items: [
           { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
-          { label: 'Users', icon: 'pi pi-fw pi-user', routerLink: ['/users'] },
-          { label: 'Clients', icon: 'pi pi-fw pi-database', routerLink: ['/clients'] },
-          { label: 'Tipos Lavado', icon: 'pi pi-fw pi-sync', routerLink: ['/wash-types'] },
+          { label: 'Users', icon: 'pi pi-fw pi-user', routerLink: ['/users'], roles: [Role.ADMIN] },
+          { label: 'Clients', icon: 'pi pi-fw pi-database', routerLink: ['/clients'], roles: [Role.ADMIN, Role.SECRETARY] },
+          { label: 'Tipos Lavado', icon: 'pi pi-fw pi-sync', routerLink: ['/wash-types'], roles: [Role.SECRETARY] },
           { label: 'Effects', icon: 'pi pi-fw pi-filter-fill', routerLink: ['/effects'] },
           { label: 'Tipos de Ropa', icon: 'pi pi-fw pi-shopping-bag', routerLink: ['/cloth-types'] },
         ]

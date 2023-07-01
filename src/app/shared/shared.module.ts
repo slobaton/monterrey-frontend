@@ -22,6 +22,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FormSwitchComponent } from './components/form-switch/form-switch.component';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormLabelComponent } from './components/form-label/form-label.component';
+import { UserRoleDirective } from './directives/user-role.directive';
 
 
 
@@ -33,7 +34,8 @@ import { FormLabelComponent } from './components/form-label/form-label.component
     FormInputTextComponent,
     FormTextareaComponent,
     FormSwitchComponent,
-    FormLabelComponent
+    FormLabelComponent,
+    UserRoleDirective
   ],
   imports: [
     CommonModule,
@@ -58,7 +60,8 @@ import { FormLabelComponent } from './components/form-label/form-label.component
     FormInputTextComponent,
     FormTextareaComponent,
     FormSwitchComponent,
-    FormLabelComponent
+    FormLabelComponent,
+    UserRoleDirective
   ]
 })
 export class SharedModule { }

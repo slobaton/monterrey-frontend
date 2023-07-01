@@ -10,11 +10,13 @@ import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './pages/login/login.component';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { DeniedComponent } from './pages/denied/denied.component';
 
 
 @NgModule({
   declarations: [
-    LoginComponent
+    LoginComponent,
+    DeniedComponent
   ],
   imports: [
     CommonModule,

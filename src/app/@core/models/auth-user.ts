@@ -1,3 +1,4 @@
+import { AuthRole } from "./auth-role";
 import { AuthToken } from "./auth-token";
 
 export class AuthUser {
@@ -11,6 +12,7 @@ export class AuthUser {
     public email_verified_at: string,
     public created_at: string,
     public updated_at: string,
-    public token: AuthToken
+    public token: AuthToken,
+    public roles: Array<AuthRole>
   ) { }
 }
