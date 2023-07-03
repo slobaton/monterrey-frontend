@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { UserListComponent } from './pages/user-list/user-list.component';
+import { ClothSizeListComponent } from './pages/cloth-size-list/cloth-size-list.component';
 
 const routes: Routes = [
-  { path: '', component: UserListComponent }
+  { path: '', component: ClothSizeListComponent }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class UserRoutingModule { }
+export class ClothSizeRoutingModule { }
