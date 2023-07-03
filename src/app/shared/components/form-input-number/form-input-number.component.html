@@ -1,0 +1,38 @@
+<ng-container [formGroup]="form">
+  <p-inputNumber
+    [id]="id"
+    [formControlName]="controlName"
+    [placeholder]="placeholder"
+    mode="decimal"
+    [ngClass]="
+      formControl?.errors && (formControl?.dirty || formControl?.touched)
+        ? 'ng-invalid ng-dirty'
+        : ''
+    "
+    [minFractionDigits]="isDecimal ? minDecimalDigits : 0"
+    [maxFractionDigits]="isDecimal ? maxDecimalDigits : 0"
+  />
+  <div
+    *ngIf="formControl?.errors && (formControl?.dirty || formControl?.touched)"
+    class="text-red-300"
+  >
+    <small *ngIf="formControl?.hasError('required')">
+      * El campo es requerido.
+    </small>
+    <small *ngIf="formControl?.hasError('min')">
+      * El campo debe ser como mínimo
+      {{ formControl?.getError("min").min }}.
+    </small>
+    <small *ngIf="formControl?.hasError('max')">
+      * El campo debe ser como máximo
+      {{ formControl?.getError("max").max }}.
+    </small>
+    <small *ngIf="formControl?.hasError('serverError')">
+      El campo contiene los siguientes errores:
+      <span *ngFor="let error of formControl?.errors?.['serverError']">
+        <br />
+        * {{ error }}
+      </span>
+    </small>
+  </div>
+</ng-container>
