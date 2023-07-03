@@ -19,7 +19,7 @@ export class UpsertClientFormComponent implements OnInit {
   clientForm!: FormGroup;
   formProcessEvent: EventEmitter<boolean> = new EventEmitter();
 
-  isExistingClient: boolean = false;
+  doesClientExists: boolean = false;
 
   constructor(
     private _clientService: ClientService,
@@ -33,24 +33,21 @@ export class UpsertClientFormComponent implements OnInit {
   }
 
   initializeForm(): void {
-    var existingClient = this.config.data?.client;
-
-    if (existingClient) {
-      this.isExistingClient = true;
-    }
+    const client = this.config.data?.client;
+    this.doesClientExists = client!!;
 
     this.clientForm = new FormGroup({
-      nit: new FormControl<string>(existingClient?.nit ?? ''),
-      name: new FormControl<string>(existingClient?.name ?? '', [Validators.required]),
-      paternal_surname: new FormControl<string>(existingClient?.paternal_surname ?? ''),
-      maternal_surname: new FormControl<string>(existingClient?.maternal_surname ?? ''),
-      address: new FormControl<string>(existingClient?.address ?? ''),
-      phone: new FormControl<string>(existingClient?.phone ?? ''),
-      cellphone: new FormControl<string>(existingClient?.cellphone ?? ''),
-      observations: new FormControl<string>(existingClient?.observations ?? ''),
+      nit: new FormControl<string>(client?.nit ?? ''),
+      name: new FormControl<string>(client?.name ?? '', [Validators.required]),
+      paternal_surname: new FormControl<string>(client?.paternal_surname ?? ''),
+      maternal_surname: new FormControl<string>(client?.maternal_surname ?? ''),
+      address: new FormControl<string>(client?.address ?? ''),
+      phone: new FormControl<string>(client?.phone ?? ''),
+      cellphone: new FormControl<string>(client?.cellphone ?? ''),
+      observations: new FormControl<string>(client?.observations ?? ''),
       is_active: new FormControl<boolean>({
-        value: existingClient?.is_active ?? true,
-        disabled: !this.isExistingClient
+        value: client?.is_active ?? true,
+        disabled: !this.doesClientExists
       })
     });
   }
