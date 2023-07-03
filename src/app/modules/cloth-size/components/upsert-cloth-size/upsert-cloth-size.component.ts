@@ -54,7 +54,7 @@ export class UpsertClothSizeComponent {
       clothSize.id = clothSizeId;
       this._clothSizeService.update(clothSizeId, clothSize)
         .then((clothSizeUpdated) => {
-          this.messageService.add({ severity: 'success', summary: 'Actualizado con éxito', detail: 'Tipo de ropa actualizado con éxito' });
+          this.messageService.add({ severity: 'success', summary: 'Actualizado con éxito', detail: 'Tamaño de ropa actualizado con éxito' });
           this.ref.close(clothSizeUpdated);
         })
         .catch(err => {
@@ -72,7 +72,7 @@ export class UpsertClothSizeComponent {
     } else {
       this._clothSizeService.create(clothSize)
         .then(() => {
-          this.messageService.add({ severity: 'success', summary: 'Creado con éxito', detail: 'Tipo de ropa creado con éxito' });
+          this.messageService.add({ severity: 'success', summary: 'Creado con éxito', detail: 'Tamaño de ropa creado con éxito' });
           this.ref.close(clothSize);
         })
         .catch(err => {
