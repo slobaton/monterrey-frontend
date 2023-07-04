@@ -1,0 +1,88 @@
+<app-form
+  [form]="clientForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-6">
+      <app-form-label id="nit" text="Nit" />
+      <app-form-input-text
+        [form]="clientForm"
+        id="nit"
+        controlName="nit"
+        placeholder="Ingrese el NIT del cliente..."
+      />
+    </div>
+    <div class="col-6">
+      <app-form-label id="name" text="Nombre" [required]="true" />
+      <app-form-input-text
+        [form]="clientForm"
+        id="name"
+        controlName="name"
+        placeholder="Ingrese el nombre del cliente..."
+      />
+    </div>
+    <div class="col-6">
+      <app-form-label id="paternal_surname" text="Apellido Paterno" />
+      <app-form-input-text
+        [form]="clientForm"
+        id="paternal_surname"
+        controlName="paternal_surname"
+        placeholder="Ingrese el apellido paterno del cliente..."
+      />
+    </div>
+    <div class="col-6">
+      <app-form-label id="maternal_surname" text="Apellido Materno" />
+      <app-form-input-text
+        [form]="clientForm"
+        id="maternal_surname"
+        controlName="maternal_surname"
+        placeholder="Ingrese el apellido materno del cliente..."
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label id="address" text="Dirección" />
+      <app-form-textarea
+        [form]="clientForm"
+        id="address"
+        controlName="address"
+        placeholder="Ingrese una direccion válida..."
+      ></app-form-textarea>
+    </div>
+    <div class="col-6">
+      <app-form-label id="phone" text="Telefono" />
+      <app-form-input-text
+        [form]="clientForm"
+        id="phone"
+        controlName="phone"
+        placeholder="Ingrese un número de telefono válido..."
+      />
+    </div>
+    <div class="col-6">
+      <app-form-label id="cellphone" text="Celular" />
+      <app-form-input-text
+        [form]="clientForm"
+        id="cellphone"
+        controlName="cellphone"
+        placeholder="Ingrese un número de celular válido..."
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label id="observations" text="Observaciones" />
+      <app-form-textarea
+        [form]="clientForm"
+        id="observations"
+        controlName="observations"
+        placeholder="Ingrese observaciones extra sobre el cliente..."
+      ></app-form-textarea>
+    </div>
+    <div class="col-12 text-center">
+      <h6>Es Cliente Activo</h6>
+      <app-form-switch
+        [form]="clientForm"
+        id="is_active"
+        controlName="is_active"
+      ></app-form-switch>
+    </div>
+  </div>
+</app-form>

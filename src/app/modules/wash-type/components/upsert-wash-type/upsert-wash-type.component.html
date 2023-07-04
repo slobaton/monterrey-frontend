@@ -1,0 +1,34 @@
+<app-form
+  [form]="washTypeForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-12">
+      <app-form-label id="name" text="Nombre" [required]="true" />
+      <app-form-input-text
+        [form]="washTypeForm"
+        id="name"
+        controlName="name"
+        placeholder="Ingrese el nombre del tipo de lavado..."
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label id="description" text="Descripción" />
+      <app-form-textarea
+        [form]="washTypeForm"
+        id="description"
+        controlName="description"
+        placeholder="Ingrese la descripción del tipo de lavado..."
+      ></app-form-textarea>
+    </div>
+    <div class="col-12 text-center">
+      <h6>Es Tipo Activo</h6>
+      <app-form-switch
+        [form]="washTypeForm"
+        id="is_active"
+        controlName="is_active"
+      ></app-form-switch>
+    </div>
+  </div>
+</app-form>
