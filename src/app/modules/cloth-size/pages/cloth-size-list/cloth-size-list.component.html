@@ -1,0 +1,17 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card mb-0">
+      <h5>Lista Tamaños de Ropa</h5>
+      <app-confirm-dialog
+        id="confirmDelete"
+        title="Eliminar Tamaño de Ropa"
+        message="¿Estas seguro de eliminar el tamaño de ropa?"
+      ></app-confirm-dialog>
+      <app-data-table
+        #clothSizeTable
+        [tableConfig]="tableConfig"
+        [sourceDataService]="clothSizeService"
+      ></app-data-table>
+    </div>
+  </div>
+</div>

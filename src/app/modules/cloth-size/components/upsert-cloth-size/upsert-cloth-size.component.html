@@ -1,0 +1,57 @@
+<app-form
+  [form]="clothSizeForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-12">
+      <app-form-label id="name" text="Nombre" [required]="true" />
+      <app-form-input-text
+        [form]="clothSizeForm"
+        id="name"
+        controlName="name"
+        placeholder="Ingrese el nombre del tipo de ropa..."
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label id="description" text="Descripción" />
+      <app-form-textarea
+        [form]="clothSizeForm"
+        id="description"
+        controlName="description"
+        placeholder="Ingrese la descripción del tipo de ropa..."
+      ></app-form-textarea>
+    </div>
+    <div class="col-6">
+      <app-form-label id="wash_price" text="Precio de Lavado" />
+      <app-form-input-number
+        [form]="clothSizeForm"
+        id="wash_price"
+        controlName="wash_price"
+        placeholder="Ingrese el precio de lavado..."
+        mode="decimal"
+      ></app-form-input-number>
+    </div>
+    <div class="col-6">
+      <app-form-label
+        id="wash_special_price"
+        text="Precio de Lavado Especial"
+      />
+      <app-form-input-number
+        [form]="clothSizeForm"
+        id="wash_special_price"
+        controlName="wash_special_price"
+        placeholder="Ingrese el precio de lavado especial..."
+        mode="decimal"
+      ></app-form-input-number>
+    </div>
+    <div class="col-12 text-center">
+      <h6>Es Tipo Activo</h6>
+      <app-form-switch
+        [form]="clothSizeForm"
+        id="is_active"
+        controlName="is_active"
+      ></app-form-switch>
+    </div>
+  </div>
+</app-form>

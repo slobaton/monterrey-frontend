@@ -23,6 +23,8 @@ import { FormSwitchComponent } from './components/form-switch/form-switch.compon
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormLabelComponent } from './components/form-label/form-label.component';
 import { UserRoleDirective } from './directives/user-role.directive';
+import { FormInputNumberComponent } from './components/form-input-number/form-input-number.component';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 
 
@@ -35,7 +37,8 @@ import { UserRoleDirective } from './directives/user-role.directive';
     FormTextareaComponent,
     FormSwitchComponent,
     FormLabelComponent,
-    UserRoleDirective
+    UserRoleDirective,
+    FormInputNumberComponent
   ],
   imports: [
     CommonModule,
@@ -51,7 +54,8 @@ import { UserRoleDirective } from './directives/user-role.directive';
     ConfirmDialogModule,
     ToastModule,
     InputTextareaModule,
-    InputSwitchModule
+    InputSwitchModule,
+    InputNumberModule
   ],
   exports: [
     DataTableComponent,
@@ -60,6 +64,7 @@ import { UserRoleDirective } from './directives/user-role.directive';
     FormInputTextComponent,
     FormTextareaComponent,
     FormSwitchComponent,
+    FormInputNumberComponent,
     FormLabelComponent,
     UserRoleDirective
   ]

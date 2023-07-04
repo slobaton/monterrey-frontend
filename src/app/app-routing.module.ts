@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { NotfoundComponent } from './demo/components/notfound/notfound.component';
 import { AppLayoutComponent } from "./layout/app.layout.component";
 import { authGuard } from './@core/auth/auth.guard';
+import { roleGuard } from './@core/auth/role.guard';
+import { Role } from './@core/enums/role.enum';
 
 @NgModule({
   imports: [
@@ -17,11 +19,12 @@ import { authGuard } from './@core/auth/auth.guard';
           { path: 'documentation', loadChildren: () => import('./demo/components/documentation/documentation.module').then(m => m.DocumentationModule) },
           { path: 'blocks', loadChildren: () => import('./demo/components/primeblocks/primeblocks.module').then(m => m.PrimeBlocksModule) },
           { path: 'pages', loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule) },
-          { path: 'users', loadChildren: () => import('./modules/user/user.module').then(m => m.UserModule) },
+          { path: 'users', canActivate: [roleGuard([Role.ADMIN])], loadChildren: () => import('./modules/user/user.module').then(m => m.UserModule) },
           { path: 'clients', loadChildren: () => import('./modules/client/client.module').then(m => m.ClientModule) },
           { path: 'wash-types', loadChildren: () => import('./modules/wash-type/wash-type.module').then(m => m.WashTypeModule) },
           { path: 'effects', loadChildren: () => import('./modules/effect/effect.module').then(m => m.EffectModule) },
           { path: 'cloth-types', loadChildren: () => import('./modules/cloth-type/cloth-type.module').then(m => m.ClothTypeModule) },
+          { path: 'cloth-sizes', loadChildren: () => import('./modules/cloth-size/cloth-size.module').then(m => m.ClothSizeModule) },
           { path: '', redirectTo: 'inicio', pathMatch: 'full' }
         ]
       },
