@@ -27,6 +27,8 @@ import { UserRoleDirective } from './directives/user-role.directive';
 import { FormInputNumberComponent } from './components/form-input-number/form-input-number.component';
 import { FormSelectComponent } from './components/form-select/form-select.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { FormDatetimePickerComponent } from './components/form-datetime-picker/form-datetime-picker.component';
+import { CalendarModule } from 'primeng/calendar';
 
 
 
@@ -41,7 +43,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     FormLabelComponent,
     UserRoleDirective,
     FormInputNumberComponent,
-    FormSelectComponent
+    FormSelectComponent,
+    FormDatetimePickerComponent
   ],
   imports: [
     CommonModule,
@@ -60,7 +63,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     InputSwitchModule,
     InputNumberModule,
     DropdownModule,
-    NgSelectModule
+    NgSelectModule,
+    CalendarModule
   ],
   exports: [
     DataTableComponent,
@@ -72,7 +76,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     FormInputNumberComponent,
     FormLabelComponent,
     UserRoleDirective,
-    FormSelectComponent
+    FormSelectComponent,
+    FormDatetimePickerComponent
   ]
 })
 export class SharedModule { }
