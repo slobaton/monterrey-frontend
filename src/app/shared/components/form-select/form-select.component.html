@@ -1,0 +1,18 @@
+<ng-container [formGroup]="form">
+  <p-dropdown
+    [id]="id"
+    [formControlName]="controlName"
+    [options]="options"
+    [optionLabel]="optionLabel"
+    [optionValue]="optionValue"
+    [placeholder]="placeholder"
+    [showClear]="true"
+    [filter]="filterEnabled"
+    filterPlaceholder="Buscar..."
+    [resetFilterOnHide]="true"
+    emptyFilterMessage="No se encontraron resultados."
+    emptyMessage="No existen opciones disponibles."
+    [virtualScroll]="true"
+    [virtualScrollItemSize]="30"
+  ></p-dropdown>
+</ng-container>
