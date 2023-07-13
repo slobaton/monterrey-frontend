@@ -10,6 +10,7 @@ export class FormComponent implements OnInit {
   @Input() form!: FormGroup;
   @Input() onProcessCompleted!: EventEmitter<boolean>;
   @Input() redirectBackRoute?: string;
+  @Input() customSubmit: boolean = false;
   @Input() submitLabel: string = 'Enviar';
   @Output() onSubmit: EventEmitter<any> = new EventEmitter();
 

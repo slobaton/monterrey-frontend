@@ -15,6 +15,8 @@ export class FormInputNumberComponent {
   @Input() maxDecimalDigits: number = 2
   @Input() minDecimalDigits: number = 2
 
+  @Input() readOnly: boolean = false;
+
   public get formControl() {
     return this.form.get(this.controlName);
   }
