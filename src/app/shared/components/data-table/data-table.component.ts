@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { LazyLoadEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
@@ -14,6 +14,8 @@ export class DataTableComponent<TEntity> implements OnInit {
 
   @Input() tableConfig!: DataTableConfiguration;
   @Input() sourceDataService!: IFetchPaginatedData<TEntity>;
+
+  @Input() rowDetails: TemplateRef<any> | null = null;
 
   @ViewChild('dataTableRef') dataTable!: Table;
 

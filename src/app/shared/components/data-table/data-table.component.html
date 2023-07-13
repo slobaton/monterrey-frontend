@@ -50,6 +50,8 @@
 
   <ng-template pTemplate="header" let-columns>
     <tr>
+      <th *ngIf="rowDetails" style="width: 5rem"></th>
+
       <ng-container *ngFor="let col of columns">
         <ng-container *ngIf="col.visible ?? true">
           <th
@@ -80,12 +82,24 @@
     let-rowData
     let-rowIndex="rowIndex"
     let-columns="columns"
+    let-expanded="expanded"
   >
     <tr
       [pSelectableRowDisabled]="!isSelectionEnabled()"
       [pSelectableRow]="rowData"
       [pSelectableRowIndex]="rowIndex"
     >
+      <td *ngIf="rowDetails">
+        <button
+          type="button"
+          pButton
+          pRipple
+          [pRowToggler]="rowData"
+          class="p-button-sm p-button-text p-button-rounded p-button-plain"
+          [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+        ></button>
+      </td>
+
       <ng-container *ngFor="let col of columns">
         <td
           *ngIf="col.visible ?? true"
@@ -127,6 +141,17 @@
           (click)="executeActionCallback(action, rowData)"
           [pTooltip]="action.tooltip ?? ''"
         ></button>
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template *ngIf="rowDetails" pTemplate="rowexpansion" let-rowItem>
+    <tr>
+      <td colspan="12">
+        <ng-container
+          [ngTemplateOutlet]="rowDetails"
+          [ngTemplateOutletContext]="{ $implicit: rowItem }"
+        ></ng-container>
       </td>
     </tr>
   </ng-template>

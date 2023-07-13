@@ -11,7 +11,17 @@
         #washOrderTable
         [tableConfig]="tableConfig"
         [sourceDataService]="washOrderService"
+        [rowDetails]="rowDetails"
       ></app-data-table>
+
+      <ng-template #rowDetails let-rowData>
+        <div class="grid mt-1">
+          <div class="col-12">
+            <h6>Observaciones:</h6>
+            <p>{{ rowData["observations"] }}</p>
+          </div>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>
