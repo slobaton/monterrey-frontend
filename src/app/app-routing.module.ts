@@ -25,6 +25,7 @@ import { Role } from './@core/enums/role.enum';
           { path: 'effects', loadChildren: () => import('./modules/effect/effect.module').then(m => m.EffectModule) },
           { path: 'cloth-types', loadChildren: () => import('./modules/cloth-type/cloth-type.module').then(m => m.ClothTypeModule) },
           { path: 'cloth-sizes', loadChildren: () => import('./modules/cloth-size/cloth-size.module').then(m => m.ClothSizeModule) },
+          { path: 'wash-orders', loadChildren: () => import('./modules/wash-order/wash-order.module').then(m => m.WashOrderModule) },
           { path: '', redirectTo: 'inicio', pathMatch: 'full' }
         ]
       },
