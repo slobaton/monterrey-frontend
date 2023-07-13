@@ -1,0 +1,123 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card mb-0">
+      <h5>Nueva Orden de Lavado</h5>
+      <hr />
+
+      <app-form
+        [form]="washOrderForm"
+        [onProcessCompleted]="formProcessEvent"
+        (onSubmit)="onSubmitForm($event)"
+        [customSubmit]="true"
+      >
+        <div class="form-container p-fluid p-formgrid grid">
+          <div class="col-12">
+            <h6>Informacion General</h6>
+          </div>
+
+          <div class="col-4">
+            <app-form-label id="client_id" text="Cliente" [required]="true" />
+            <app-form-select
+              [form]="washOrderForm"
+              id="client_id"
+              controlName="client_id"
+              placeholder="Seleccione un cliente..."
+              optionLabel="name"
+              optionValue="id"
+              [filterEnabled]="true"
+              [isLazy]="true"
+              [sourceDataService]="clientService"
+            >
+            </app-form-select>
+          </div>
+          <div class="col-4">
+            <app-form-label
+              id="wash_type_id"
+              text="Tipo de Lavado"
+              [required]="true"
+            />
+            <app-form-select
+              [form]="washOrderForm"
+              id="wash_type_id"
+              controlName="wash_type_id"
+              placeholder="Seleccione un tipo de Lavado..."
+              optionLabel="name"
+              optionValue="id"
+              [filterEnabled]="true"
+              [isLazy]="true"
+              [sourceDataService]="washTypeService"
+            >
+            </app-form-select>
+          </div>
+          <div class="col-4">
+            <app-form-label id="date" text="Fecha" [required]="true" />
+            <app-form-datetime-picker
+              [form]="washOrderForm"
+              id="date"
+              controlName="date"
+              placeholder="Seleccione una fecha válida..."
+              [showIcon]="true"
+            />
+          </div>
+
+          <div class="col-12">
+            <app-form-label id="observations" text="Observaciones" />
+            <app-form-textarea
+              [form]="washOrderForm"
+              id="observations"
+              controlName="observations"
+              placeholder="Ingrese las observaciones de la orden de lavado..."
+            ></app-form-textarea>
+          </div>
+
+          <div class="col-12">
+            <div class="flex align-items-center justify-content-end gap-2">
+              <p-button
+                styleClass="p-button-sm p-button-warning"
+                routerLink="/wash-orders"
+                icon="pi pi-arrow-circle-left"
+                label="Volver"
+              >
+              </p-button>
+              <p-button
+                type="submit"
+                styleClass="p-button-sm p-button-success"
+                icon="pi pi-save"
+                [disabled]="!washOrderForm.valid || isProcessing"
+                label="Guardar"
+                [loading]="isProcessing"
+              >
+              </p-button>
+            </div>
+          </div>
+
+          <div class="col-12 h-16rem">
+            <h6>Detalles de la Orden</h6>
+
+            <div class="flex"></div>
+          </div>
+
+          <div class="col-4 col-offset-4">
+            <app-form-label id="total_quantity" text="Cantidad Total" />
+            <app-form-input-number
+              [form]="washOrderForm"
+              id="total_quantity"
+              controlName="total_quantity"
+              [readOnly]="true"
+            />
+          </div>
+          <div class="col-4">
+            <app-form-label id="total_price" text="Precio Total" />
+            <app-form-input-number
+              [form]="washOrderForm"
+              id="total_price"
+              controlName="total_price"
+              mode="decimal"
+              [readOnly]="true"
+            />
+          </div>
+        </div>
+      </app-form>
+    </div>
+  </div>
+</div>
