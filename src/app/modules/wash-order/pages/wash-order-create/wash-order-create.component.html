@@ -15,7 +15,17 @@
             <h6>Informacion General</h6>
           </div>
 
-          <div class="col-4">
+          <div class="col-3">
+            <app-form-label id="client_id" text="COD" />
+            <input
+              pInputText
+              type="text"
+              [(ngModel)]="code"
+              [readOnly]="true"
+            />
+          </div>
+
+          <div class="col-3">
             <app-form-label id="client_id" text="Cliente" [required]="true" />
             <app-form-select
               [form]="washOrderForm"
@@ -30,7 +40,7 @@
             >
             </app-form-select>
           </div>
-          <div class="col-4">
+          <div class="col-3">
             <app-form-label
               id="wash_type_id"
               text="Tipo de Lavado"
@@ -49,7 +59,7 @@
             >
             </app-form-select>
           </div>
-          <div class="col-4">
+          <div class="col-3">
             <app-form-label id="date" text="Fecha" [required]="true" />
             <app-form-datetime-picker
               [form]="washOrderForm"
@@ -76,15 +86,23 @@
                 styleClass="p-button-sm p-button-warning"
                 routerLink="/wash-orders"
                 icon="pi pi-arrow-circle-left"
-                label="Volver"
+                [label]="!washOrderCreated ? 'Cancelar' : 'Volver'"
               >
               </p-button>
+              <p-button
+                *ngIf="washOrderCreated"
+                type="button"
+                styleClass="p-button-sm p-button-help"
+                icon="pi pi-plus"
+                label="Agregar Detalle"
+                (onClick)="addWashOrderDetail()"
+              ></p-button>
               <p-button
                 type="submit"
                 styleClass="p-button-sm p-button-success"
                 icon="pi pi-save"
                 [disabled]="!washOrderForm.valid || isProcessing"
-                label="Guardar"
+                [label]="!washOrderCreated ? 'Guardar' : 'Actualizar'"
                 [loading]="isProcessing"
               >
               </p-button>

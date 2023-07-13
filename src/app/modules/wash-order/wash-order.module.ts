@@ -6,6 +6,8 @@ import { WashOrderListComponent } from './pages/wash-order-list/wash-order-list.
 import { WashOrderCreateComponent } from './pages/wash-order-create/wash-order-create.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -15,9 +17,11 @@ import { ButtonModule } from 'primeng/button';
   ],
   imports: [
     CommonModule,
+    FormsModule,
     WashOrderRoutingModule,
     SharedModule,
-    ButtonModule
+    ButtonModule,
+    InputTextModule
   ]
 })
 export class WashOrderModule { }

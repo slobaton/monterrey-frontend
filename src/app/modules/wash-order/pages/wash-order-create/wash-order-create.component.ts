@@ -23,6 +23,9 @@ export class WashOrderCreateComponent implements OnInit {
 
   isProcessing: boolean = false;
 
+  code: string = '';
+  washOrderCreated: boolean = false;
+
   constructor(
     public clientService: ClientService,
     public washTypeService: WashTypeService,
@@ -60,6 +63,8 @@ export class WashOrderCreateComponent implements OnInit {
     this._washOrderService.create(washOrder)
       .then((createdWashOrder) => {
         console.log(createdWashOrder);
+        this.code = createdWashOrder.code.toString();
+        this.washOrderCreated = true;
         this.messageService.add({ severity: 'success', summary: `Orden COD: ${createdWashOrder.code}`, detail: 'Orden de Lavado creado con éxito', life: 3500 });
       })
       .catch(err => {
@@ -77,5 +82,10 @@ export class WashOrderCreateComponent implements OnInit {
         this.formProcessEvent.emit(false);
         this.isProcessing = false;
       });
+  }
+
+  addWashOrderDetail(): void {
+    alert('detail added');
+    //Show the modal, to add the detail
   }
 }
