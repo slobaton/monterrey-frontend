@@ -45,13 +45,20 @@ export class BaseService {
     return Promise.reject(error);
   }
 
-  protected getPaginationParams(request: PaginatedRequest) {
+  protected getPaginationParams(request: PaginatedRequest, filterCol: string = '', includes: Array<string> = []): HttpParams {
     const sortOrder = request.sortOrder === 'desc' ? '-' : '';
-    return new HttpParams()
-      .append(`filter[all]`, request.filter)
+    const filter = filterCol && filterCol.length ? filterCol : 'all';
+    let params = new HttpParams()
+      .append(`filter[${filter}]`, request.filter)
       .append('page[size]', request.pageSize)
       .append('page[number]', request.page)
       .append('sort', `${sortOrder}${request.sort}`);
+
+    if (includes && includes.length) {
+      params = params.append('include', includes.join(','));
+    }
+
+    return params;
   }
 
   private setHeaders() {

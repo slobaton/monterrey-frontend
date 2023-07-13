@@ -1,1 +1,17 @@
-<p>wash-order-list works!</p>
+<div class="grid">
+  <div class="col-12">
+    <div class="card mb-0">
+      <h5>Ordenes de Lavado</h5>
+      <app-confirm-dialog
+        id="confirmDelete"
+        title="Eliminar Orden de Lavado"
+        message="¿Estas seguro de eliminar el orden de lavado?"
+      ></app-confirm-dialog>
+      <app-data-table
+        #washOrderTable
+        [tableConfig]="tableConfig"
+        [sourceDataService]="washOrderService"
+      ></app-data-table>
+    </div>
+  </div>
+</div>

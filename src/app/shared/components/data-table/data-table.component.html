@@ -108,6 +108,9 @@
             <ng-container *ngSwitchCase="columnType.DATETIME">
               {{ rowData[col.propertyRef] | date : "dd/MM/YYYY HH:mm:ss" }}
             </ng-container>
+            <ng-container *ngSwitchCase="columnType.CUSTOM">
+              {{ getColumnCustomValue(col, rowData) }}
+            </ng-container>
           </container-element>
         </td>
       </ng-container>

@@ -21,8 +21,15 @@ export class WashOrderService extends BaseService implements IWashOrderService, 
     super(_http);
   }
 
-  fetchPaginatedResource(request: PaginatedRequest): Promise<PaginatedResponse<WashOrder>> {
-    throw new Error('Method not implemented.');
+  async fetchPaginatedResource(request: PaginatedRequest): Promise<PaginatedResponse<WashOrder>> {
+    try {
+      const includes = ['client', 'wash_type'];
+      const response = await firstValueFrom(this.get<PaginatedResponse<WashOrder>>('wash-orders', this.getPaginationParams(request, 'code', includes)));
+
+      return response;
+    } catch (error) {
+      return this.handleError(error);
+    }
   }
 
   async create(request: WashOrderCreateRequest): Promise<WashOrder> {
@@ -30,6 +37,14 @@ export class WashOrderService extends BaseService implements IWashOrderService, 
       const response = await firstValueFrom(this.post<BaseResponse<WashOrder>>('wash-orders', request));
 
       return response.data;
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  async deleteById(id: string): Promise<void> {
+    try {
+      await firstValueFrom(this.delete(`wash-orders/${id}`));
     } catch (error) {
       return this.handleError(error);
     }

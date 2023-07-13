@@ -1,3 +1,6 @@
+import { Client } from "./client";
+import { WashType } from "./wash-type";
+
 export class WashOrder {
   constructor(
     public id: string,
@@ -14,7 +17,9 @@ export class WashOrder {
     public user_id: string,
     public created_at: string,
     public updated_at: string,
-    public wash_order_details: Array<WashOrderDetail>
+    public wash_order_details: Array<WashOrderDetail>,
+    public client: Client,
+    public wash_type: WashType
   ) { }
 }
 

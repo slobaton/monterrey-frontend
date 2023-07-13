@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { LazyLoadEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { DataTableActionProps, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
+import { DataTableActionProps, DataTableColumnProps, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { IFetchPaginatedData } from 'src/app/@core/services/interfaces/fetch-paginated-data';
 
 @Component({
@@ -170,5 +170,14 @@ export class DataTableComponent<TEntity> implements OnInit {
     }
 
     return classStyles;
+  }
+
+  getColumnCustomValue(col: DataTableColumnProps, row: any) {
+    if (col.type === DataTableColumnType.CUSTOM && col.customValue) {
+      const value = col.customValue(row);
+      return value;
+    }
+
+    return '';
   }
 }

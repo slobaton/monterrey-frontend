@@ -3,4 +3,5 @@ import { WashOrder } from "../../models/wash-order";
 
 export interface IWashOrderService {
   create(request: WashOrderCreateRequest): Promise<WashOrder>
+  deleteById(id: string): Promise<void>;
 }

@@ -8,6 +8,7 @@ export type DataTableConfiguration = {
 export type DataTableColumnProps = {
   title: string;
   propertyRef: string;
+  customValue?: (row: any) => string,
   visible?: boolean;
   sortable?: boolean;
   type?: DataTableColumnType;
@@ -46,5 +47,6 @@ export enum DataTableColumnType {
   TEXT,
   BOOLEAN,
   DATE,
-  DATETIME
+  DATETIME,
+  CUSTOM
 }
