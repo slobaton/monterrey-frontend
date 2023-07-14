@@ -1,0 +1,28 @@
+<p-pickList
+  [source]="sourceOptions"
+  [target]="selectedOptions"
+  [sourceHeader]="sourceHeader"
+  [targetHeader]="targetHeader"
+  [dragdrop]="isDragDropEnabled"
+  [responsive]="true"
+  [filterBy]="filterEnabled ? filterBy : ''"
+  [sourceFilterPlaceholder]="filterPlaceholder"
+  [targetFilterPlaceholder]="filterPlaceholder"
+  [showSourceFilter]="filterEnabled"
+  [showTargetFilter]="filterEnabled"
+  [showSourceControls]="false"
+  [showTargetControls]="false"
+  (onMoveToTarget)="changeSelection($event)"
+  (onMoveToSource)="changeSelection($event)"
+  (onMoveAllToTarget)="changeSelection($event)"
+  (onMoveAllToSource)="changeSelection($event)"
+  [sourceStyle]="{ height: '20rem' }"
+  [targetStyle]="{ height: '20rem' }"
+>
+  <ng-template *ngIf="item" let-rowItem pTemplate="item">
+    <ng-container
+      [ngTemplateOutlet]="item"
+      [ngTemplateOutletContext]="{ $implicit: rowItem }"
+    ></ng-container>
+  </ng-template>
+</p-pickList>

@@ -15,6 +15,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { PickListModule } from 'primeng/picklist';
+import { CalendarModule } from 'primeng/calendar';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 import { DataTableComponent } from './components/data-table/data-table.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
@@ -26,9 +29,8 @@ import { FormLabelComponent } from './components/form-label/form-label.component
 import { UserRoleDirective } from './directives/user-role.directive';
 import { FormInputNumberComponent } from './components/form-input-number/form-input-number.component';
 import { FormSelectComponent } from './components/form-select/form-select.component';
-import { NgSelectModule } from '@ng-select/ng-select';
 import { FormDatetimePickerComponent } from './components/form-datetime-picker/form-datetime-picker.component';
-import { CalendarModule } from 'primeng/calendar';
+import { ListPickerComponent } from './components/list-picker/list-picker.component';
 
 
 
@@ -44,7 +46,8 @@ import { CalendarModule } from 'primeng/calendar';
     UserRoleDirective,
     FormInputNumberComponent,
     FormSelectComponent,
-    FormDatetimePickerComponent
+    FormDatetimePickerComponent,
+    ListPickerComponent
   ],
   imports: [
     CommonModule,
@@ -64,7 +67,8 @@ import { CalendarModule } from 'primeng/calendar';
     InputNumberModule,
     DropdownModule,
     NgSelectModule,
-    CalendarModule
+    CalendarModule,
+    PickListModule
   ],
   exports: [
     DataTableComponent,
@@ -77,7 +81,8 @@ import { CalendarModule } from 'primeng/calendar';
     FormLabelComponent,
     UserRoleDirective,
     FormSelectComponent,
-    FormDatetimePickerComponent
+    FormDatetimePickerComponent,
+    ListPickerComponent
   ]
 })
 export class SharedModule { }
