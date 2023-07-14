@@ -14,11 +14,6 @@ import { Role } from './@core/enums/role.enum';
         canActivate: [authGuard],
         children: [
           { path: 'inicio', loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
-          { path: 'uikit', loadChildren: () => import('./demo/components/uikit/uikit.module').then(m => m.UIkitModule) },
-          { path: 'utilities', loadChildren: () => import('./demo/components/utilities/utilities.module').then(m => m.UtilitiesModule) },
-          { path: 'documentation', loadChildren: () => import('./demo/components/documentation/documentation.module').then(m => m.DocumentationModule) },
-          { path: 'blocks', loadChildren: () => import('./demo/components/primeblocks/primeblocks.module').then(m => m.PrimeBlocksModule) },
-          { path: 'pages', loadChildren: () => import('./demo/components/pages/pages.module').then(m => m.PagesModule) },
           { path: 'users', canActivate: [roleGuard([Role.ADMIN])], loadChildren: () => import('./modules/user/user.module').then(m => m.UserModule) },
           { path: 'clients', loadChildren: () => import('./modules/client/client.module').then(m => m.ClientModule) },
           { path: 'wash-types', loadChildren: () => import('./modules/wash-type/wash-type.module').then(m => m.WashTypeModule) },
@@ -30,11 +25,9 @@ import { Role } from './@core/enums/role.enum';
         ]
       },
       { path: 'auth', loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule) },
-      { path: 'authold', loadChildren: () => import('./demo/components/auth/auth.module').then(m => m.AuthModule) },
-      { path: 'landing', loadChildren: () => import('./demo/components/landing/landing.module').then(m => m.LandingModule) },
       { path: 'notfound', component: NotfoundComponent },
       { path: '**', redirectTo: '/notfound' },
-    ], { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', onSameUrlNavigation: 'reload' })
+    ], { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', onSameUrlNavigation: 'reload', useHash: true })
   ],
   exports: [RouterModule]
 })
