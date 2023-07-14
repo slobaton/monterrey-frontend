@@ -5,7 +5,7 @@
   submitLabel="Agregar Detalle"
 >
   <div class="form-container p-fluid p-formgrid grid">
-    <div class="col-6">
+    <div class="col-4">
       <app-form-label
         id="cloth_type_id"
         text="Tipo de Ropa"
@@ -24,7 +24,7 @@
       >
       </app-form-select>
     </div>
-    <div class="col-6">
+    <div class="col-4">
       <app-form-label
         id="cloth_size_id"
         text="Tamaño de Ropa"
@@ -43,6 +43,16 @@
       >
       </app-form-select>
     </div>
+
+    <div class="col-4 text-center">
+      <h6>Es lavado Especial?</h6>
+      <app-form-switch
+        [form]="washOrderDetailForm"
+        id="is_special_wash"
+        controlName="is_special_wash"
+      ></app-form-switch>
+    </div>
+
     <div class="col-4">
       <app-form-label
         id="num_buttonholes"
@@ -74,6 +84,7 @@
         placeholder="Precio Lavado..."
       />
     </div>
+
     <div class="col-12">
       <app-form-label id="observations" text="Descripción" />
       <app-form-textarea
@@ -83,13 +94,22 @@
         placeholder="Ingrese las observaciones del detalle..."
       ></app-form-textarea>
     </div>
-    <div class="col-12 text-center">
-      <h6>Es lavado Especial?</h6>
-      <app-form-switch
-        [form]="washOrderDetailForm"
-        id="is_special_wash"
-        controlName="is_special_wash"
-      ></app-form-switch>
+
+    <div class="col-12">
+      <app-list-picker
+        [sourceDataService]="effectService"
+        [isLazy]="true"
+        filterBy="name"
+        [filterEnabled]="true"
+        filterPlaceholder="Buscar Efecto..."
+        sourceHeader="Efectos Disponibles"
+        targetHeader="Efectos Seleccionados"
+        (onChangeSelection)="onEffectSelection($event)"
+        [item]="itemTemplate"
+      ></app-list-picker>
+      <ng-template #itemTemplate let-item>
+        {{ item.name }} - {{ item.price }} .Bs
+      </ng-template>
     </div>
   </div>
 </app-form>

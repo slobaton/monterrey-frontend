@@ -72,21 +72,33 @@ export class WashOrderCreateComponent implements OnInit {
 
     this._washOrderService.create(washOrder)
       .then((createdWashOrder) => {
-        console.log(createdWashOrder);
         this.code = createdWashOrder.code.toString();
         this.washOrderId = createdWashOrder.id;
         this.washOrderCreated = true;
-        this._messageService.add({ severity: 'success', summary: `Orden COD: ${createdWashOrder.code}`, detail: 'Orden de Lavado creado con éxito', life: 3500 });
+        this._messageService.add({
+          severity: 'success',
+          summary: `Orden COD: ${createdWashOrder.code}`,
+          detail: 'Orden de Lavado creado con éxito',
+          life: 3500
+        });
       })
       .catch(err => {
         if (err instanceof HttpErrorResponse) {
           if (err.status === 422) {
             this._validationService.handleValidationErrors(this.washOrderForm, err.error.errors);
           } else {
-            this._messageService.add({ severity: 'error', summary: 'Error!', detail: 'La acción no se pudo realizar, intente nuevamente...' });
+            this._messageService.add({
+              severity: 'error',
+              summary: 'Error!',
+              detail: 'La acción no se pudo realizar, intente nuevamente...'
+            });
           }
         } else {
-          this._messageService.add({ severity: 'error', summary: 'Error!', detail: 'Error inesperado, intente nuevamente...' });
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Error!',
+            detail: 'Error inesperado, intente nuevamente...'
+          });
         }
       })
       .finally(() => {
@@ -96,9 +108,15 @@ export class WashOrderCreateComponent implements OnInit {
   }
 
   addWashOrderDetail(): void {
-    this.ref = this._dialogService.open(AddWashOrderDetailComponent, { header: 'Agregar Detalle de lavado', data: { washOrderId: this.washOrderId } });
+    const dialogProps = {
+      header: 'Agregar Detalle de lavado',
+      data: { washOrderId: this.washOrderId }
+    };
+
+    this.ref = this._dialogService.open(AddWashOrderDetailComponent, dialogProps);
+
     this.ref.onClose.subscribe((result) => {
-      if (result.detailAdded) {
+      if (result && result.detailAdded) {
         this.washOrderDetails.push(result.detail);
       }
     });

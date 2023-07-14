@@ -1,13 +1,17 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { WashOrderDetail } from 'src/app/@core/models/wash-order';
+import { Effect } from 'src/app/@core/models/effect';
+import { WashOrderDetailCreateRequest } from 'src/app/@core/models/request/wash-order-detail-create-request';
 
 import { ValidationService } from 'src/app/@core/services/common/validation.service';
 import { ClothSizeService } from 'src/app/@core/services/rest/cloth-size.service';
 import { ClothTypeService } from 'src/app/@core/services/rest/cloth-type.service';
+import { EffectService } from 'src/app/@core/services/rest/effect.service';
+import { WashOrderDetailService } from 'src/app/@core/services/rest/wash-order-detail.service';
 
 @Component({
   selector: 'app-add-wash-order-detail',
@@ -22,9 +26,11 @@ export class AddWashOrderDetailComponent implements OnInit {
   constructor(
     public clothTypeService: ClothTypeService,
     public clothSizeService: ClothSizeService,
+    public effectService: EffectService,
     private _messageService: MessageService,
     private _ref: DynamicDialogRef,
     private _config: DynamicDialogConfig,
+    private _washOrderDetailService: WashOrderDetailService,
     private _validationService: ValidationService) { }
 
   ngOnInit(): void {
@@ -45,20 +51,55 @@ export class AddWashOrderDetailComponent implements OnInit {
       cloth_type_id: new FormControl<number | null>(null, [Validators.required]),
       cloth_size_id: new FormControl<number | null>(null, [Validators.required]),
       is_special_wash: new FormControl<boolean>(false, [Validators.required]),
-      wash_price: new FormControl<number>(0, [Validators.required]),
-      quantity: new FormControl<number>(0, [Validators.required]),
-      num_buttonholes: new FormControl<number>(0, [Validators.required]),
-      observations: new FormControl<string>('', [])
+      wash_price: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
+      quantity: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
+      num_buttonholes: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
+      observations: new FormControl<string>('', []),
+      effects: new FormControl<Array<string>>([], [])
     });
   }
 
   onSubmitForm(formValue: any): void {
     this.formProcessEvent.emit(true);
 
-    const washOrderDetail: WashOrderDetail = formValue;
-    this._ref.close({ detailAdded: true, detail: washOrderDetail });
+    const washOrderDetail: WashOrderDetailCreateRequest = { ...formValue };
 
-    this.formProcessEvent.emit(false)
+    this._washOrderDetailService.create(washOrderDetail)
+      .then((washOrderDetailCreated) => {
+        this._messageService.add({
+          severity: 'success',
+          summary: `Detalle agregado.`,
+          detail: 'Orden de Lavado creado con éxito.',
+          life: 1500
+        });
+        this._ref.close({ detailAdded: true, detail: washOrderDetailCreated });
+      })
+      .catch(err => {
+        if (err instanceof HttpErrorResponse) {
+          if (err.status === 422) {
+            this._validationService.handleValidationErrors(this.washOrderDetailForm, err.error.errors);
+          } else {
+            this._messageService.add({
+              severity: 'error',
+              summary: 'Error!',
+              detail: 'La acción no se pudo realizar, intente nuevamente...'
+            });
+          }
+        } else {
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Error!',
+            detail: 'Error inesperado, intente nuevamente...'
+          });
+        }
+      })
+      .finally(() => {
+        this.formProcessEvent.emit(false);
+      });
   }
 
+  onEffectSelection(selectedEffects: Array<Effect>): void {
+    const selectedEffectIds = selectedEffects.map(effect => effect.id);
+    this.washOrderDetailForm.get('effects')?.setValue(selectedEffectIds);
+  }
 }
