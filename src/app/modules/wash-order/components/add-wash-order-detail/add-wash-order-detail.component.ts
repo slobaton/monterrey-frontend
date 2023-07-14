@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { WashOrderDetail } from 'src/app/@core/models/wash-order';
 
 import { ValidationService } from 'src/app/@core/services/common/validation.service';
 import { ClothSizeService } from 'src/app/@core/services/rest/cloth-size.service';
@@ -35,7 +36,7 @@ export class AddWashOrderDetailComponent implements OnInit {
 
     if (!washOrderId) {
       this._messageService.add({ severity: 'error', summary: 'Error!', detail: 'La orden de lavado, no ha sido creada correctamente.' });
-      this._ref.close(false);
+      this._ref.close({ detailAdded: false, detail: null });
       return;
     }
 
@@ -53,7 +54,10 @@ export class AddWashOrderDetailComponent implements OnInit {
 
   onSubmitForm(formValue: any): void {
     this.formProcessEvent.emit(true);
-    console.log(formValue);
+
+    const washOrderDetail: WashOrderDetail = formValue;
+    this._ref.close({ detailAdded: true, detail: washOrderDetail });
+
     this.formProcessEvent.emit(false)
   }
 

@@ -108,7 +108,16 @@
           <div class="col-12 h-22rem">
             <h6>Detalles de la Orden</h6>
 
-            <div class="flex"></div>
+            <p-card *ngFor="let washOrderDetail of washOrderDetails">
+              <p>
+                <strong>Precio Lavado:</strong>
+                {{ washOrderDetail.wash_price }} .Bs
+              </p>
+              <p>
+                <strong>Cantidad:</strong>
+                {{ washOrderDetail.quantity }} .Bs
+              </p>
+            </p-card>
           </div>
 
           <div class="col-4 col-offset-4">

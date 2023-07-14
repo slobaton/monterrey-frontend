@@ -12,6 +12,7 @@ import { ClientService } from 'src/app/@core/services/rest/client.service';
 import { WashOrderService } from 'src/app/@core/services/rest/wash-order.service';
 import { WashTypeService } from 'src/app/@core/services/rest/wash-type.service';
 import { AddWashOrderDetailComponent } from '../../components/add-wash-order-detail/add-wash-order-detail.component';
+import { WashOrderDetail } from 'src/app/@core/models/wash-order';
 
 @Component({
   selector: 'app-wash-order-create',
@@ -29,6 +30,8 @@ export class WashOrderCreateComponent implements OnInit {
 
   washOrderId: string = '';
   code: string = '';
+
+  washOrderDetails: Array<WashOrderDetail> = [];
 
   ref: DynamicDialogRef | undefined;
 
@@ -95,8 +98,8 @@ export class WashOrderCreateComponent implements OnInit {
   addWashOrderDetail(): void {
     this.ref = this._dialogService.open(AddWashOrderDetailComponent, { header: 'Agregar Detalle de lavado', data: { washOrderId: this.washOrderId } });
     this.ref.onClose.subscribe((result) => {
-      if (result) {
-        console.log(result);
+      if (result.detailAdded) {
+        this.washOrderDetails.push(result.detail);
       }
     });
   }

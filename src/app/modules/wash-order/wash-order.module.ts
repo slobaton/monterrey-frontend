@@ -9,6 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { AddWashOrderDetailComponent } from './components/add-wash-order-detail/add-wash-order-detail.component';
+import { CardModule } from 'primeng/card';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { AddWashOrderDetailComponent } from './components/add-wash-order-detail/
     WashOrderRoutingModule,
     SharedModule,
     ButtonModule,
-    InputTextModule
+    InputTextModule,
+    CardModule
   ]
 })
 export class WashOrderModule { }
