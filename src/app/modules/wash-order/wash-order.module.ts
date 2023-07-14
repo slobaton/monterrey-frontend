@@ -8,12 +8,14 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
+import { AddWashOrderDetailComponent } from './components/add-wash-order-detail/add-wash-order-detail.component';
 
 
 @NgModule({
   declarations: [
     WashOrderListComponent,
-    WashOrderCreateComponent
+    WashOrderCreateComponent,
+    AddWashOrderDetailComponent
   ],
   imports: [
     CommonModule,

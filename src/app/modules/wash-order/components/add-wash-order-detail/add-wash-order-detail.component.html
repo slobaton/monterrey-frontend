@@ -1,0 +1,95 @@
+<app-form
+  [form]="washOrderDetailForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+  submitLabel="Agregar Detalle"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-6">
+      <app-form-label
+        id="cloth_type_id"
+        text="Tipo de Ropa"
+        [required]="true"
+      />
+      <app-form-select
+        [form]="washOrderDetailForm"
+        id="cloth_type_id"
+        controlName="cloth_type_id"
+        placeholder="Seleccione un tipo de ropa..."
+        optionLabel="name"
+        optionValue="id"
+        [filterEnabled]="true"
+        [isLazy]="true"
+        [sourceDataService]="clothTypeService"
+      >
+      </app-form-select>
+    </div>
+    <div class="col-6">
+      <app-form-label
+        id="cloth_size_id"
+        text="Tamaño de Ropa"
+        [required]="true"
+      />
+      <app-form-select
+        [form]="washOrderDetailForm"
+        id="cloth_size_id"
+        controlName="cloth_size_id"
+        placeholder="Seleccione un tamaño de ropa..."
+        optionLabel="name"
+        optionValue="id"
+        [filterEnabled]="true"
+        [isLazy]="true"
+        [sourceDataService]="clothSizeService"
+      >
+      </app-form-select>
+    </div>
+    <div class="col-4">
+      <app-form-label
+        id="num_buttonholes"
+        text="Num. Ojales"
+        [required]="true"
+      />
+      <app-form-input-number
+        [form]="washOrderDetailForm"
+        id="num_buttonholes"
+        controlName="num_buttonholes"
+        placeholder="Num. Ojales..."
+      />
+    </div>
+    <div class="col-4">
+      <app-form-label id="quantity" text="Cantidad" [required]="true" />
+      <app-form-input-number
+        [form]="washOrderDetailForm"
+        id="quantity"
+        controlName="quantity"
+        placeholder="Cantidad..."
+      />
+    </div>
+    <div class="col-4">
+      <app-form-label id="wash_price" text="Precio Lavado" [required]="true" />
+      <app-form-input-number
+        [form]="washOrderDetailForm"
+        id="wash_price"
+        controlName="wash_price"
+        placeholder="Precio Lavado..."
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label id="observations" text="Descripción" />
+      <app-form-textarea
+        [form]="washOrderDetailForm"
+        id="observations"
+        controlName="observations"
+        placeholder="Ingrese las observaciones del detalle..."
+      ></app-form-textarea>
+    </div>
+    <div class="col-12 text-center">
+      <h6>Es lavado Especial?</h6>
+      <app-form-switch
+        [form]="washOrderDetailForm"
+        id="is_special_wash"
+        controlName="is_special_wash"
+      ></app-form-switch>
+    </div>
+  </div>
+</app-form>
