@@ -45,4 +45,8 @@ export class FormSelectComponent<TEntity> implements OnInit {
 
     this.options = response?.data ?? [];
   }
+
+  public get formControl() {
+    return this.form.get(this.controlName);
+  }
 }

@@ -16,4 +16,8 @@ export class FormDatetimePickerComponent {
 
   @Input() showIcon: boolean = false;
   @Input() timeEnabled: boolean = false;
+
+  public get formControl() {
+    return this.form.get(this.controlName);
+  }
 }
