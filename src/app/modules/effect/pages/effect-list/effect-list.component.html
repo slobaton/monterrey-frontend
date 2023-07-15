@@ -11,7 +11,16 @@
         #effectTable
         [tableConfig]="tableConfig"
         [sourceDataService]="effectService"
+        [rowDetails]="rowDetails"
       ></app-data-table>
+      <ng-template #rowDetails let-rowData>
+        <div class="grid mt-1">
+          <div class="col-12">
+            <h6>Descripción:</h6>
+            <p>{{ rowData["description"] }}</p>
+          </div>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>
