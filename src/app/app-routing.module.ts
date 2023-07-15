@@ -15,12 +15,12 @@ import { Role } from './@core/enums/role.enum';
         children: [
           { path: 'inicio', loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
           { path: 'users', canActivate: [roleGuard([Role.ADMIN])], loadChildren: () => import('./modules/user/user.module').then(m => m.UserModule) },
-          { path: 'clients', loadChildren: () => import('./modules/client/client.module').then(m => m.ClientModule) },
-          { path: 'wash-types', loadChildren: () => import('./modules/wash-type/wash-type.module').then(m => m.WashTypeModule) },
-          { path: 'effects', loadChildren: () => import('./modules/effect/effect.module').then(m => m.EffectModule) },
-          { path: 'cloth-types', loadChildren: () => import('./modules/cloth-type/cloth-type.module').then(m => m.ClothTypeModule) },
-          { path: 'cloth-sizes', loadChildren: () => import('./modules/cloth-size/cloth-size.module').then(m => m.ClothSizeModule) },
-          { path: 'wash-orders', loadChildren: () => import('./modules/wash-order/wash-order.module').then(m => m.WashOrderModule) },
+          { path: 'clients', canActivate: [roleGuard([Role.ADMIN, Role.SECRETARY])], loadChildren: () => import('./modules/client/client.module').then(m => m.ClientModule) },
+          { path: 'wash-types', canActivate: [roleGuard([Role.ADMIN])], loadChildren: () => import('./modules/wash-type/wash-type.module').then(m => m.WashTypeModule) },
+          { path: 'effects', canActivate: [roleGuard([Role.ADMIN])], loadChildren: () => import('./modules/effect/effect.module').then(m => m.EffectModule) },
+          { path: 'cloth-types', canActivate: [roleGuard([Role.ADMIN])], loadChildren: () => import('./modules/cloth-type/cloth-type.module').then(m => m.ClothTypeModule) },
+          { path: 'cloth-sizes', canActivate: [roleGuard([Role.ADMIN])], loadChildren: () => import('./modules/cloth-size/cloth-size.module').then(m => m.ClothSizeModule) },
+          { path: 'wash-orders', canActivate: [roleGuard([Role.ADMIN, Role.SECRETARY])], loadChildren: () => import('./modules/wash-order/wash-order.module').then(m => m.WashOrderModule) },
           { path: '', redirectTo: 'inicio', pathMatch: 'full' }
         ]
       },
