@@ -1,7 +1,7 @@
 <div class="grid">
   <div class="col-12">
     <div class="card mb-0">
-      <h5>Nueva Orden de Lavado</h5>
+      <h6>Nueva Orden de Lavado</h6>
       <hr />
 
       <app-form
@@ -76,7 +76,7 @@
             ></app-form-textarea>
           </div>
 
-          <div class="col-12">
+          <div class="col-12 my-0 py-0">
             <div class="flex align-items-center justify-content-end gap-2">
               <p-button
                 styleClass="p-button-sm p-button-secondary"
@@ -105,22 +105,98 @@
             </div>
           </div>
 
-          <div class="col-12 h-22rem">
-            <h6>Detalles de la Orden</h6>
-
-            <p-card *ngFor="let washOrderDetail of washOrderDetails">
-              <p>
-                <strong>Precio Lavado:</strong>
-                {{ washOrderDetail.wash_price }} .Bs
-              </p>
-              <p>
-                <strong>Cantidad:</strong>
-                {{ washOrderDetail.quantity }} .Bs
-              </p>
-            </p-card>
+          <div class="col-12 py-0 my-0">
+            <h6>Detalles de orden de lavado</h6>
           </div>
 
-          <div class="col-4 col-offset-4">
+          <div class="col-12 h-22rem py-0 my-0">
+            <p-scrollPanel [style]="{ width: '100%', height: '22rem' }">
+              <p-table
+                [value]="washOrderDetails"
+                [tableStyle]="{ 'max-height': '22rem' }"
+                styleClass="p-datatable-sm"
+                dataKey="id"
+              >
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="width: 5rem"></th>
+                    <th>Tipo</th>
+                    <th>Tamaño</th>
+                    <th>Lavado Esp.</th>
+                    <th>Num. Ojales</th>
+                    <th>Cantidad</th>
+                    <th>Precio ($)</th>
+                    <th>Subtotal ($)</th>
+                    <th>Acciones</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item let-expanded="expanded">
+                  <tr>
+                    <td>
+                      <button
+                        type="button"
+                        pButton
+                        pRipple
+                        [pRowToggler]="item"
+                        class="p-button-sm p-button-text p-button-rounded p-button-plain"
+                        [icon]="
+                          expanded
+                            ? 'pi pi-chevron-down'
+                            : 'pi pi-chevron-right'
+                        "
+                      ></button>
+                    </td>
+                    <td>{{ item.cloth_type.name }}</td>
+                    <td>{{ item.cloth_size.name }}</td>
+                    <td>
+                      <p-tag
+                        *ngIf="item.is_special_wash; else withoutSpecialWash"
+                        value="Si"
+                        severity="success"
+                      ></p-tag>
+                      <ng-template #withoutSpecialWash>
+                        <p-tag value="No" severity="danger"></p-tag>
+                      </ng-template>
+                    </td>
+                    <td>{{ item.num_buttonholes }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.wash_price }}</td>
+                    <td>{{ item.wash_price * item.quantity }}</td>
+                    <td>
+                      <p-button
+                        icon="pi pi-times"
+                        styleClass="p-button-sm p-button-rounded p-button-danger p-button-text"
+                        (onClick)="deleteWashOrderDetail(item.id)"
+                      ></p-button>
+                    </td>
+                  </tr>
+                </ng-template>
+
+                <ng-template pTemplate="rowexpansion" let-rowItem>
+                  <tr>
+                    <td colspan="12">
+                      <div class="grid mt-1">
+                        <div class="col-6">
+                          <h6>Observaciones:</h6>
+                          <p>{{ rowItem["observations"] }}</p>
+                        </div>
+                        <div class="col-6">
+                          <h6>Efectos seleccionados:</h6>
+                          <ul>
+                            <li *ngFor="let effect of rowItem['effects']">
+                              <span>{{ effect.name }}</span>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </p-scrollPanel>
+          </div>
+
+          <div class="col-4 col-offset-4 py-0 my-0">
             <app-form-label id="total_quantity" text="Cantidad Total" />
             <app-form-input-number
               [form]="washOrderForm"
@@ -129,7 +205,7 @@
               [readOnly]="true"
             />
           </div>
-          <div class="col-4">
+          <div class="col-4 py-0 my-0">
             <app-form-label id="total_price" text="Precio Total" />
             <app-form-input-number
               [form]="washOrderForm"

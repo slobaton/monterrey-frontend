@@ -9,7 +9,9 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { AddWashOrderDetailComponent } from './components/add-wash-order-detail/add-wash-order-detail.component';
-import { CardModule } from 'primeng/card';
+import { TableModule } from 'primeng/table';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { TagModule } from 'primeng/tag';
 
 
 @NgModule({
@@ -25,7 +27,9 @@ import { CardModule } from 'primeng/card';
     SharedModule,
     ButtonModule,
     InputTextModule,
-    CardModule
+    ScrollPanelModule,
+    TableModule,
+    TagModule
   ]
 })
 export class WashOrderModule { }

@@ -13,6 +13,8 @@ import { WashOrderService } from 'src/app/@core/services/rest/wash-order.service
 import { WashTypeService } from 'src/app/@core/services/rest/wash-type.service';
 import { AddWashOrderDetailComponent } from '../../components/add-wash-order-detail/add-wash-order-detail.component';
 import { WashOrderDetail } from 'src/app/@core/models/wash-order';
+import { WashOrderDetailService } from 'src/app/@core/services/rest/wash-order-detail.service';
+import { PaginatedRequest } from 'src/app/@core/models/request/paginated-request';
 
 @Component({
   selector: 'app-wash-order-create',
@@ -39,6 +41,7 @@ export class WashOrderCreateComponent implements OnInit {
     public clientService: ClientService,
     public washTypeService: WashTypeService,
     private _washOrderService: WashOrderService,
+    private _washOrderDetailService: WashOrderDetailService,
     private _messageService: MessageService,
     private _validationService: ValidationService,
     private _dialogService: DialogService) { }
@@ -118,7 +121,29 @@ export class WashOrderCreateComponent implements OnInit {
     this.ref.onClose.subscribe((result) => {
       if (result && result.detailAdded) {
         this.washOrderDetails.push(result.detail);
+
+        let totalPrice = 0;
+        let totalQuantity = 0;
+        this.washOrderDetails.forEach(x => {
+          totalPrice += x.wash_price * x.quantity;
+          totalQuantity += x.quantity;
+        })
+        this.washOrderForm.get('total_price')?.setValue(totalPrice);
+        this.washOrderForm.get('total_quantity')?.setValue(totalQuantity);
       }
     });
+  }
+
+  deleteWashOrderDetail(washOrderDetailId: string): void {
+    // this._washOrderDetailService.deleteById(washOrderDetailId)
+    //   .then(() => {
+    //     this._messageService.add({
+    //       severity: 'success',
+    //       summary: 'Eliminado!',
+    //       detail: 'Detalle de orden de lavado eliminado con exito...'
+    //     });
+
+    //   })
+    this.washOrderDetails = this.washOrderDetails.filter((x) => x.id !== washOrderDetailId);
   }
 }

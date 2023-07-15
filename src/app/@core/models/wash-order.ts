@@ -1,4 +1,6 @@
 import { Client } from "./client";
+import { ClothSize } from "./cloth-size";
+import { ClothType } from "./cloth-type";
 import { Effect } from "./effect";
 import { WashType } from "./wash-type";
 
@@ -36,6 +38,8 @@ export class WashOrderDetail {
     public wash_price: number,
     public quantity: number,
     public effects: Array<Effect>,
+    public cloth_type: ClothType,
+    public cloth_size: ClothSize,
     public unit_price?: number,
     public additional_price?: number,
     public additional_price_desc?: number,
