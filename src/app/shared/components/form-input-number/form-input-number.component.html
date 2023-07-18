@@ -11,6 +11,7 @@
     "
     [minFractionDigits]="isDecimal ? minDecimalDigits : 0"
     [maxFractionDigits]="isDecimal ? maxDecimalDigits : 0"
+    [readonly]="readOnly"
   />
   <div
     *ngIf="formControl?.errors && (formControl?.dirty || formControl?.touched)"

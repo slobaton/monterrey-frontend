@@ -1,6 +1,6 @@
 <form [formGroup]="form" (ngSubmit)="onSubmitForm()" autocomplete="off">
   <ng-content></ng-content>
-  <div class="grid p-fluid">
+  <div *ngIf="redirectBackRoute || !customSubmit" class="grid p-fluid">
     <div class="col-12 mt-2">
       <div class="flex flex-row justify-content-end">
         <a
@@ -13,6 +13,7 @@
         >
         </a>
         <p-button
+          *ngIf="!customSubmit"
           type="submit"
           styleClass="p-button-sm p-button-success"
           icon="pi pi-send"

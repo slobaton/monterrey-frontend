@@ -11,20 +11,26 @@ import { TooltipModule } from 'primeng/tooltip';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { PickListModule } from 'primeng/picklist';
+import { CalendarModule } from 'primeng/calendar';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 import { DataTableComponent } from './components/data-table/data-table.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { FormComponent } from './components/form/form.component';
-import { MessageService } from 'primeng/api';
 import { FormInputTextComponent } from './components/form-input-text/form-input-text.component';
 import { FormTextareaComponent } from './components/form-textarea/form-textarea.component';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FormSwitchComponent } from './components/form-switch/form-switch.component';
-import { InputSwitchModule } from 'primeng/inputswitch';
 import { FormLabelComponent } from './components/form-label/form-label.component';
 import { UserRoleDirective } from './directives/user-role.directive';
 import { FormInputNumberComponent } from './components/form-input-number/form-input-number.component';
-import { InputNumberModule } from 'primeng/inputnumber';
+import { FormSelectComponent } from './components/form-select/form-select.component';
+import { FormDatetimePickerComponent } from './components/form-datetime-picker/form-datetime-picker.component';
+import { ListPickerComponent } from './components/list-picker/list-picker.component';
 
 
 
@@ -38,7 +44,10 @@ import { InputNumberModule } from 'primeng/inputnumber';
     FormSwitchComponent,
     FormLabelComponent,
     UserRoleDirective,
-    FormInputNumberComponent
+    FormInputNumberComponent,
+    FormSelectComponent,
+    FormDatetimePickerComponent,
+    ListPickerComponent
   ],
   imports: [
     CommonModule,
@@ -55,7 +64,11 @@ import { InputNumberModule } from 'primeng/inputnumber';
     ToastModule,
     InputTextareaModule,
     InputSwitchModule,
-    InputNumberModule
+    InputNumberModule,
+    DropdownModule,
+    NgSelectModule,
+    CalendarModule,
+    PickListModule
   ],
   exports: [
     DataTableComponent,
@@ -66,7 +79,10 @@ import { InputNumberModule } from 'primeng/inputnumber';
     FormSwitchComponent,
     FormInputNumberComponent,
     FormLabelComponent,
-    UserRoleDirective
+    UserRoleDirective,
+    FormSelectComponent,
+    FormDatetimePickerComponent,
+    ListPickerComponent
   ]
 })
 export class SharedModule { }

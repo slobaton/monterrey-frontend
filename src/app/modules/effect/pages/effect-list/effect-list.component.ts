@@ -27,7 +27,6 @@ export class EffectListComponent {
     columns: [
       { title: 'Id', propertyRef: 'id', sortable: false, visible: false },
       { title: 'Nombre', propertyRef: 'name', sortable: true },
-      { title: 'Descripción', propertyRef: 'description', sortable: false },
       { title: 'Precio', propertyRef: 'price', sortable: true },
       { title: 'Activo', propertyRef: 'is_active', type: DataTableColumnType.BOOLEAN },
       { title: 'Creado', propertyRef: 'created_at', sortable: true, type: DataTableColumnType.DATETIME },

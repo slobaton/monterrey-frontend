@@ -10,4 +10,8 @@ export class FormSwitchComponent {
   @Input() form!: FormGroup;
   @Input() id: string = '';
   @Input() controlName: string = '';
+
+  public get formControl() {
+    return this.form.get(this.controlName);
+  }
 }

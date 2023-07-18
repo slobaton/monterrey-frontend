@@ -1,18 +1,26 @@
 <div class="grid">
   <div class="col-12">
     <div class="card mb-0">
-      <h5>Lista de Efectos</h5>
+      <h5>Efectos</h5>
       <app-confirm-dialog
         id="confirmDelete"
         title="Eliminar Efecto"
         message="¿Estas seguro de eliminar el efecto?"
       ></app-confirm-dialog>
       <app-data-table
-        *appUserRole="[role.ADMIN]"
         #effectTable
         [tableConfig]="tableConfig"
         [sourceDataService]="effectService"
+        [rowDetails]="rowDetails"
       ></app-data-table>
+      <ng-template #rowDetails let-rowData>
+        <div class="grid mt-1">
+          <div class="col-12">
+            <h6>Descripción:</h6>
+            <p>{{ rowData["description"] }}</p>
+          </div>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>
