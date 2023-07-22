@@ -14,6 +14,16 @@
       />
     </div>
     <div class="col-12">
+      <app-form-label id="price" text="Precio (Defecto)" [required]="true" />
+      <app-form-input-number
+        [form]="washTypeForm"
+        id="price"
+        controlName="price"
+        placeholder="Ingrese el precio por defecto del tipo de lavado..."
+        mode="decimal"
+      />
+    </div>
+    <div class="col-12">
       <app-form-label id="description" text="Descripción" />
       <app-form-textarea
         [form]="washTypeForm"

@@ -38,6 +38,7 @@ export class UpsertWashTypeComponent {
 
     this.washTypeForm = new FormGroup({
       name: new FormControl<string>(existingWashType?.name ?? '', [Validators.required, Validators.maxLength(150)]),
+      price: new FormControl<number>(existingWashType?.price ?? 0, [Validators.required, Validators.min(0), Validators.max(99999999.99)]),
       description: new FormControl<string>(existingWashType?.description ?? ''),
       is_active: new FormControl<boolean>({
         value: existingWashType?.is_active ?? true,
