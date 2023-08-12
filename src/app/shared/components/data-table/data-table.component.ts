@@ -14,6 +14,8 @@ export class DataTableComponent<TEntity> implements OnInit {
 
   @Input() tableConfig!: DataTableConfiguration;
   @Input() sourceDataService!: IFetchPaginatedData<TEntity>;
+  @Input() extraParams?: any;
+  @Input() searchEnabled: boolean = true;
 
   @Input() rowDetails: TemplateRef<any> | null = null;
 
@@ -61,7 +63,7 @@ export class DataTableComponent<TEntity> implements OnInit {
     const sort = event.sortField ?? '';
     const sortOrder = event.sortOrder?.toString() === '1' ? 'asc' : 'desc';
 
-    this.sourceDataService.fetchPaginatedResource({ filter: searchFilter, page, pageSize, sort, sortOrder })
+    this.sourceDataService.fetchPaginatedResource({ filter: searchFilter, page, pageSize, sort, sortOrder, extraParams: this.extraParams })
       .then((res) => {
         this.data = res.data;
         this.totalRecords = res.meta.total;
