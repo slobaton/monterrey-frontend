@@ -18,12 +18,20 @@ export class WashTypePriceService extends BaseService implements IWashTypePriceS
     super(_http);
   }
 
-  assignWashTypePrice(request: WashTypePriceUpsertRequest): Promise<void> {
-    throw new Error('Method not implemented.');
+  async assignWashTypePrice(clientId: string, washTypeId: number, request: WashTypePriceUpsertRequest): Promise<void> {
+    try {
+      await firstValueFrom(this.post(`clients/${clientId}/wash-types/${washTypeId}/prices`, request));
+    } catch (error) {
+      return this.handleError(error);
+    }
   }
 
-  updateWashTypePrice(id: number, request: WashTypePriceUpsertRequest): Promise<void> {
-    throw new Error('Method not implemented.');
+  async updateWashTypePrice(clientId: string, washTypeId: number, id: number, request: WashTypePriceUpsertRequest): Promise<void> {
+    try {
+      await firstValueFrom(this.patch(`clients/${clientId}/wash-types/${washTypeId}/prices/${id}`, request));
+    } catch (error) {
+      return this.handleError(error);
+    }
   }
 
   async deleteWashTypePrice(clientId: string, washTypeId: number, id: number): Promise<void> {

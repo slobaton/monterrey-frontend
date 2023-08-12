@@ -34,6 +34,13 @@ export class BaseService {
     });
   }
 
+  protected patch<TResponse>(uri: string, params: any = null): Observable<TResponse> {
+    this.setHeaders();
+    return this._http.patch<TResponse>(`${this.baseUrl}/${uri}`, params, {
+      headers: this.headers,
+    });
+  }
+
   protected delete<TResponse>(uri: string): Observable<TResponse> {
     this.setHeaders();
     return this._http.delete<TResponse>(`${this.baseUrl}/${uri}`, {

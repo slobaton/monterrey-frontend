@@ -10,6 +10,8 @@ import {
 } from 'src/app/@core/types/data-table-definition';
 import { WashTypePriceService } from 'src/app/@core/services/rest/wash-type-price.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { UpsertWashTypePriceComponent } from '../../components/upsert-wash-type-price/upsert-wash-type-price.component';
 
 @Component({
   selector: 'app-client-wash-type-price-list',
@@ -21,6 +23,8 @@ export class ClientWashTypePriceListComponent implements OnInit {
   @ViewChild('washPricesTable') table!: DataTableComponent<WashTypePrice>;
 
   public clientId: string = '';
+
+  ref: DynamicDialogRef | undefined;
 
   public tableConfig: DataTableConfiguration = {
     columns: [
@@ -46,7 +50,12 @@ export class ClientWashTypePriceListComponent implements OnInit {
           isRequired: false
         },
         callback: () => {
-          console.log('new wash type price');
+          this.ref = this._dialogService.open(UpsertWashTypePriceComponent, { header: 'Asignar Precio', data: { clientId: this.clientId } });
+          this.ref.onClose.subscribe((result) => {
+            if (result) {
+              this.table.reset();
+            }
+          });
         }
       },
       {
@@ -58,7 +67,13 @@ export class ClientWashTypePriceListComponent implements OnInit {
           maxSelectedRows: 1
         },
         callback: (selectedRows) => {
-          console.log('update wash type price');
+          const washTypePrice = selectedRows[0];
+          this.ref = this._dialogService.open(UpsertWashTypePriceComponent, { header: 'Asignar Precio', data: { washTypePrice, clientId: this.clientId } });
+          this.ref.onClose.subscribe((result) => {
+            if (result) {
+              this.table.reset();
+            }
+          });
         }
       },
       {
@@ -102,6 +117,7 @@ export class ClientWashTypePriceListComponent implements OnInit {
   constructor(
     private _route: ActivatedRoute,
     private _confirmationService: ConfirmationService,
+    private _dialogService: DialogService,
     private _messageService: MessageService,
     public washTypePriceService: WashTypePriceService
   ) { }

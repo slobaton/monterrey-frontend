@@ -12,6 +12,7 @@ import { UpsertClientFormComponent } from './components/upsert-client-form/upser
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ClientWashTypePriceListComponent } from './pages/client-wash-type-price-list/client-wash-type-price-list.component';
+import { UpsertWashTypePriceComponent } from './components/upsert-wash-type-price/upsert-wash-type-price.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { ClientWashTypePriceListComponent } from './pages/client-wash-type-price
   declarations: [
     ClientListComponent,
     UpsertClientFormComponent,
-    ClientWashTypePriceListComponent
+    ClientWashTypePriceListComponent,
+    UpsertWashTypePriceComponent
   ]
 })
 export class ClientModule { }
