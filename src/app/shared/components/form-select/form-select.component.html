@@ -14,6 +14,7 @@
     emptyMessage="No existen opciones disponibles."
     [virtualScroll]="true"
     [virtualScrollItemSize]="30"
+    appendTo="body"
   ></p-dropdown>
   <div
     *ngIf="formControl?.errors && (formControl?.dirty || formControl?.touched)"
