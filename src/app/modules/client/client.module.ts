@@ -13,6 +13,8 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ClientWashTypePriceListComponent } from './pages/client-wash-type-price-list/client-wash-type-price-list.component';
 import { UpsertWashTypePriceComponent } from './components/upsert-wash-type-price/upsert-wash-type-price.component';
+import { ClientEffectPriceListComponent } from './pages/client-effect-price-list/client-effect-price-list.component';
+import { UpsertEffectPriceComponent } from './components/upsert-effect-price/upsert-effect-price.component';
 
 
 @NgModule({
@@ -31,7 +33,9 @@ import { UpsertWashTypePriceComponent } from './components/upsert-wash-type-pric
     ClientListComponent,
     UpsertClientFormComponent,
     ClientWashTypePriceListComponent,
-    UpsertWashTypePriceComponent
+    UpsertWashTypePriceComponent,
+    ClientEffectPriceListComponent,
+    UpsertEffectPriceComponent
   ]
 })
 export class ClientModule { }
