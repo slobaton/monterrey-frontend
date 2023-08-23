@@ -102,7 +102,7 @@ export class ClientListComponent {
       {
         title: 'Precios Lavado',
         tooltip: 'Ver Precios Lavado',
-        icon: 'eye',
+        icon: 'dollar',
         status: DataTableActionStatus.INFO,
         selectionConfig: {
           maxSelectedRows: 1
@@ -110,6 +110,19 @@ export class ClientListComponent {
         callback: (selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/wash-type-prices`])
+        }
+      },
+      {
+        title: 'Precios Efecto',
+        tooltip: 'Ver Precios Efectos',
+        icon: 'dollar',
+        status: DataTableActionStatus.INFO,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        callback: (selectedRows) => {
+          const clientId = selectedRows[0].id;
+          this._router.navigate([`clients/${clientId}/effect-prices`])
         }
       }
     ]
