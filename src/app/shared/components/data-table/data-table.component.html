@@ -35,7 +35,7 @@
           </ng-container>
         </ng-container>
       </div>
-      <span class="p-input-icon-left">
+      <span *ngIf="searchEnabled" class="p-input-icon-left">
         <i class="pi pi-search"></i>
         <input
           pInputText

@@ -6,6 +6,7 @@ import { ClientService } from 'src/app/@core/services/rest/client.service';
 import { DataTableActionStatus, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
 import { UpsertClientFormComponent } from '../../components/upsert-client-form/upsert-client-form.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-client-list',
@@ -43,7 +44,7 @@ export class ClientListComponent {
           isRequired: false
         },
         callback: () => {
-          this.ref = this.dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente' });
+          this.ref = this._dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente' });
           this.ref.onClose.subscribe((result) => {
             if (result) {
               this.table.reset();
@@ -61,7 +62,7 @@ export class ClientListComponent {
         },
         callback: (selectedRows) => {
           const client = selectedRows[0];
-          this.ref = this.dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente', data: { client } });
+          this.ref = this._dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente', data: { client } });
           this.ref.onClose.subscribe((result) => {
             if (result) {
               this.table.reset();
@@ -79,23 +80,36 @@ export class ClientListComponent {
         },
         callback: (selectedRows) => {
           const clientId = selectedRows[0].id;
-          this.confirmationService.confirm({
+          this._confirmationService.confirm({
             key: 'confirmDelete',
             accept: () => {
               this.clientService.deleteClient(clientId)
                 .then(() => {
-                  this.messageService.add({ key: 'confirmDelete', severity: 'success', summary: 'Eliminado!', detail: 'El cliente ha sido eliminado!.' });
+                  this._messageService.add({ key: 'confirmDelete', severity: 'success', summary: 'Eliminado!', detail: 'El cliente ha sido eliminado!.' });
                   this.table.reset();
                 })
                 .catch((err) => {
                   console.error(err);
-                  this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' })
+                  this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' })
                 });
             },
             reject: () => {
-              this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' })
+              this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' })
             }
           });
+        }
+      },
+      {
+        title: 'Precios Lavado',
+        tooltip: 'Ver Precios Lavado',
+        icon: 'eye',
+        status: DataTableActionStatus.INFO,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        callback: (selectedRows) => {
+          const clientId = selectedRows[0].id;
+          this._router.navigate([`clients/${clientId}/wash-type-prices`])
         }
       }
     ]
@@ -103,8 +117,9 @@ export class ClientListComponent {
 
   constructor(
     public clientService: ClientService,
-    private confirmationService: ConfirmationService,
-    private messageService: MessageService,
-    private dialogService: DialogService) { }
+    private _confirmationService: ConfirmationService,
+    private _messageService: MessageService,
+    private _dialogService: DialogService,
+    private _router: Router) { }
 
 }
