@@ -1,0 +1,19 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card mb-0">
+      <h5>Precios de Efectos</h5>
+      <app-confirm-dialog
+        id="confirmEffectPriceDelete"
+        title="Eliminar Precio Efecto"
+        message="¿Estas seguro de eliminar el precio para cliente?"
+      ></app-confirm-dialog>
+      <app-data-table
+        #effectPricesTable
+        [searchEnabled]="false"
+        [tableConfig]="tableConfig"
+        [sourceDataService]="effectPriceService"
+        [extraParams]="clientId"
+      ></app-data-table>
+    </div>
+  </div>
+</div>
