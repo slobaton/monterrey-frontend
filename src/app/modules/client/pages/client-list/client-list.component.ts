@@ -100,6 +100,19 @@ export class ClientListComponent {
         }
       },
       {
+        title: 'Precios General',
+        tooltip: 'Ver Precios General',
+        icon: 'dollar',
+        status: DataTableActionStatus.INFO,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        callback: (selectedRows) => {
+          const clientId = selectedRows[0].id;
+          this._router.navigate([`clients/${clientId}/parameters`])
+        }
+      },
+      {
         title: 'Precios Lavado',
         tooltip: 'Ver Precios Lavado',
         icon: 'dollar',

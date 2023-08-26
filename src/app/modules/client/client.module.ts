@@ -15,6 +15,8 @@ import { ClientWashTypePriceListComponent } from './pages/client-wash-type-price
 import { UpsertWashTypePriceComponent } from './components/upsert-wash-type-price/upsert-wash-type-price.component';
 import { ClientEffectPriceListComponent } from './pages/client-effect-price-list/client-effect-price-list.component';
 import { UpsertEffectPriceComponent } from './components/upsert-effect-price/upsert-effect-price.component';
+import { ClientParameterPriceListComponent } from './pages/client-parameter-price-list/client-parameter-price-list.component';
+import { UpsertParameterPriceComponent } from './components/upsert-parameter-price/upsert-parameter-price.component';
 
 
 @NgModule({
@@ -35,7 +37,9 @@ import { UpsertEffectPriceComponent } from './components/upsert-effect-price/ups
     ClientWashTypePriceListComponent,
     UpsertWashTypePriceComponent,
     ClientEffectPriceListComponent,
-    UpsertEffectPriceComponent
+    UpsertEffectPriceComponent,
+    ClientParameterPriceListComponent,
+    UpsertParameterPriceComponent
   ]
 })
 export class ClientModule { }
