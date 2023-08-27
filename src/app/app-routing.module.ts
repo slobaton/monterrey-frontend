@@ -21,6 +21,7 @@ import { Role } from './@core/enums/role.enum';
           { path: 'cloth-types', canActivate: [roleGuard([Role.ADMIN])], loadChildren: () => import('./modules/cloth-type/cloth-type.module').then(m => m.ClothTypeModule) },
           { path: 'cloth-sizes', canActivate: [roleGuard([Role.ADMIN])], loadChildren: () => import('./modules/cloth-size/cloth-size.module').then(m => m.ClothSizeModule) },
           { path: 'wash-orders', canActivate: [roleGuard([Role.ADMIN, Role.SECRETARY])], loadChildren: () => import('./modules/wash-order/wash-order.module').then(m => m.WashOrderModule) },
+          { path: 'parameters', canActivate: [roleGuard([Role.ADMIN])], loadChildren: () => import('./modules/parameter/parameter.module').then(m => m.ParameterModule) },
           { path: '', redirectTo: 'inicio', pathMatch: 'full' }
         ]
       },

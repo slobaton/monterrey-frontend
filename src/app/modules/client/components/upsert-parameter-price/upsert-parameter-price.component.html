@@ -1,0 +1,36 @@
+<app-form
+  [form]="parameterPriceForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-12" *ngIf="!doesParameterPriceExists">
+      <app-form-label
+        id="charge_parameter_id"
+        text="Parametro"
+        [required]="true"
+      />
+      <app-form-select
+        [form]="parameterPriceForm"
+        id="charge_parameter_id"
+        controlName="charge_parameter_id"
+        placeholder="Seleccione un parametro..."
+        optionLabel="name"
+        optionValue="id"
+        [filterEnabled]="true"
+        [isLazy]="true"
+        [sourceDataService]="parameterService"
+      >
+      </app-form-select>
+    </div>
+    <div class="col-12">
+      <app-form-label id="price" text="Precio" [required]="true" />
+      <app-form-input-text
+        [form]="parameterPriceForm"
+        id="price"
+        controlName="price"
+        placeholder="Ingrese el precio del cliente.."
+      />
+    </div>
+  </div>
+</app-form>
