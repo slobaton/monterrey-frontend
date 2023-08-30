@@ -21,8 +21,7 @@ export class ClothSizeListComponent {
     columns: [
       { title: 'Id', propertyRef: 'id', sortable: false, visible: false },
       { title: 'Nombre', propertyRef: 'name', sortable: true },
-      { title: 'P. Lavado', propertyRef: 'wash_price', sortable: true },
-      { title: 'P. Lavado Especial', propertyRef: 'wash_special_price', sortable: true },
+      { title: 'Descripción', propertyRef: 'description', sortable: false },
       { title: 'Activo', propertyRef: 'is_active', type: DataTableColumnType.BOOLEAN },
       { title: 'Creado', propertyRef: 'created_at', sortable: true, type: DataTableColumnType.DATETIME },
       { title: 'Actualizado', propertyRef: 'updated_at', sortable: true, type: DataTableColumnType.DATETIME },

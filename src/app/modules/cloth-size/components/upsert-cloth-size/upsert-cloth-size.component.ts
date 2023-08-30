@@ -36,8 +36,6 @@ export class UpsertClothSizeComponent {
     this.clothSizeForm = new FormGroup({
       name: new FormControl<string>(clothSize?.name ?? '', [Validators.required, Validators.maxLength(150)]),
       description: new FormControl<string>(clothSize?.description ?? ''),
-      wash_price: new FormControl<number>(clothSize?.wash_price ?? 0, [Validators.required, Validators.min(0), Validators.max(99999999.99)]),
-      wash_special_price: new FormControl<number>(clothSize?.wash_special_price ?? 0, [Validators.min(0), Validators.max(99999999.99)]),
       is_active: new FormControl<boolean>({
         value: clothSize?.is_active ?? true,
         disabled: !this.doesClothSizeExists
