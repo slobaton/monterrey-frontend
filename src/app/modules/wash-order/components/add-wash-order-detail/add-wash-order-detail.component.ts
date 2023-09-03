@@ -50,10 +50,11 @@ export class AddWashOrderDetailComponent implements OnInit {
       wash_order_id: new FormControl<string>(washOrderId, [Validators.required]),
       cloth_type_id: new FormControl<number | null>(null, [Validators.required]),
       cloth_size_id: new FormControl<number | null>(null, [Validators.required]),
-      is_special_wash: new FormControl<boolean>(false, [Validators.required]),
-      wash_price: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
+      is_focalizado_active: new FormControl<boolean>(false, [Validators.required]),
+      is_nevado_active: new FormControl<boolean>(false, [Validators.required]),
       quantity: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
       num_buttonholes: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
+      buttonholes_price: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
       observations: new FormControl<string>('', []),
       effects: new FormControl<Array<string>>([], [])
     });

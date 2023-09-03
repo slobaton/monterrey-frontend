@@ -5,7 +5,7 @@
   submitLabel="Agregar Detalle"
 >
   <div class="form-container p-fluid p-formgrid grid">
-    <div class="col-4">
+    <div class="col-3">
       <app-form-label
         id="cloth_type_id"
         text="Tipo de Ropa"
@@ -24,7 +24,7 @@
       >
       </app-form-select>
     </div>
-    <div class="col-4">
+    <div class="col-3">
       <app-form-label
         id="cloth_size_id"
         text="Tamaño de Ropa"
@@ -43,17 +43,21 @@
       >
       </app-form-select>
     </div>
-
-    <div class="col-4 text-center">
-      <h6>Es lavado Especial?</h6>
-      <app-form-switch
+    <div class="col-3">
+      <app-form-label
+        id="buttonholes_price"
+        text="Precio Ojal"
+        [required]="true"
+      />
+      <app-form-input-number
         [form]="washOrderDetailForm"
-        id="is_special_wash"
-        controlName="is_special_wash"
-      ></app-form-switch>
+        id="buttonholes_price"
+        controlName="buttonholes_price"
+        placeholder="Precio Ojal..."
+        mode="decimal"
+      />
     </div>
-
-    <div class="col-4">
+    <div class="col-3">
       <app-form-label
         id="num_buttonholes"
         text="Num. Ojales"
@@ -66,7 +70,8 @@
         placeholder="Num. Ojales..."
       />
     </div>
-    <div class="col-4">
+
+    <div class="col-6">
       <app-form-label id="quantity" text="Cantidad" [required]="true" />
       <app-form-input-number
         [form]="washOrderDetailForm"
@@ -75,14 +80,21 @@
         placeholder="Cantidad..."
       />
     </div>
-    <div class="col-4">
-      <app-form-label id="wash_price" text="Precio Lavado" [required]="true" />
-      <app-form-input-number
+    <div class="col-3 text-center">
+      <h6>Focalizado</h6>
+      <app-form-switch
         [form]="washOrderDetailForm"
-        id="wash_price"
-        controlName="wash_price"
-        placeholder="Precio Lavado..."
-      />
+        id="is_focalizado_active"
+        controlName="is_focalizado_active"
+      ></app-form-switch>
+    </div>
+    <div class="col-3 text-center">
+      <h6>Nevado</h6>
+      <app-form-switch
+        [form]="washOrderDetailForm"
+        id="is_nevado_active"
+        controlName="is_nevado_active"
+      ></app-form-switch>
     </div>
 
     <div class="col-12 py-0 my-0">

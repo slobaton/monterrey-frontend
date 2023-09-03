@@ -33,6 +33,9 @@ export class WashOrderCreateComponent implements OnInit {
   washOrderId: string = '';
   code: string = '';
 
+  totalQuantity: number = 0;
+  totalPrice: number = 0;
+
   washOrderDetails: Array<WashOrderDetail> = [];
 
   ref: DynamicDialogRef | undefined;
@@ -55,10 +58,9 @@ export class WashOrderCreateComponent implements OnInit {
 
     this.washOrderForm = new FormGroup({
       client_id: new FormControl<string>('', [Validators.required]),
-      date: new FormControl<Date>(todayDate, [Validators.required]),
       wash_type_id: new FormControl<number | null>(null, [Validators.required]),
-      total_quantity: new FormControl<number>(0, [Validators.required]),
-      total_price: new FormControl<number>(0, [Validators.required]),
+      date: new FormControl<Date>(todayDate, [Validators.required]),
+      is_special_price: new FormControl<boolean>(false, [Validators.required]),
       observations: new FormControl<string>('', [])
     })
   }
@@ -69,8 +71,7 @@ export class WashOrderCreateComponent implements OnInit {
 
     const washOrder: WashOrderCreateRequest = {
       ...washOrderFormValue,
-      total_price: washOrderFormValue.total_price.toFixed(2),
-      date: formatDate(washOrderFormValue.date, 'yyyy/MM/dd', 'en_US'),
+      date: formatDate(washOrderFormValue.date, 'yyyy/MM/dd', 'en_US')
     }
 
     this._washOrderService.create(washOrder)
@@ -78,6 +79,10 @@ export class WashOrderCreateComponent implements OnInit {
         this.code = createdWashOrder.code.toString();
         this.washOrderId = createdWashOrder.id;
         this.washOrderCreated = true;
+
+        this.totalQuantity = createdWashOrder.total_quantity;
+        this.totalPrice = createdWashOrder.total_price;
+
         this._messageService.add({
           severity: 'success',
           summary: `Orden COD: ${createdWashOrder.code}`,
@@ -121,29 +126,33 @@ export class WashOrderCreateComponent implements OnInit {
     this.ref.onClose.subscribe((result) => {
       if (result && result.detailAdded) {
         this.washOrderDetails.push(result.detail);
-
-        let totalPrice = 0;
-        let totalQuantity = 0;
-        this.washOrderDetails.forEach(x => {
-          totalPrice += x.wash_price * x.quantity;
-          totalQuantity += x.quantity;
-        })
-        this.washOrderForm.get('total_price')?.setValue(totalPrice);
-        this.washOrderForm.get('total_quantity')?.setValue(totalQuantity);
+        this.updateWashOrderTotal();
       }
     });
   }
 
   deleteWashOrderDetail(washOrderDetailId: string): void {
-    // this._washOrderDetailService.deleteById(washOrderDetailId)
-    //   .then(() => {
-    //     this._messageService.add({
-    //       severity: 'success',
-    //       summary: 'Eliminado!',
-    //       detail: 'Detalle de orden de lavado eliminado con exito...'
-    //     });
+    this._washOrderDetailService.deleteById(washOrderDetailId)
+      .then(() => {
+        this.washOrderDetails = this.washOrderDetails.filter((x) => x.id !== washOrderDetailId);
+        this.updateWashOrderTotal();
+        this._messageService.add({
+          severity: 'success',
+          summary: 'Eliminado!',
+          detail: 'Detalle de orden de lavado eliminado con exito...'
+        });
+      })
+  }
 
-    //   })
-    this.washOrderDetails = this.washOrderDetails.filter((x) => x.id !== washOrderDetailId);
+  private updateWashOrderTotal() {
+    let totalPrice = 0;
+    let totalQuantity = 0;
+    this.washOrderDetails.forEach(x => {
+      totalPrice += x.subtotal_price;
+      totalQuantity += x.quantity;
+    });
+
+    this.totalPrice = totalPrice;
+    this.totalQuantity = totalQuantity;
   }
 }
