@@ -90,6 +90,18 @@ export class WashOrderListComponent {
             }
           });
         }
+      },
+      {
+        title: 'Imprimir',
+        tooltip: 'Imprimir Orden de Lavado',
+        icon: 'print',
+        status: DataTableActionStatus.PRIMARY,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        callback: (selectedRows) => {
+          const washOrderId = selectedRows[0].id;
+        }
       }
     ]
   };
