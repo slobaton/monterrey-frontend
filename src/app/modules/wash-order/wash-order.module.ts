@@ -8,6 +8,7 @@ import { TableModule } from 'primeng/table';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { TagModule } from 'primeng/tag';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import { SharedModule } from 'src/app/shared/shared.module';
 
@@ -32,7 +33,8 @@ import { AddWashOrderDetailComponent } from './components/add-wash-order-detail/
     ScrollPanelModule,
     InputNumberModule,
     TableModule,
-    TagModule
+    TagModule,
+    ProgressSpinnerModule
   ]
 })
 export class WashOrderModule { }

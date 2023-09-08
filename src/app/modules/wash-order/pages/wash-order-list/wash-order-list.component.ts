@@ -63,6 +63,19 @@ export class WashOrderListComponent {
         }
       },
       {
+        title: 'Actualizar',
+        tooltip: 'Actualizar la Orden de Lavado',
+        icon: 'pencil',
+        status: DataTableActionStatus.WARNING,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        callback: (selectedRows) => {
+          const washOrderId = selectedRows[0].id;
+          this._router.navigate([`/wash-orders/edit/${washOrderId}`]);
+        }
+      },
+      {
         title: 'Eliminar',
         tooltip: 'Eliminar Orden de Lavado',
         icon: 'trash',

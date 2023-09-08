@@ -12,9 +12,10 @@ import { ClientService } from 'src/app/@core/services/rest/client.service';
 import { WashOrderService } from 'src/app/@core/services/rest/wash-order.service';
 import { WashTypeService } from 'src/app/@core/services/rest/wash-type.service';
 import { AddWashOrderDetailComponent } from '../../components/add-wash-order-detail/add-wash-order-detail.component';
-import { WashOrderDetail } from 'src/app/@core/models/wash-order';
+import { WashOrder, WashOrderDetail } from 'src/app/@core/models/wash-order';
 import { WashOrderDetailService } from 'src/app/@core/services/rest/wash-order-detail.service';
-import { PaginatedRequest } from 'src/app/@core/models/request/paginated-request';
+import { WashOrderUpdateRequest } from 'src/app/@core/models/request/wash-order-update-request';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-wash-order-create',
@@ -29,9 +30,12 @@ export class WashOrderCreateComponent implements OnInit {
   isProcessing: boolean = false;
 
   washOrderCreated: boolean = false;
+  existingWashOrder: boolean = false;
+  washOrderLoaded: boolean = false;
 
   washOrderId: string = '';
   code: string = '';
+  washOrder: WashOrder | null = null;
 
   totalQuantity: number = 0;
   totalPrice: number = 0;
@@ -41,6 +45,8 @@ export class WashOrderCreateComponent implements OnInit {
   ref: DynamicDialogRef | undefined;
 
   constructor(
+    public _route: ActivatedRoute,
+    public _router: Router,
     public clientService: ClientService,
     public washTypeService: WashTypeService,
     private _washOrderService: WashOrderService,
@@ -50,25 +56,88 @@ export class WashOrderCreateComponent implements OnInit {
     private _dialogService: DialogService) { }
 
   ngOnInit(): void {
-    this.initializeForm();
+    this._route.params.subscribe(params => {
+      this.washOrderId = params['id'];
+
+      if (this.washOrderId) {
+        this.washOrderCreated = true;
+        this.existingWashOrder = true;
+
+        this._washOrderService.getById(this.washOrderId)
+          .then(async (washOrder) => {
+            this.washOrder = washOrder;
+            this.code = washOrder.code.toString();
+            this.totalQuantity = washOrder.total_quantity;
+            this.totalPrice = washOrder.total_price;
+            this.washOrderDetails = (await this._washOrderDetailService.fetchPaginatedResource({
+              filter: this.washOrderId,
+              page: 1,
+              pageSize: 1000,
+              sort: '',
+              sortOrder: ''
+            })).data;
+          })
+          .catch((err) => {
+            if (err instanceof HttpErrorResponse) {
+              if (err.status === 404) {
+                this._messageService.add({
+                  severity: 'error',
+                  summary: `Orden invalida`,
+                  detail: 'La Orden de Lavado es invalida o no existe',
+                  life: 2000
+                });
+              }
+            } else {
+              this._messageService.add({
+                severity: 'error',
+                summary: `Error inesperado`,
+                detail: 'Ocurrio un error inesperado al intentar obtener la order de lavado.',
+                life: 2000
+              });
+            }
+
+            setTimeout(() => {
+              this._router.navigateByUrl('wash-orders');
+            }, 2000);
+          })
+          .finally(() => {
+            this.initializeForm();
+          });
+      }
+
+      this.initializeForm();
+    })
   }
 
   initializeForm(): void {
     const todayDate = new Date();
+    const existingDate = this.washOrder ? new Date(this.washOrder.date) : null;
 
     this.washOrderForm = new FormGroup({
-      client_id: new FormControl<string>('', [Validators.required]),
-      wash_type_id: new FormControl<number | null>(null, [Validators.required]),
-      date: new FormControl<Date>(todayDate, [Validators.required]),
-      is_special_price: new FormControl<boolean>(false, [Validators.required]),
-      observations: new FormControl<string>('', [])
-    })
+      client_id: new FormControl<string>(this.washOrder?.client_id ?? '', [Validators.required]),
+      wash_type_id: new FormControl<number | null>(this.washOrder?.wash_type_id ?? null, [Validators.required]),
+      date: new FormControl<Date>(existingDate ?? todayDate, [Validators.required]),
+      is_special_price: new FormControl<boolean>(this.washOrder?.is_special_price ?? false, [Validators.required]),
+      observations: new FormControl<string>(this.washOrder?.observations ?? '', [])
+    });
+
+    if (this.washOrder) {
+      this.washOrderLoaded = true;
+    }
   }
 
   onSubmitForm(washOrderFormValue: any): void {
     this.formProcessEvent.emit(true);
     this.isProcessing = true;
 
+    if (!this.washOrderCreated && this.washOrderId.length == 0) {
+      this.saveWashOrder(washOrderFormValue);
+    } else {
+      this.updateWashOrder(washOrderFormValue);
+    }
+  }
+
+  private saveWashOrder(washOrderFormValue: any) {
     const washOrder: WashOrderCreateRequest = {
       ...washOrderFormValue,
       date: formatDate(washOrderFormValue.date, 'yyyy/MM/dd', 'en_US')
@@ -87,6 +156,61 @@ export class WashOrderCreateComponent implements OnInit {
           severity: 'success',
           summary: `Orden COD: ${createdWashOrder.code}`,
           detail: 'Orden de Lavado creado con éxito',
+          life: 3500
+        });
+      })
+      .catch(err => {
+        if (err instanceof HttpErrorResponse) {
+          if (err.status === 422) {
+            this._validationService.handleValidationErrors(this.washOrderForm, err.error.errors);
+          } else {
+            this._messageService.add({
+              severity: 'error',
+              summary: 'Error!',
+              detail: 'La acción no se pudo realizar, intente nuevamente...'
+            });
+          }
+        } else {
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Error!',
+            detail: 'Error inesperado, intente nuevamente...'
+          });
+        }
+      })
+      .finally(() => {
+        this.formProcessEvent.emit(false);
+        this.isProcessing = false;
+      });
+  }
+
+  private updateWashOrder(washOrderFormValue: any) {
+    const washOrder: WashOrderUpdateRequest = {
+      ...washOrderFormValue,
+      date: formatDate(washOrderFormValue.date, 'yyyy/MM/dd', 'en_US')
+    }
+
+    this._washOrderService.update(washOrder, this.washOrderId)
+      .then(async (updatedWashOrder) => {
+        this.code = updatedWashOrder.code.toString();
+        this.washOrderId = updatedWashOrder.id;
+        this.washOrderCreated = true;
+
+        this.totalQuantity = updatedWashOrder.total_quantity;
+        this.totalPrice = updatedWashOrder.total_price;
+
+        this.washOrderDetails = (await this._washOrderDetailService.fetchPaginatedResource({
+          filter: this.washOrderId,
+          page: 1,
+          pageSize: 1000,
+          sort: '',
+          sortOrder: ''
+        })).data;
+
+        this._messageService.add({
+          severity: 'success',
+          summary: `Orden COD: ${updatedWashOrder.code}`,
+          detail: 'Orden de Lavado actualizada con éxito',
           life: 3500
         });
       })

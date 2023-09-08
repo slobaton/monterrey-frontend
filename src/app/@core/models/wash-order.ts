@@ -19,7 +19,7 @@ export class WashOrder {
     public is_special_price: boolean,
     public created_at: string,
     public updated_at: string,
-    public wash_order_details: Array<WashOrderDetail>,
+    public details: Array<WashOrderDetail>,
     public client: Client,
     public wash_type: WashType
   ) { }

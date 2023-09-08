@@ -5,7 +5,8 @@ import { WashOrderCreateComponent } from './pages/wash-order-create/wash-order-c
 
 const routes: Routes = [
   { path: '', component: WashOrderListComponent },
-  { path: 'new', component: WashOrderCreateComponent }
+  { path: 'new', component: WashOrderCreateComponent },
+  { path: 'edit/:id', component: WashOrderCreateComponent }
 ];
 
 @NgModule({
