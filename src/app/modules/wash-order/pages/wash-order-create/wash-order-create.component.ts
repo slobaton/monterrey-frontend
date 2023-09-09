@@ -130,7 +130,7 @@ export class WashOrderCreateComponent implements OnInit {
     this.formProcessEvent.emit(true);
     this.isProcessing = true;
 
-    if (!this.washOrderCreated && this.washOrderId.length == 0) {
+    if (!this.washOrderCreated && !this.washOrder) {
       this.saveWashOrder(washOrderFormValue);
     } else {
       this.updateWashOrder(washOrderFormValue);
