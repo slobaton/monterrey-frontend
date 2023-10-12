@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { WashOrder } from 'src/app/@core/models/wash-order';
 import { WashOrderService } from 'src/app/@core/services/rest/wash-order.service';
 import {
@@ -11,6 +11,7 @@ import {
   DataTableSelectionType
 } from 'src/app/@core/types/data-table-definition';
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
+import { WashOrderInfoComponent } from '../../components/wash-order-info/wash-order-info.component';
 
 @Component({
   selector: 'app-wash-order-list',
@@ -63,6 +64,19 @@ export class WashOrderListComponent {
         }
       },
       {
+        title: 'Actualizar',
+        tooltip: 'Actualizar la Orden de Lavado',
+        icon: 'pencil',
+        status: DataTableActionStatus.WARNING,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        callback: (selectedRows) => {
+          const washOrderId = selectedRows[0].id;
+          this._router.navigate([`/wash-orders/edit/${washOrderId}`]);
+        }
+      },
+      {
         title: 'Eliminar',
         tooltip: 'Eliminar Orden de Lavado',
         icon: 'trash',
@@ -90,6 +104,37 @@ export class WashOrderListComponent {
             }
           });
         }
+      },
+      {
+        title: 'Detalles',
+        tooltip: 'Ver detalles de la orden de lavado',
+        icon: 'eye',
+        status: DataTableActionStatus.INFO,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        callback: (selectedRows) => {
+          const washOrderId = selectedRows[0].id;
+
+          const dialogProps = {
+            header: 'Detalles de la Orden de Lavado',
+            data: { washOrderId }
+          };
+
+          this.ref = this._dialogService.open(WashOrderInfoComponent, dialogProps);
+        }
+      },
+      {
+        title: 'Imprimir',
+        tooltip: 'Imprimir Orden de Lavado',
+        icon: 'print',
+        status: DataTableActionStatus.PRIMARY,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        callback: (selectedRows) => {
+          const washOrderId = selectedRows[0].id;
+        }
       }
     ]
   };
@@ -98,5 +143,6 @@ export class WashOrderListComponent {
     public washOrderService: WashOrderService,
     private _confirmationService: ConfirmationService,
     private _messageService: MessageService,
+    private _dialogService: DialogService,
     private _router: Router) { }
 }
