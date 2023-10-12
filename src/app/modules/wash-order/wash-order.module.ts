@@ -16,12 +16,16 @@ import { WashOrderRoutingModule } from './wash-order-routing.module';
 import { WashOrderListComponent } from './pages/wash-order-list/wash-order-list.component';
 import { WashOrderCreateComponent } from './pages/wash-order-create/wash-order-create.component';
 import { AddWashOrderDetailComponent } from './components/add-wash-order-detail/add-wash-order-detail.component';
+import { WashOrderInfoComponent } from './components/wash-order-info/wash-order-info.component';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { ChipModule } from 'primeng/chip';
 
 @NgModule({
   declarations: [
     WashOrderListComponent,
     WashOrderCreateComponent,
-    AddWashOrderDetailComponent
+    AddWashOrderDetailComponent,
+    WashOrderInfoComponent
   ],
   imports: [
     CommonModule,
@@ -34,7 +38,9 @@ import { AddWashOrderDetailComponent } from './components/add-wash-order-detail/
     InputNumberModule,
     TableModule,
     TagModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    ProgressBarModule,
+    ChipModule
   ]
 })
 export class WashOrderModule { }

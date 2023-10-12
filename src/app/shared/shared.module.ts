@@ -31,6 +31,7 @@ import { FormInputNumberComponent } from './components/form-input-number/form-in
 import { FormSelectComponent } from './components/form-select/form-select.component';
 import { FormDatetimePickerComponent } from './components/form-datetime-picker/form-datetime-picker.component';
 import { ListPickerComponent } from './components/list-picker/list-picker.component';
+import { SimpleTableComponent } from './components/simple-table/simple-table.component';
 
 
 
@@ -47,7 +48,8 @@ import { ListPickerComponent } from './components/list-picker/list-picker.compon
     FormInputNumberComponent,
     FormSelectComponent,
     FormDatetimePickerComponent,
-    ListPickerComponent
+    ListPickerComponent,
+    SimpleTableComponent
   ],
   imports: [
     CommonModule,
@@ -72,6 +74,7 @@ import { ListPickerComponent } from './components/list-picker/list-picker.compon
   ],
   exports: [
     DataTableComponent,
+    SimpleTableComponent,
     ConfirmDialogComponent,
     FormComponent,
     FormInputTextComponent,
