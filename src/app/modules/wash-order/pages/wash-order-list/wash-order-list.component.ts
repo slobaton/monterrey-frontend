@@ -12,6 +12,7 @@ import {
 } from 'src/app/@core/types/data-table-definition';
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
 import { WashOrderInfoComponent } from '../../components/wash-order-info/wash-order-info.component';
+import { ReportService } from 'src/app/@core/services/rest/report.service';
 
 @Component({
   selector: 'app-wash-order-list',
@@ -132,8 +133,12 @@ export class WashOrderListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        callback: async (selectedRows) => {
           const washOrderId = selectedRows[0].id;
+
+          const reportUrl = await this._reportService.getWashOrderPrintReportUrl(washOrderId);
+
+          window.open(reportUrl);
         }
       }
     ]
@@ -141,6 +146,7 @@ export class WashOrderListComponent {
 
   constructor(
     public washOrderService: WashOrderService,
+    private _reportService: ReportService,
     private _confirmationService: ConfirmationService,
     private _messageService: MessageService,
     private _dialogService: DialogService,
