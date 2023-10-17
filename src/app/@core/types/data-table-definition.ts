@@ -20,7 +20,9 @@ export type DataTableActionProps = {
   icon?: string,
   status?: DataTableActionStatus,
   selectionConfig?: DataTableActionSelectionConfig,
-  callback: (selectedRows: Array<any>) => void
+  hasLoadingEnabled?: boolean,
+  loading?: boolean,
+  callback: (action: DataTableActionProps, selectedRows: Array<any>) => void
 }
 
 export type DataTableActionSelectionConfig = {

@@ -36,7 +36,7 @@ export class ParameterPricesComponent implements OnInit {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        callback: (action, selectedRows) => {
           const parameter = selectedRows[0];
           this.ref = this._dialogService.open(UpdateParameterFormComponent, { header: 'Actualizar Parametro', data: { parameter } });
           this.ref.onClose.subscribe((result) => {

@@ -72,7 +72,7 @@ export class WashOrderListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        callback: (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
           this._router.navigate([`/wash-orders/edit/${washOrderId}`]);
         }
@@ -85,8 +85,10 @@ export class WashOrderListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        hasLoadingEnabled: true,
+        callback: (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
+
           this._confirmationService.confirm({
             key: 'confirmDelete',
             accept: () => {
@@ -97,11 +99,13 @@ export class WashOrderListComponent {
                 })
                 .catch((err) => {
                   console.error(err);
-                  this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' })
-                });
+                  this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
+                })
+                .finally(() => action.loading = false);
             },
             reject: () => {
-              this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' })
+              this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' });
+              action.loading = false;
             }
           });
         }
@@ -114,7 +118,7 @@ export class WashOrderListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        callback: (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
 
           const dialogProps = {
@@ -133,10 +137,13 @@ export class WashOrderListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: async (selectedRows) => {
+        hasLoadingEnabled: true,
+        callback: async (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
 
           const reportUrl = await this._reportService.getWashOrderPrintReportUrl(washOrderId);
+
+          action.loading = false;
 
           window.open(reportUrl);
         }
