@@ -30,6 +30,9 @@
               [icon]="generateActionIcon(action)"
               [label]="action.title ?? ''"
               [disabled]="!isActionEnabled(action)"
+              [loading]="
+                action.hasLoadingEnabled ? action.loading ?? false : false
+              "
               (onClick)="executeActionCallback(action)"
             ></p-button>
           </ng-container>

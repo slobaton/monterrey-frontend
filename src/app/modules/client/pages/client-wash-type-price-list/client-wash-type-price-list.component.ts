@@ -66,7 +66,7 @@ export class ClientWashTypePriceListComponent implements OnInit {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        callback: (action, selectedRows) => {
           const washTypePrice = selectedRows[0];
           this.ref = this._dialogService.open(UpsertWashTypePriceComponent, { header: 'Asignar Precio', data: { washTypePrice, clientId: this.clientId } });
           this.ref.onClose.subscribe((result) => {
@@ -84,7 +84,8 @@ export class ClientWashTypePriceListComponent implements OnInit {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        hasLoadingEnabled: true,
+        callback: (action, selectedRows) => {
           const washTypeId = selectedRows[0].id;
           const priceId = selectedRows[0].wash_type_price.id;
           this._confirmationService.confirm({
@@ -102,11 +103,13 @@ export class ClientWashTypePriceListComponent implements OnInit {
                 })
                 .catch((err) => {
                   console.error(err);
-                  this._messageService.add({ key: 'confirmWashTypePriceDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' })
-                });
+                  this._messageService.add({ key: 'confirmWashTypePriceDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
+                })
+                .finally(() => action.loading = false);
             },
             reject: () => {
-              this._messageService.add({ key: 'confirmWashTypePriceDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' })
+              this._messageService.add({ key: 'confirmWashTypePriceDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' });
+              action.loading = false;
             }
           });
         }

@@ -54,7 +54,7 @@ export class WashTypeListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        callback: (action, selectedRows) => {
           const washType = selectedRows[0];
           this.ref = this.dialogService.open(UpsertWashTypeComponent, { header: 'Editar Tipo lavado', data: { washType } });
           this.ref.onClose.subscribe((result) => {
@@ -72,7 +72,8 @@ export class WashTypeListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        hasLoadingEnabled: true,
+        callback: (action, selectedRows) => {
           const washTypeId = selectedRows[0].id;
           this.confirmationService.confirm({
             key: 'confirmDelete',
@@ -84,11 +85,13 @@ export class WashTypeListComponent {
                 })
                 .catch((err) => {
                   console.error(err);
-                  this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' })
-                });
+                  this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
+                })
+                .finally(() => action.loading = false);
             },
             reject: () => {
-              this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' })
+              this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' });
+              action.loading = false;
             }
           });
         }

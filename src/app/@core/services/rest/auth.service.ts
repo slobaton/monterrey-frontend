@@ -9,6 +9,7 @@ import { LoginRequest } from '../../models/request/login-request';
 import { AuthUser } from '../../models/auth-user';
 import { AuthRole } from '../../models/auth-role';
 import { Role } from '../../enums/role.enum';
+import { AuthPublicKey } from '../../models/auth-public-key';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +48,14 @@ export class AuthService extends BaseService implements IAuthService {
     try {
       await firstValueFrom(this.post('logout'));
       this.cleanSession();
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  async getPublicKey(): Promise<AuthPublicKey> {
+    try {
+      return await firstValueFrom(this.get<AuthPublicKey>('auth/key'));
     } catch (error) {
       return this.handleError(error);
     }

@@ -60,7 +60,7 @@ export class ClientParameterPriceListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        callback: (action, selectedRows) => {
           const parameterPrice = selectedRows[0];
           this.ref = this._dialogService.open(UpsertParameterPriceComponent, { header: 'Asignar Precio', data: { parameterPrice, clientId: this.clientId } });
           this.ref.onClose.subscribe((result) => {
@@ -78,7 +78,8 @@ export class ClientParameterPriceListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        hasLoadingEnabled: true,
+        callback: (action, selectedRows) => {
           const parameterId = selectedRows[0].id;
           const priceId = selectedRows[0].parameter_price.id;
           this._confirmationService.confirm({
@@ -96,11 +97,13 @@ export class ClientParameterPriceListComponent {
                 })
                 .catch((err) => {
                   console.error(err);
-                  this._messageService.add({ key: 'confirmParameterPriceDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' })
-                });
+                  this._messageService.add({ key: 'confirmParameterPriceDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
+                })
+                .finally(() => action.loading = false);
             },
             reject: () => {
-              this._messageService.add({ key: 'confirmParameterPriceDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' })
+              this._messageService.add({ key: 'confirmParameterPriceDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' });
+              action.loading = false
             }
           });
         }

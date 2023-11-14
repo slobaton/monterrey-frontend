@@ -8,7 +8,7 @@ import { environment } from './../../../../environments/environment';
 export class BaseService {
 
   private headers!: HttpHeaders;
-  private baseUrl: string = environment.apiUrl;
+  protected baseUrl: string = environment.apiUrl;
 
   constructor(private _http: HttpClient) { }
 

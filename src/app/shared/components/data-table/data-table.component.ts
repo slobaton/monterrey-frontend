@@ -78,23 +78,28 @@ export class DataTableComponent<TEntity> implements OnInit {
   }
 
   executeActionCallback(action: DataTableActionProps, selectedRow?: string): void {
+
+    if (action.hasLoadingEnabled) {
+      action.loading = true;
+    }
+
     if (!this.requireSelectedRows(action)) {
-      action.callback([]);
+      action.callback(action, []);
       return;
     }
 
     if (!this.isSelectionEnabled() && selectedRow) {
-      action.callback([selectedRow]);
+      action.callback(action, [selectedRow]);
       return;
     }
 
     if (this.isMultipleSelection()) {
       const selectedRows = this.selectedRows ?? [];
-      action.callback(selectedRows);
+      action.callback(action, selectedRows);
       return;
     }
 
-    action.callback([this.selectedRows]);
+    action.callback(action, [this.selectedRows]);
   }
 
   hasActions(): boolean {

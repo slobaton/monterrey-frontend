@@ -60,7 +60,7 @@ export class EffectListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        callback: (action, selectedRows) => {
           const effect = selectedRows[0];
           this.ref = this.dialogService.open(UpsertEffectFormComponent, { header: 'Crear nuevo efecto', data: { effect } });
           this.ref.onClose.subscribe((result) => {
@@ -78,7 +78,8 @@ export class EffectListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        hasLoadingEnabled: true,
+        callback: (action, selectedRows) => {
           const effectId = selectedRows[0].id;
           this.confirmationService.confirm({
             key: 'confirmDelete',
@@ -90,11 +91,13 @@ export class EffectListComponent {
                 })
                 .catch((err) => {
                   console.error(err);
-                  this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' })
-                });
+                  this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
+                })
+                .finally(() => action.loading = false);
             },
             reject: () => {
-              this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' })
+              this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' });
+              action.loading = false;
             }
           });
         }

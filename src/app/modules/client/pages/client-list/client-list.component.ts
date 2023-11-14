@@ -60,7 +60,7 @@ export class ClientListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        callback: (action, selectedRows) => {
           const client = selectedRows[0];
           this.ref = this._dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente', data: { client } });
           this.ref.onClose.subscribe((result) => {
@@ -72,13 +72,14 @@ export class ClientListComponent {
       },
       {
         title: 'Eliminar',
-        tooltip: 'Eliminar Usuario',
+        tooltip: 'Eliminar Cliente',
         icon: 'trash',
         status: DataTableActionStatus.DANGER,
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        hasLoadingEnabled: true,
+        callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._confirmationService.confirm({
             key: 'confirmDelete',
@@ -90,11 +91,13 @@ export class ClientListComponent {
                 })
                 .catch((err) => {
                   console.error(err);
-                  this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' })
-                });
+                  this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
+                })
+                .finally(() => action.loading = false);
             },
             reject: () => {
-              this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' })
+              this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' });
+              action.loading = false
             }
           });
         }
@@ -107,7 +110,7 @@ export class ClientListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/parameters`])
         }
@@ -120,7 +123,7 @@ export class ClientListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/wash-type-prices`])
         }
@@ -133,7 +136,7 @@ export class ClientListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/effect-prices`])
         }
