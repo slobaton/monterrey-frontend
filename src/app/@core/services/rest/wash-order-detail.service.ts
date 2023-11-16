@@ -11,6 +11,8 @@ import { WashOrderDetailCreateRequest } from '../../models/request/wash-order-de
 import { PaginatedRequest } from '../../models/request/paginated-request';
 import { PaginatedResponse } from '../../models/response/paginated-response';
 import { BaseResponse } from '../../models/response/base-response';
+import { WashOrderDetailCalculateRequest } from '../../models/request/wash-order-detail-calculate-request';
+import { WashOrderDetailCalcResult } from '../../models/wash-order-detail-calc-result';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +47,14 @@ export class WashOrderDetailService extends BaseService implements IWashOrderDet
   async deleteById(id: string): Promise<void> {
     try {
       await firstValueFrom(this.delete(`wash-order-details/${id}`));
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  async calculatePrices(request: WashOrderDetailCalculateRequest): Promise<WashOrderDetailCalcResult> {
+    try {
+      return await firstValueFrom(this.post<WashOrderDetailCalcResult>('wash-order-details/calculate', request))
     } catch (error) {
       return this.handleError(error);
     }

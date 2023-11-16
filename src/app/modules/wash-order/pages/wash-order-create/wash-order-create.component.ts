@@ -268,6 +268,10 @@ export class WashOrderCreateComponent implements OnInit {
       })
   }
 
+  updateWashOrderDetail(washOrderDetailId: string, washOrderDetail: WashOrderDetail): void {
+    console.log(washOrderDetailId, washOrderDetail);
+  }
+
   private updateWashOrderTotal() {
     let totalPrice = 0;
     let totalQuantity = 0;

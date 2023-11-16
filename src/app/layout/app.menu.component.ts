@@ -23,7 +23,7 @@ export class AppMenuComponent implements OnInit {
         roles: [Role.ADMIN]
       },
       {
-        label: 'Home',
+        label: 'Principal',
         items: [
           { label: 'Inicio', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
           { label: 'Usuarios', icon: 'pi pi-fw pi-user', routerLink: ['/users'], roles: [Role.ADMIN] },

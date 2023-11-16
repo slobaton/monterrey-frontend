@@ -182,6 +182,11 @@
                           styleClass="p-button-sm p-button-rounded p-button-danger p-button-text"
                           (onClick)="deleteWashOrderDetail(item.id)"
                         ></p-button>
+                        <p-button
+                          icon="pi pi-pencil"
+                          styleClass="p-button-sm p-button-rounded p-button-warning p-button-text"
+                          (onClick)="updateWashOrderDetail(item.id, item)"
+                        ></p-button>
                       </td>
                     </tr>
                   </ng-template>

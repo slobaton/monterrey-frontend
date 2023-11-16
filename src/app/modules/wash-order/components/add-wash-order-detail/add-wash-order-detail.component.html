@@ -71,7 +71,7 @@
       />
     </div>
 
-    <div class="col-6">
+    <div class="col-4">
       <app-form-label id="quantity" text="Cantidad" [required]="true" />
       <app-form-input-number
         [form]="washOrderDetailForm"
@@ -80,7 +80,7 @@
         placeholder="Cantidad..."
       />
     </div>
-    <div class="col-3 text-center">
+    <div class="col-1 text-center">
       <h6>Focalizado</h6>
       <app-form-switch
         [form]="washOrderDetailForm"
@@ -88,7 +88,7 @@
         controlName="is_focalizado_active"
       ></app-form-switch>
     </div>
-    <div class="col-3 text-center">
+    <div class="col-1 text-center">
       <h6>Nevado</h6>
       <app-form-switch
         [form]="washOrderDetailForm"
@@ -97,7 +97,24 @@
       ></app-form-switch>
     </div>
 
-    <div class="col-12 py-0 my-0">
+    <div class="col-3">
+      <app-form-label id="unit_price" text="Precio Unitario" />
+      <p-inputNumber
+        id="unit_price"
+        [(ngModel)]="washOrderDetailCalcResult.unit_price"
+        [disabled]="true"
+      />
+    </div>
+    <div class="col-3">
+      <app-form-label id="subtotal_price" text="Subtotal" />
+      <p-inputNumber
+        id="subtotal_price"
+        [(ngModel)]="washOrderDetailCalcResult.subtotal_price"
+        [disabled]="true"
+      />
+    </div>
+
+    <div class="col-9 py-0 my-0">
       <app-form-label id="observations" text="Descripción" />
       <app-form-textarea
         [form]="washOrderDetailForm"
@@ -105,6 +122,40 @@
         controlName="observations"
         placeholder="Ingrese las observaciones del detalle..."
       ></app-form-textarea>
+    </div>
+    <div class="col-3">
+      <div class="flex justify-content-center align-items-center h-full">
+        <p-overlayPanel #priceInfo>
+          <h6>Detalle Precio Unitario</h6>
+          <ul>
+            <li>
+              Precio Lavado: {{ washOrderDetailCalcResult.wash_price }} Bs.
+            </li>
+            <li>
+              Precio Ojales:
+              {{ washOrderDetailCalcResult.buttonholes_total_price }} Bs.
+            </li>
+            <li>
+              Precio Focalizado:
+              {{ washOrderDetailCalcResult.focalizado_price }} Bs.
+            </li>
+            <li>
+              Precio Nevado: {{ washOrderDetailCalcResult.nevado_price }} Bs.
+            </li>
+            <li>
+              Precio Efectos:
+              {{ washOrderDetailCalcResult.effect_total_price }} Bs.
+            </li>
+          </ul>
+        </p-overlayPanel>
+        <p-button
+          styleClass="p-button-info"
+          icon="pi pi-dollar"
+          label="Detalle de Precios"
+          [loading]="isCalcPrices"
+          (click)="priceInfo.toggle($event)"
+        ></p-button>
+      </div>
     </div>
 
     <div class="col-12 py-0 my-0">

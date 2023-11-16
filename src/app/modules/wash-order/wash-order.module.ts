@@ -9,6 +9,9 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { TagModule } from 'primeng/tag';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { ChipModule } from 'primeng/chip';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 import { SharedModule } from 'src/app/shared/shared.module';
 
@@ -17,8 +20,6 @@ import { WashOrderListComponent } from './pages/wash-order-list/wash-order-list.
 import { WashOrderCreateComponent } from './pages/wash-order-create/wash-order-create.component';
 import { AddWashOrderDetailComponent } from './components/add-wash-order-detail/add-wash-order-detail.component';
 import { WashOrderInfoComponent } from './components/wash-order-info/wash-order-info.component';
-import { ProgressBarModule } from 'primeng/progressbar';
-import { ChipModule } from 'primeng/chip';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { ChipModule } from 'primeng/chip';
     TagModule,
     ProgressSpinnerModule,
     ProgressBarModule,
-    ChipModule
+    ChipModule,
+    OverlayPanelModule
   ]
 })
 export class WashOrderModule { }
