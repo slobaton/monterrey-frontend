@@ -13,6 +13,7 @@ import { PaginatedResponse } from '../../models/response/paginated-response';
 import { BaseResponse } from '../../models/response/base-response';
 import { WashOrderDetailCalculateRequest } from '../../models/request/wash-order-detail-calculate-request';
 import { WashOrderDetailCalcResult } from '../../models/wash-order-detail-calc-result';
+import { WashOrderDetailUpdateRequest } from '../../models/request/wash-order-detail-update-request';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,16 @@ export class WashOrderDetailService extends BaseService implements IWashOrderDet
   async create(request: WashOrderDetailCreateRequest): Promise<WashOrderDetail> {
     try {
       const response = await firstValueFrom(this.post<BaseResponse<WashOrderDetail>>('wash-order-details', request));
+
+      return response.data;
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  async update(id: string, request: WashOrderDetailUpdateRequest): Promise<WashOrderDetail> {
+    try {
+      const response = await firstValueFrom(this.put<BaseResponse<WashOrderDetail>>(`wash-order-details/${id}`, request));
 
       return response.data;
     } catch (error) {

@@ -9,7 +9,10 @@ import { IFetchPaginatedData } from 'src/app/@core/services/interfaces/fetch-pag
 })
 export class ListPickerComponent<TEntity> implements OnInit {
 
+  @Input() key: string = 'id';
+
   @Input() sourceOptions: Array<TEntity> = [];
+  @Input() selectedOptions: Array<TEntity> = [];
 
   @Input() filterEnabled: boolean = false;
   @Input() filterBy: string = '';
@@ -26,8 +29,6 @@ export class ListPickerComponent<TEntity> implements OnInit {
   @Input() item: TemplateRef<any> | null = null;
 
   @Output() onChangeSelection: EventEmitter<Array<TEntity>> = new EventEmitter<Array<TEntity>>();
-
-  selectedOptions: Array<TEntity> = [];
 
   constructor() { }
 
@@ -47,8 +48,9 @@ export class ListPickerComponent<TEntity> implements OnInit {
     };
 
     const response = await this.sourceDataService?.fetchPaginatedResource(request)
+    const data = response?.data.filter((item: any) => !this.selectedOptions.some((x: any) => x[this.key] === item[this.key]));
 
-    this.sourceOptions = response?.data ?? [];
+    this.sourceOptions = data ?? [];
   }
 
   changeSelection($event: any): void {

@@ -15,6 +15,7 @@ import { ClothTypeService } from 'src/app/@core/services/rest/cloth-type.service
 import { EffectService } from 'src/app/@core/services/rest/effect.service';
 import { WashOrderDetailService } from 'src/app/@core/services/rest/wash-order-detail.service';
 import { WashOrderDetailCalcResult } from 'src/app/@core/models/wash-order-detail-calc-result';
+import { WashOrderDetailUpdateRequest } from 'src/app/@core/models/request/wash-order-detail-update-request';
 
 @Component({
   selector: 'app-add-wash-order-detail',
@@ -26,15 +27,18 @@ export class AddWashOrderDetailComponent implements OnInit {
   washOrderDetailForm!: FormGroup;
   formProcessEvent: EventEmitter<boolean> = new EventEmitter();
 
+  alreadySelectedItems: Array<Effect> = [];
+
   isCalcPrices: boolean = false;
 
   unitPrice: number = 0;
   subTotalPrice: number = 0;
 
-  washOrderDetailCalcResult: WashOrderDetailCalcResult = new WashOrderDetailCalcResult(0, 0, 0, 0, 0, 0, 0);
+  doesWashOrderDetailExists: boolean = false;
 
   private readonly defaultDebounceTime = 500;
 
+  washOrderDetailCalcResult: WashOrderDetailCalcResult = new WashOrderDetailCalcResult(0, 0, 0, 0, 0, 0, 0);
   private calculateRequest = new Subject<WashOrderDetailCalculateRequest>();
 
   constructor(
@@ -63,63 +67,107 @@ export class AddWashOrderDetailComponent implements OnInit {
   initializeForm(): void {
     const washOrderId = this._config.data?.washOrderId;
 
+    const washOrderDetail = this._config.data?.washOrderDetail;
+    this.doesWashOrderDetailExists = washOrderDetail!!;
+
     if (!washOrderId) {
       this._messageService.add({ severity: 'error', summary: 'Error!', detail: 'La orden de lavado, no ha sido creada correctamente.' });
       this._ref.close({ detailAdded: false, detail: null });
       return;
     }
 
+    this.alreadySelectedItems = washOrderDetail?.effects ?? [];
+    const selectedEffects = this.alreadySelectedItems.map((effect: Effect) => effect.id);
+
     this.washOrderDetailForm = new FormGroup({
       wash_order_id: new FormControl<string>(washOrderId, [Validators.required]),
-      cloth_type_id: new FormControl<number | null>(null, [Validators.required]),
-      cloth_size_id: new FormControl<number | null>(null, [Validators.required]),
-      is_focalizado_active: new FormControl<boolean>(false, [Validators.required]),
-      is_nevado_active: new FormControl<boolean>(false, [Validators.required]),
-      quantity: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
-      num_buttonholes: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
-      buttonholes_price: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
-      observations: new FormControl<string>('', []),
-      effects: new FormControl<Array<string>>([], [])
+      cloth_type_id: new FormControl<number | null>(washOrderDetail?.cloth_type_id ?? null, [Validators.required]),
+      cloth_size_id: new FormControl<number | null>(washOrderDetail?.cloth_size_id ?? null, [Validators.required]),
+      is_focalizado_active: new FormControl<boolean>(washOrderDetail?.is_focalizado_active ?? false, [Validators.required]),
+      is_nevado_active: new FormControl<boolean>(washOrderDetail?.is_nevado_active ?? false, [Validators.required]),
+      quantity: new FormControl<number>(washOrderDetail?.quantity ?? 0, [Validators.required, Validators.min(0)]),
+      num_buttonholes: new FormControl<number>(washOrderDetail?.num_buttonholes ?? 0, [Validators.required, Validators.min(0)]),
+      buttonholes_price: new FormControl<number>(washOrderDetail?.buttonholes_price ?? 0, [Validators.required, Validators.min(0)]),
+      observations: new FormControl<string>(washOrderDetail?.observations ?? '', []),
+      effects: new FormControl<Array<string>>(selectedEffects, [])
     });
   }
 
   onSubmitForm(formValue: any): void {
     this.formProcessEvent.emit(true);
 
-    const washOrderDetail: WashOrderDetailCreateRequest = { ...formValue };
+    if (!this.doesWashOrderDetailExists) {
+      const washOrderDetail: WashOrderDetailCreateRequest = { ...formValue };
 
-    this._washOrderDetailService.create(washOrderDetail)
-      .then((washOrderDetailCreated) => {
-        this._messageService.add({
-          severity: 'success',
-          summary: `Detalle agregado.`,
-          detail: 'Orden de Lavado creado con éxito.',
-          life: 1500
-        });
-        this._ref.close({ detailAdded: true, detail: washOrderDetailCreated });
-      })
-      .catch(err => {
-        if (err instanceof HttpErrorResponse) {
-          if (err.status === 422) {
-            this._validationService.handleValidationErrors(this.washOrderDetailForm, err.error.errors);
+      this._washOrderDetailService.create(washOrderDetail)
+        .then((washOrderDetailCreated) => {
+          this._messageService.add({
+            severity: 'success',
+            summary: `Detalle agregado.`,
+            detail: 'Detalle de Orden de Lavado creado con éxito.',
+            life: 1500
+          });
+          this._ref.close({ detailAdded: true, detail: washOrderDetailCreated });
+        })
+        .catch(err => {
+          if (err instanceof HttpErrorResponse) {
+            if (err.status === 422) {
+              this._validationService.handleValidationErrors(this.washOrderDetailForm, err.error.errors);
+            } else {
+              this._messageService.add({
+                severity: 'error',
+                summary: 'Error!',
+                detail: 'La acción no se pudo realizar, intente nuevamente...'
+              });
+            }
           } else {
             this._messageService.add({
               severity: 'error',
               summary: 'Error!',
-              detail: 'La acción no se pudo realizar, intente nuevamente...'
+              detail: 'Error inesperado, intente nuevamente...'
             });
           }
-        } else {
+        })
+        .finally(() => {
+          this.formProcessEvent.emit(false);
+        });
+    } else {
+      const washOrderDetailId = this._config.data?.washOrderDetailId;
+      const washOrderDetail: WashOrderDetailUpdateRequest = { ...formValue };
+
+      this._washOrderDetailService.update(washOrderDetailId, washOrderDetail)
+        .then((washOrderDetailUpdated) => {
           this._messageService.add({
-            severity: 'error',
-            summary: 'Error!',
-            detail: 'Error inesperado, intente nuevamente...'
+            severity: 'success',
+            summary: `Detalle actualizado.`,
+            detail: 'Detalle de Orden de Lavado actualizado con éxito.',
+            life: 1500
           });
-        }
-      })
-      .finally(() => {
-        this.formProcessEvent.emit(false);
-      });
+          this._ref.close({ detailUpdated: true, detail: washOrderDetailUpdated });
+        })
+        .catch(err => {
+          if (err instanceof HttpErrorResponse) {
+            if (err.status === 422) {
+              this._validationService.handleValidationErrors(this.washOrderDetailForm, err.error.errors);
+            } else {
+              this._messageService.add({
+                severity: 'error',
+                summary: 'Error!',
+                detail: 'La acción no se pudo realizar, intente nuevamente...'
+              });
+            }
+          } else {
+            this._messageService.add({
+              severity: 'error',
+              summary: 'Error!',
+              detail: 'Error inesperado, intente nuevamente...'
+            });
+          }
+        })
+        .finally(() => {
+          this.formProcessEvent.emit(false);
+        });
+    }
   }
 
   onEffectSelection(selectedEffects: Array<Effect>): void {
