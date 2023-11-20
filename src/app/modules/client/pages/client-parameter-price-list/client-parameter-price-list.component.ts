@@ -24,9 +24,9 @@ export class ClientParameterPriceListComponent {
     columns: [
       { title: 'Id', propertyRef: 'id', sortable: true, visible: false },
       { title: 'Parametero', propertyRef: 'name', sortable: false },
-      { title: 'Precio Original', propertyRef: 'price' },
+      { title: 'Precio Original (Bs.)', propertyRef: 'price' },
       {
-        title: 'Precio Cliente',
+        title: 'Precio Cliente (Bs.)',
         propertyRef: 'parameter_price.price',
         type: DataTableColumnType.CUSTOM,
         customValue: (row: ParameterPrice) => `${row.parameter_price.price}`

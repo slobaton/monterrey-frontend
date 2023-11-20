@@ -22,7 +22,7 @@ export class ParameterPricesComponent implements OnInit {
     columns: [
       { title: 'Código', propertyRef: 'name', type: DataTableColumnType.TEXT, visible: true, sortable: false },
       { title: 'Descripción', propertyRef: 'description', type: DataTableColumnType.TEXT, visible: true, sortable: false },
-      { title: 'Precio', propertyRef: 'price', type: DataTableColumnType.TEXT, visible: true, sortable: false },
+      { title: 'Precio (Bs.)', propertyRef: 'price', type: DataTableColumnType.TEXT, visible: true, sortable: false },
       { title: 'Actualizado', propertyRef: 'updated_at', type: DataTableColumnType.DATETIME, visible: true, sortable: false }
     ],
     identifierPropRef: 'id',

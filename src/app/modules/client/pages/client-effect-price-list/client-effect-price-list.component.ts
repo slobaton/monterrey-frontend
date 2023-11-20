@@ -24,9 +24,9 @@ export class ClientEffectPriceListComponent implements OnInit {
     columns: [
       { title: 'Id', propertyRef: 'id', sortable: true, visible: false },
       { title: 'Efecto', propertyRef: 'name', sortable: false },
-      { title: 'Precio Original', propertyRef: 'price' },
+      { title: 'Precio Original (Bs.)', propertyRef: 'price' },
       {
-        title: 'Precio Cliente',
+        title: 'Precio Cliente (Bs.)',
         propertyRef: 'effect_price.price',
         type: DataTableColumnType.CUSTOM,
         customValue: (row: EffectPrice) => `${row.effect_price.price}`

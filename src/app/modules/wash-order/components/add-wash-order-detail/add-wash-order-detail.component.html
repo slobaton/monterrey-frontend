@@ -46,7 +46,7 @@
     <div class="col-3">
       <app-form-label
         id="buttonholes_price"
-        text="Precio Ojal"
+        text="Precio Ojal (Bs.)"
         [required]="true"
       />
       <app-form-input-number
@@ -126,7 +126,7 @@
     <div class="col-3">
       <div class="flex justify-content-center align-items-center h-full">
         <p-overlayPanel #priceInfo>
-          <h6>Detalle Precio Unitario</h6>
+          <h5>Detalle Precio Unitario</h5>
           <ul>
             <li>
               Precio Lavado: {{ washOrderDetailCalcResult.wash_price }} Bs.
@@ -147,6 +147,9 @@
               {{ washOrderDetailCalcResult.effect_total_price }} Bs.
             </li>
           </ul>
+          <h6>
+            Precio Unitario: {{ washOrderDetailCalcResult.unit_price }} Bs.
+          </h6>
         </p-overlayPanel>
         <p-button
           styleClass="p-button-info"
@@ -172,7 +175,7 @@
         [item]="itemTemplate"
       ></app-list-picker>
       <ng-template #itemTemplate let-item>
-        {{ item.name }} - {{ item.price }} .Bs
+        {{ item.name }} - {{ item.price }} Bs.
       </ng-template>
     </div>
   </div>
