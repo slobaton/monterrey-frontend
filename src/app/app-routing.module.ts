@@ -13,7 +13,7 @@ import { Role } from './@core/enums/role.enum';
         path: '', component: AppLayoutComponent,
         canActivate: [authGuard],
         children: [
-          { path: 'dashboard', loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
+          { path: 'dashboard', loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule) },
           { path: 'users', canActivate: [roleGuard([Role.ADMIN])], loadChildren: () => import('./modules/user/user.module').then(m => m.UserModule) },
           { path: 'clients', canActivate: [roleGuard([Role.ADMIN, Role.SECRETARY])], loadChildren: () => import('./modules/client/client.module').then(m => m.ClientModule) },
           { path: 'wash-types', canActivate: [roleGuard([Role.ADMIN])], loadChildren: () => import('./modules/wash-type/wash-type.module').then(m => m.WashTypeModule) },
