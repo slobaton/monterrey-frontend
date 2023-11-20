@@ -145,9 +145,9 @@
                       <th style="width: 5rem"></th>
                       <th>Tipo</th>
                       <th>Tamaño</th>
-                      <th>Precio c/u ($)</th>
+                      <th>Precio c/u (Bs.)</th>
                       <th>Cantidad</th>
-                      <th>Subtotal ($)</th>
+                      <th>Subtotal (Bs.)</th>
                       <th>Acciones</th>
                     </tr>
                   </ng-template>
@@ -195,26 +195,45 @@
                   <ng-template pTemplate="rowexpansion" let-rowItem>
                     <tr>
                       <td colspan="12">
-                        <div class="grid mt-1">
+                        <div class="grid m-0 p-0">
                           <div class="col-6">
                             <h6>Observaciones:</h6>
                             <p>{{ rowItem["observations"] }}</p>
+
+                            <p>
+                              <b>Precio Lavado:</b>
+                              {{ rowItem["wash_price"] }} Bs.
+                            </p>
+
+                            <p>
+                              <b>Precio Ojales:</b>
+                              {{
+                                rowItem["buttonholes_price"] *
+                                  rowItem["num_buttonholes"]
+                              }}
+                              Bs.
+                            </p>
 
                             <ng-container
                               *ngIf="rowItem['is_focalizado_active']"
                             >
                               <p>
                                 <b>Precio Focalizado:</b>
-                                {{ rowItem["focalizado_price"] }}
+                                {{ rowItem["focalizado_price"] }} Bs.
                               </p>
                             </ng-container>
 
                             <ng-container *ngIf="rowItem['is_nevado_active']">
                               <p>
                                 <b>Precio Nevado:</b>
-                                {{ rowItem["nevado_price"] }}
+                                {{ rowItem["nevado_price"] }} Bs.
                               </p>
                             </ng-container>
+
+                            <p>
+                              <b>Precio Total Efectos:</b>
+                              {{ rowItem["effect_price"] }} Bs.
+                            </p>
                           </div>
                           <div class="col-6">
                             <h6>Efectos seleccionados:</h6>
