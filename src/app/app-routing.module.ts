@@ -13,7 +13,7 @@ import { Role } from './@core/enums/role.enum';
         path: '', component: AppLayoutComponent,
         canActivate: [authGuard],
         children: [
-          { path: 'inicio', loadChildren: () => import('./demo/components/dashboard/dashboard.module').then(m => m.DashboardModule) },
+          { path: 'dashboard', loadChildren: () => import('./modules/dashboard/dashboard.module').then(m => m.DashboardModule) },
           { path: 'users', canActivate: [roleGuard([Role.ADMIN])], loadChildren: () => import('./modules/user/user.module').then(m => m.UserModule) },
           { path: 'clients', canActivate: [roleGuard([Role.ADMIN, Role.SECRETARY])], loadChildren: () => import('./modules/client/client.module').then(m => m.ClientModule) },
           { path: 'wash-types', canActivate: [roleGuard([Role.ADMIN])], loadChildren: () => import('./modules/wash-type/wash-type.module').then(m => m.WashTypeModule) },
@@ -22,7 +22,7 @@ import { Role } from './@core/enums/role.enum';
           { path: 'cloth-sizes', canActivate: [roleGuard([Role.ADMIN])], loadChildren: () => import('./modules/cloth-size/cloth-size.module').then(m => m.ClothSizeModule) },
           { path: 'wash-orders', canActivate: [roleGuard([Role.ADMIN, Role.SECRETARY])], loadChildren: () => import('./modules/wash-order/wash-order.module').then(m => m.WashOrderModule) },
           { path: 'parameters', canActivate: [roleGuard([Role.ADMIN])], loadChildren: () => import('./modules/parameter/parameter.module').then(m => m.ParameterModule) },
-          { path: '', redirectTo: 'inicio', pathMatch: 'full' }
+          { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
         ]
       },
       { path: 'auth', loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule) },

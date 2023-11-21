@@ -16,7 +16,7 @@ import { AuthPublicKey } from '../../models/auth-public-key';
 })
 export class AuthService extends BaseService implements IAuthService {
 
-  redirectUrl: string = 'inicio';
+  redirectUrl: string = 'dashboard';
 
   private userSubject: BehaviorSubject<AuthUser | null>;
   public user: Observable<AuthUser | null>;

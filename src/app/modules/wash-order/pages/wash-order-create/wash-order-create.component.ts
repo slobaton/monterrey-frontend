@@ -28,6 +28,7 @@ export class WashOrderCreateComponent implements OnInit {
   formProcessEvent: EventEmitter<boolean> = new EventEmitter();
 
   isProcessing: boolean = false;
+  isDetailProcessing: boolean = false;
 
   washOrderCreated: boolean = false;
   existingWashOrder: boolean = false;
@@ -256,6 +257,7 @@ export class WashOrderCreateComponent implements OnInit {
   }
 
   deleteWashOrderDetail(washOrderDetailId: string): void {
+    this.isDetailProcessing = true;
     this._washOrderDetailService.deleteById(washOrderDetailId)
       .then(() => {
         this.washOrderDetails = this.washOrderDetails.filter((x) => x.id !== washOrderDetailId);
@@ -266,6 +268,28 @@ export class WashOrderCreateComponent implements OnInit {
           detail: 'Detalle de orden de lavado eliminado con exito...'
         });
       })
+      .finally(() => this.isDetailProcessing = false);
+  }
+
+  updateWashOrderDetail(washOrderDetailId: string, washOrderDetail: WashOrderDetail): void {
+    const dialogProps = {
+      header: 'Actualizar Detalle de Lavado',
+      data: { washOrderId: this.washOrderId, washOrderDetailId, washOrderDetail }
+    }
+
+    this.ref = this._dialogService.open(AddWashOrderDetailComponent, dialogProps);
+
+    this.ref.onClose.subscribe((result) => {
+      if (result && result.detailUpdated) {
+        const updatedWashOrderDetail = result.detail as WashOrderDetail;
+
+        const index = this.washOrderDetails.findIndex(x => x.id === updatedWashOrderDetail.id);
+
+        if (index > -1) {
+          this.washOrderDetails[index] = updatedWashOrderDetail;
+        }
+      }
+    });
   }
 
   private updateWashOrderTotal() {

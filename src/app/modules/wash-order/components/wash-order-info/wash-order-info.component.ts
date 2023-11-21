@@ -34,7 +34,7 @@ export class WashOrderInfoComponent implements OnInit {
         customValue: (row) => row.cloth_type.name,
       },
       {
-        title: 'Precio Unidad ($)',
+        title: 'Precio Unidad (Bs.)',
         type: SimpleTableColumnType.TEXT,
         propertyRef: 'unit_price'
       },
@@ -44,7 +44,7 @@ export class WashOrderInfoComponent implements OnInit {
         propertyRef: 'quantity'
       },
       {
-        title: 'Subtotal ($)',
+        title: 'Subtotal (Bs.)',
         type: SimpleTableColumnType.TEXT,
         propertyRef: 'subtotal_price'
       }
