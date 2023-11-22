@@ -249,9 +249,28 @@ export class WashOrderCreateComponent implements OnInit {
     this.ref = this._dialogService.open(AddWashOrderDetailComponent, dialogProps);
 
     this.ref.onClose.subscribe((result) => {
-      if (result && result.detailAdded) {
+      if (result && result.detailSaved) {
         this.washOrderDetails.push(result.detail);
         this.updateWashOrderTotal();
+      } else {
+        this._washOrderDetailService.fetchPaginatedResource({
+          filter: this.washOrderId,
+          page: 1,
+          pageSize: 1000,
+          sort: '',
+          sortOrder: ''
+        }).then((result) => {
+          this.washOrderDetails = result.data
+          this.updateWashOrderTotal();
+        }).catch(err => {
+          this._messageService.add({
+            severity: 'error',
+            summary: 'Error inesperado',
+            detail: 'Ocurrio un error inesperado, recargando...'
+          });
+
+          window.location.reload();
+        });
       }
     });
   }
@@ -280,13 +299,14 @@ export class WashOrderCreateComponent implements OnInit {
     this.ref = this._dialogService.open(AddWashOrderDetailComponent, dialogProps);
 
     this.ref.onClose.subscribe((result) => {
-      if (result && result.detailUpdated) {
+      if (result && result.detailSaved) {
         const updatedWashOrderDetail = result.detail as WashOrderDetail;
 
         const index = this.washOrderDetails.findIndex(x => x.id === updatedWashOrderDetail.id);
 
         if (index > -1) {
           this.washOrderDetails[index] = updatedWashOrderDetail;
+          this.updateWashOrderTotal();
         }
       }
     });

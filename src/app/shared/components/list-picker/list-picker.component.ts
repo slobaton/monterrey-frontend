@@ -28,6 +28,8 @@ export class ListPickerComponent<TEntity> implements OnInit {
 
   @Input() item: TemplateRef<any> | null = null;
 
+  @Input() onReset?: EventEmitter<void>;
+
   @Output() onChangeSelection: EventEmitter<Array<TEntity>> = new EventEmitter<Array<TEntity>>();
 
   constructor() { }
@@ -35,6 +37,12 @@ export class ListPickerComponent<TEntity> implements OnInit {
   ngOnInit(): void {
     if (this.isLazy && this.sourceDataService) {
       this.fetchData();
+    }
+
+    if (this.onReset) {
+      this.onReset.subscribe(() => {
+        this.resetSelection();
+      });
     }
   }
 
@@ -55,5 +63,15 @@ export class ListPickerComponent<TEntity> implements OnInit {
 
   changeSelection($event: any): void {
     this.onChangeSelection.emit(this.selectedOptions);
+  }
+
+  private resetSelection(): void {
+    if (this.isLazy && this.sourceDataService) {
+      this.fetchData();
+    } else {
+      this.sourceOptions = [...this.sourceOptions, ...this.selectedOptions];
+    }
+
+    this.selectedOptions = [];
   }
 }

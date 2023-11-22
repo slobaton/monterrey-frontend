@@ -26,6 +26,9 @@ export class AddWashOrderDetailComponent implements OnInit {
 
   washOrderDetailForm!: FormGroup;
   formProcessEvent: EventEmitter<boolean> = new EventEmitter();
+  isProcessing: boolean = false;
+  isOnlyTimeSave: boolean = true;
+  resetListPickerEvent: EventEmitter<void> = new EventEmitter();
 
   alreadySelectedItems: Array<Effect> = [];
 
@@ -94,7 +97,7 @@ export class AddWashOrderDetailComponent implements OnInit {
   }
 
   onSubmitForm(formValue: any): void {
-    this.formProcessEvent.emit(true);
+    this.changeProcessState(true);
 
     if (!this.doesWashOrderDetailExists) {
       const washOrderDetail: WashOrderDetailCreateRequest = { ...formValue };
@@ -107,7 +110,7 @@ export class AddWashOrderDetailComponent implements OnInit {
             detail: 'Detalle de Orden de Lavado creado con éxito.',
             life: 1500
           });
-          this._ref.close({ detailAdded: true, detail: washOrderDetailCreated });
+          this.processSuccessSubmit({ detailSaved: true, detail: washOrderDetailCreated });
         })
         .catch(err => {
           if (err instanceof HttpErrorResponse) {
@@ -129,7 +132,7 @@ export class AddWashOrderDetailComponent implements OnInit {
           }
         })
         .finally(() => {
-          this.formProcessEvent.emit(false);
+          this.changeProcessState(false);
         });
     } else {
       const washOrderDetailId = this._config.data?.washOrderDetailId;
@@ -143,7 +146,7 @@ export class AddWashOrderDetailComponent implements OnInit {
             detail: 'Detalle de Orden de Lavado actualizado con éxito.',
             life: 1500
           });
-          this._ref.close({ detailUpdated: true, detail: washOrderDetailUpdated });
+          this.processSuccessSubmit({ detailSaved: true, detail: washOrderDetailUpdated });
         })
         .catch(err => {
           if (err instanceof HttpErrorResponse) {
@@ -165,7 +168,7 @@ export class AddWashOrderDetailComponent implements OnInit {
           }
         })
         .finally(() => {
-          this.formProcessEvent.emit(false);
+          this.changeProcessState(false);
         });
     }
   }
@@ -188,5 +191,33 @@ export class AddWashOrderDetailComponent implements OnInit {
     this.isCalcPrices = false;
 
     this.washOrderDetailCalcResult = result;
+  }
+
+  setOnlyTimeSave(isOnlyTimeSave: boolean = true) {
+    this.isOnlyTimeSave = isOnlyTimeSave;
+  }
+
+  private processSuccessSubmit(message: any) {
+    if (this.isOnlyTimeSave) {
+      this._ref.close(message);
+    } else {
+      const washOrderId = this._config.data?.washOrderId;
+
+      this.washOrderDetailForm.reset({
+        wash_order_id: washOrderId,
+        is_focalizado_active: false,
+        is_nevado_active: false,
+        buttonholes_price: 0,
+        num_buttonholes: 0,
+        quantity: 0
+      });
+
+      this.resetListPickerEvent.emit();
+    }
+  }
+
+  private changeProcessState(state: boolean) {
+    this.formProcessEvent.emit(state);
+    this.isProcessing = state;
   }
 }
