@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { HomeComponent } from './pages/home/home.component';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { HomeComponent } from './pages/home/home.component';
   ],
   imports: [
     CommonModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    ProgressBarModule
   ]
 })
 export class DashboardModule { }
