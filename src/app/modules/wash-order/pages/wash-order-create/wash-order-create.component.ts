@@ -287,6 +287,7 @@ export class WashOrderCreateComponent implements OnInit {
 
         if (index > -1) {
           this.washOrderDetails[index] = updatedWashOrderDetail;
+          this.updateWashOrderTotal();
         }
       }
     });
