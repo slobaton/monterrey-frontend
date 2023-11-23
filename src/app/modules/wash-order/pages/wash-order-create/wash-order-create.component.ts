@@ -44,6 +44,7 @@ export class WashOrderCreateComponent implements OnInit {
 
   reportLoading: boolean = false;
 
+  washOrderDetailsLoading: boolean = false;
   washOrderDetails: Array<WashOrderDetail> = [];
 
   ref: DynamicDialogRef | undefined;
@@ -74,6 +75,7 @@ export class WashOrderCreateComponent implements OnInit {
             this.code = washOrder.code.toString();
             this.totalQuantity = washOrder.total_quantity;
             this.totalPrice = washOrder.total_price;
+
             this.washOrderDetails = (await this._washOrderDetailService.fetchPaginatedResource({
               filter: this.washOrderId,
               page: 1,
@@ -81,6 +83,7 @@ export class WashOrderCreateComponent implements OnInit {
               sort: '',
               sortOrder: ''
             })).data;
+
           })
           .catch((err) => {
             if (err instanceof HttpErrorResponse) {
@@ -204,13 +207,7 @@ export class WashOrderCreateComponent implements OnInit {
         this.totalQuantity = updatedWashOrder.total_quantity;
         this.totalPrice = updatedWashOrder.total_price;
 
-        this.washOrderDetails = (await this._washOrderDetailService.fetchPaginatedResource({
-          filter: this.washOrderId,
-          page: 1,
-          pageSize: 1000,
-          sort: '',
-          sortOrder: ''
-        })).data;
+        this.retrieveWashOrderDetails();
 
         this._messageService.add({
           severity: 'success',
@@ -253,29 +250,7 @@ export class WashOrderCreateComponent implements OnInit {
     this.ref = this._dialogService.open(AddWashOrderDetailComponent, dialogProps);
 
     this.ref.onClose.subscribe((result) => {
-      if (result && result.detailSaved) {
-        this.washOrderDetails.push(result.detail);
-        this.updateWashOrderTotal();
-      } else {
-        this._washOrderDetailService.fetchPaginatedResource({
-          filter: this.washOrderId,
-          page: 1,
-          pageSize: 1000,
-          sort: '',
-          sortOrder: ''
-        }).then((result) => {
-          this.washOrderDetails = result.data
-          this.updateWashOrderTotal();
-        }).catch(err => {
-          this._messageService.add({
-            severity: 'error',
-            summary: 'Error inesperado',
-            detail: 'Ocurrio un error inesperado, recargando...'
-          });
-
-          window.location.reload();
-        });
-      }
+      this.retrieveWashOrderDetails();
     });
   }
 
@@ -324,6 +299,28 @@ export class WashOrderCreateComponent implements OnInit {
       this.reportLoading = false;
       window.open(reportUrl);
     }
+  }
+
+  private retrieveWashOrderDetails() {
+    this.washOrderDetailsLoading = true;
+    this._washOrderDetailService.fetchPaginatedResource({
+      filter: this.washOrderId,
+      page: 1,
+      pageSize: 1000,
+      sort: '',
+      sortOrder: ''
+    }).then((result) => {
+      this.washOrderDetails = result.data
+      this.updateWashOrderTotal();
+    }).catch(err => {
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Error inesperado',
+        detail: 'Ocurrio un error inesperado, recargando...'
+      });
+
+      window.location.reload();
+    }).finally(() => this.washOrderDetailsLoading = false);
   }
 
   private updateWashOrderTotal() {
