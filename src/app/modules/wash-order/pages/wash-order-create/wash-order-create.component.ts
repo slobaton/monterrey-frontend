@@ -16,6 +16,7 @@ import { WashOrder, WashOrderDetail } from 'src/app/@core/models/wash-order';
 import { WashOrderDetailService } from 'src/app/@core/services/rest/wash-order-detail.service';
 import { WashOrderUpdateRequest } from 'src/app/@core/models/request/wash-order-update-request';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ReportService } from 'src/app/@core/services/rest/report.service';
 
 @Component({
   selector: 'app-wash-order-create',
@@ -41,6 +42,9 @@ export class WashOrderCreateComponent implements OnInit {
   totalQuantity: number = 0;
   totalPrice: number = 0;
 
+  reportLoading: boolean = false;
+
+  washOrderDetailsLoading: boolean = false;
   washOrderDetails: Array<WashOrderDetail> = [];
 
   ref: DynamicDialogRef | undefined;
@@ -52,6 +56,7 @@ export class WashOrderCreateComponent implements OnInit {
     public washTypeService: WashTypeService,
     private _washOrderService: WashOrderService,
     private _washOrderDetailService: WashOrderDetailService,
+    private _reportService: ReportService,
     private _messageService: MessageService,
     private _validationService: ValidationService,
     private _dialogService: DialogService) { }
@@ -70,6 +75,7 @@ export class WashOrderCreateComponent implements OnInit {
             this.code = washOrder.code.toString();
             this.totalQuantity = washOrder.total_quantity;
             this.totalPrice = washOrder.total_price;
+
             this.washOrderDetails = (await this._washOrderDetailService.fetchPaginatedResource({
               filter: this.washOrderId,
               page: 1,
@@ -77,6 +83,7 @@ export class WashOrderCreateComponent implements OnInit {
               sort: '',
               sortOrder: ''
             })).data;
+
           })
           .catch((err) => {
             if (err instanceof HttpErrorResponse) {
@@ -200,13 +207,7 @@ export class WashOrderCreateComponent implements OnInit {
         this.totalQuantity = updatedWashOrder.total_quantity;
         this.totalPrice = updatedWashOrder.total_price;
 
-        this.washOrderDetails = (await this._washOrderDetailService.fetchPaginatedResource({
-          filter: this.washOrderId,
-          page: 1,
-          pageSize: 1000,
-          sort: '',
-          sortOrder: ''
-        })).data;
+        this.retrieveWashOrderDetails();
 
         this._messageService.add({
           severity: 'success',
@@ -249,29 +250,7 @@ export class WashOrderCreateComponent implements OnInit {
     this.ref = this._dialogService.open(AddWashOrderDetailComponent, dialogProps);
 
     this.ref.onClose.subscribe((result) => {
-      if (result && result.detailSaved) {
-        this.washOrderDetails.push(result.detail);
-        this.updateWashOrderTotal();
-      } else {
-        this._washOrderDetailService.fetchPaginatedResource({
-          filter: this.washOrderId,
-          page: 1,
-          pageSize: 1000,
-          sort: '',
-          sortOrder: ''
-        }).then((result) => {
-          this.washOrderDetails = result.data
-          this.updateWashOrderTotal();
-        }).catch(err => {
-          this._messageService.add({
-            severity: 'error',
-            summary: 'Error inesperado',
-            detail: 'Ocurrio un error inesperado, recargando...'
-          });
-
-          window.location.reload();
-        });
-      }
+      this.retrieveWashOrderDetails();
     });
   }
 
@@ -310,6 +289,38 @@ export class WashOrderCreateComponent implements OnInit {
         }
       }
     });
+  }
+
+  async printOrder(): Promise<void> {
+    if (this.washOrderId) {
+      const washOrderId = this.washOrderId;
+      this.reportLoading = true;
+      const reportUrl = await this._reportService.getWashOrderPrintReportUrl(washOrderId);
+      this.reportLoading = false;
+      window.open(reportUrl);
+    }
+  }
+
+  private retrieveWashOrderDetails() {
+    this.washOrderDetailsLoading = true;
+    this._washOrderDetailService.fetchPaginatedResource({
+      filter: this.washOrderId,
+      page: 1,
+      pageSize: 1000,
+      sort: '',
+      sortOrder: ''
+    }).then((result) => {
+      this.washOrderDetails = result.data
+      this.updateWashOrderTotal();
+    }).catch(err => {
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Error inesperado',
+        detail: 'Ocurrio un error inesperado, recargando...'
+      });
+
+      window.location.reload();
+    }).finally(() => this.washOrderDetailsLoading = false);
   }
 
   private updateWashOrderTotal() {
