@@ -16,6 +16,7 @@ import { WashOrder, WashOrderDetail } from 'src/app/@core/models/wash-order';
 import { WashOrderDetailService } from 'src/app/@core/services/rest/wash-order-detail.service';
 import { WashOrderUpdateRequest } from 'src/app/@core/models/request/wash-order-update-request';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ReportService } from 'src/app/@core/services/rest/report.service';
 
 @Component({
   selector: 'app-wash-order-create',
@@ -41,6 +42,8 @@ export class WashOrderCreateComponent implements OnInit {
   totalQuantity: number = 0;
   totalPrice: number = 0;
 
+  reportLoading: boolean = false;
+
   washOrderDetails: Array<WashOrderDetail> = [];
 
   ref: DynamicDialogRef | undefined;
@@ -52,6 +55,7 @@ export class WashOrderCreateComponent implements OnInit {
     public washTypeService: WashTypeService,
     private _washOrderService: WashOrderService,
     private _washOrderDetailService: WashOrderDetailService,
+    private _reportService: ReportService,
     private _messageService: MessageService,
     private _validationService: ValidationService,
     private _dialogService: DialogService) { }
@@ -310,6 +314,16 @@ export class WashOrderCreateComponent implements OnInit {
         }
       }
     });
+  }
+
+  async printOrder(): Promise<void> {
+    if (this.washOrderId) {
+      const washOrderId = this.washOrderId;
+      this.reportLoading = true;
+      const reportUrl = await this._reportService.getWashOrderPrintReportUrl(washOrderId);
+      this.reportLoading = false;
+      window.open(reportUrl);
+    }
   }
 
   private updateWashOrderTotal() {

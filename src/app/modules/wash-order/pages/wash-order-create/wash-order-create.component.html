@@ -125,6 +125,16 @@
                   [loading]="isProcessing"
                 >
                 </p-button>
+                <p-button
+                  *ngIf="washOrderCreated"
+                  type="button"
+                  styleClass="p-button-sm p-button-info"
+                  icon="pi pi-print"
+                  label="Imprimir"
+                  (onClick)="printOrder()"
+                  [loading]="reportLoading"
+                >
+                </p-button>
               </div>
             </div>
 
