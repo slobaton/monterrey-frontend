@@ -5,6 +5,7 @@ import { UserRoutingModule } from './user-routing.module';
 import { UserListComponent } from './pages/user-list/user-list.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 
+import { UpsertUserComponent } from './components/upsert-user-form/upsert-user.component'
 
 @NgModule({
   imports: [
@@ -12,6 +13,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
     UserRoutingModule,
     SharedModule
   ],
-  declarations: [UserListComponent]
+  declarations: [
+    UserListComponent,
+    UpsertUserComponent
+  ]
 })
 export class UserModule { }

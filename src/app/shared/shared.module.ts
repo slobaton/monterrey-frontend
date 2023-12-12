@@ -7,6 +7,7 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
 import { TooltipModule } from 'primeng/tooltip';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ToastModule } from 'primeng/toast';
@@ -23,6 +24,7 @@ import { DataTableComponent } from './components/data-table/data-table.component
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { FormComponent } from './components/form/form.component';
 import { FormInputTextComponent } from './components/form-input-text/form-input-text.component';
+import { FormInputPasswordComponent } from './components/form-input-password/form-input-password.component';
 import { FormTextareaComponent } from './components/form-textarea/form-textarea.component';
 import { FormSwitchComponent } from './components/form-switch/form-switch.component';
 import { FormLabelComponent } from './components/form-label/form-label.component';
@@ -43,6 +45,7 @@ import { FormInputSearchComponent } from './components/form-input-search/form-in
     ConfirmDialogComponent,
     FormComponent,
     FormInputTextComponent,
+    FormInputPasswordComponent,
     FormTextareaComponent,
     FormSwitchComponent,
     FormLabelComponent,
@@ -74,7 +77,8 @@ import { FormInputSearchComponent } from './components/form-input-search/form-in
     DropdownModule,
     NgSelectModule,
     CalendarModule,
-    PickListModule
+    PickListModule,
+    PasswordModule
   ],
   exports: [
     DataTableComponent,
@@ -91,7 +95,8 @@ import { FormInputSearchComponent } from './components/form-input-search/form-in
     FormDatetimePickerComponent,
     ListPickerComponent,
     FormInputSearchComponent,
-    SearchOverlayComponent
+    SearchOverlayComponent,
+    FormInputPasswordComponent,
   ]
 })
 export class SharedModule { }
