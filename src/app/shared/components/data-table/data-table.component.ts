@@ -187,6 +187,11 @@ export class DataTableComponent<TEntity> implements OnInit {
       return value;
     }
 
+    if (col.type === DataTableColumnType.BADGE && col.customValue) {
+      const value = col.customValue(row[col.propertyRef]);
+      return value;
+    }
+
     return '';
   }
 }

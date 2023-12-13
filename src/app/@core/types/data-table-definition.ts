@@ -50,5 +50,6 @@ export enum DataTableColumnType {
   BOOLEAN,
   DATE,
   DATETIME,
+  BADGE,
   CUSTOM
 }

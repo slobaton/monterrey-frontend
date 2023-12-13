@@ -128,6 +128,11 @@
             <ng-container *ngSwitchCase="columnType.CUSTOM">
               {{ getColumnCustomValue(col, rowData) }}
             </ng-container>
+            <ng-container *ngSwitchCase="columnType.BADGE">
+              <div class="p-badge">
+                {{ getColumnCustomValue(col, rowData) }}
+              </div>
+            </ng-container>
           </container-element>
         </td>
       </ng-container>
