@@ -10,13 +10,20 @@
     </div>
     <ng-template #washOrderSection>
       <div class="card mb-0">
-        <h6>
-          {{
-            existingWashOrder
-              ? "Modificar Orden de Lavado"
-              : "Nueva Orden de Lavado"
-          }}
-        </h6>
+        <div class="p-card-title">
+          <div class="flex justify-content-between align-items-center">
+            <h6 class="mb-0">
+              {{
+                existingWashOrder
+                  ? "Modificar Orden de Lavado"
+                  : "Nueva Orden de Lavado"
+              }}
+            </h6>
+            <div>
+              <div class="p-tag"><b>Estado:</b> {{ getWashOrderStatus() }}</div>
+            </div>
+          </div>
+        </div>
         <hr />
 
         <app-form
@@ -126,7 +133,17 @@
                 >
                 </p-button>
                 <p-button
-                  *ngIf="washOrderCreated"
+                  *ngIf="isReadyToApprove()"
+                  type="button"
+                  styleClass="p-button-sm p-button-success"
+                  icon="pi pi-check"
+                  label="Aprobar"
+                  (onClick)="approveOrder()"
+                  [loading]="reportLoading"
+                >
+                </p-button>
+                <p-button
+                  *ngIf="isApproved()"
                   type="button"
                   styleClass="p-button-sm p-button-info"
                   icon="pi pi-print"
