@@ -1,3 +1,4 @@
+import { OrderStatus } from "../enums/order-status.enum";
 import { Client } from "./client";
 import { ClothSize } from "./cloth-size";
 import { ClothType } from "./cloth-type";
@@ -13,6 +14,7 @@ export class WashOrder {
     public date: Date,
     public total_quantity: number,
     public total_price: number,
+    public status: OrderStatus,
     public deliver_date: Date,
     public deliver_quantity: number,
     public observations: string,
