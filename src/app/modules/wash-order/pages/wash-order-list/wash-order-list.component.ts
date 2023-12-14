@@ -159,6 +159,14 @@ export class WashOrderListComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
+        hiddenFn: (selectedRow) => {
+          if (selectedRow) {
+            const washOrder = selectedRow;
+            return washOrder.status === OrderStatus.CREATED;
+          }
+
+          return false;
+        },
         callback: async (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
 
@@ -167,6 +175,31 @@ export class WashOrderListComponent {
           action.loading = false;
 
           window.open(reportUrl);
+        }
+      },
+      {
+        title: 'Aprobar',
+        tooltip: 'Aprobar Orden de Lavado',
+        icon: 'check',
+        status: DataTableActionStatus.SUCCESS,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        hasLoadingEnabled: true,
+        hiddenFn: (selectedRow) => {
+          if (selectedRow) {
+            const washOrder = selectedRow;
+            return washOrder.status !== OrderStatus.CREATED;
+          }
+
+          return false;
+        },
+        callback: async (action, selectedRows) => {
+          const washOrderId = selectedRows[0].id;
+
+          console.log(washOrderId);
+
+          action.loading = false;
         }
       }
     ]

@@ -109,9 +109,13 @@ export class DataTableComponent<TEntity> implements OnInit {
   }
 
   isActionVisible(action: DataTableActionProps): boolean {
-    const actionHidden = action.hidden ?? false;
+    const actionHidden = action.hiddenFn && action.hiddenFn(this.selectedRows);
 
-    return !actionHidden && (this.isSelectionEnabled() || !this.requireSelectedRows(action));
+    if (actionHidden) {
+      return false;
+    }
+
+    return this.isSelectionEnabled() || !this.requireSelectedRows(action);
   }
 
   requireSelectedRows(action: DataTableActionProps): boolean {
@@ -121,7 +125,7 @@ export class DataTableComponent<TEntity> implements OnInit {
   }
 
   isActionEnabled(action: DataTableActionProps): boolean {
-    const actionDisabled = action.disabled ?? false;
+    const actionDisabled = action.disabledFn && action.disabledFn(this.selectedRows);
 
     if (actionDisabled) {
       return false;
