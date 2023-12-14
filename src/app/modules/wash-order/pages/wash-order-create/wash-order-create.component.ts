@@ -341,19 +341,7 @@ export class WashOrderCreateComponent implements OnInit {
   }
 
   getWashOrderStatus(): string {
-    const status = this.washOrder?.status ?? 'unknown';
-    let statusLabel = 'Nuevo';
-
-    switch (status) {
-      case OrderStatus.CREATED: statusLabel = 'Creado';
-        break;
-      case OrderStatus.APPROVED: statusLabel = 'Aprobado';
-        break;
-      case OrderStatus.DELIVERED: statusLabel = 'Entregado';
-        break;
-    }
-
-    return statusLabel;
+    return WashOrder.getStatusFriendlyName(this.washOrder?.status ?? OrderStatus.UNKNOWN);
   }
 
   isReadyToApprove(): boolean {

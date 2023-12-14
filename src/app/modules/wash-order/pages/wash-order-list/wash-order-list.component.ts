@@ -51,20 +51,7 @@ export class WashOrderListComponent {
         title: 'Estado',
         propertyRef: 'status',
         sortable: false,
-        customValue: (status) => {
-          let statusLabel = 'Nuevo';
-
-          switch (status) {
-            case OrderStatus.CREATED: statusLabel = 'Creado';
-              break;
-            case OrderStatus.APPROVED: statusLabel = 'Aprobado';
-              break;
-            case OrderStatus.DELIVERED: statusLabel = 'Entregado';
-              break;
-          }
-
-          return statusLabel;
-        },
+        customValue: (status) => WashOrder.getStatusFriendlyName(status),
         type: DataTableColumnType.BADGE
       },
       { title: 'Creado', propertyRef: 'created_at', sortable: true, type: DataTableColumnType.DATETIME },

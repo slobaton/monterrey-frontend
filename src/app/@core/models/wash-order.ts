@@ -25,6 +25,25 @@ export class WashOrder {
     public client: Client,
     public wash_type: WashType
   ) { }
+
+  public getStatusFriendlyName(): string {
+    return WashOrder.getStatusFriendlyName(this.status);
+  }
+
+  public static getStatusFriendlyName(status: OrderStatus): string {
+    let statusLabel = 'Nuevo';
+
+    switch (status) {
+      case OrderStatus.CREATED: statusLabel = 'Creado';
+        break;
+      case OrderStatus.APPROVED: statusLabel = 'Aprobado';
+        break;
+      case OrderStatus.DELIVERED: statusLabel = 'Entregado';
+        break;
+    }
+
+    return statusLabel;
+  }
 }
 
 export class WashOrderDetail {
