@@ -195,11 +195,18 @@ export class WashOrderListComponent {
           return false;
         },
         callback: async (action, selectedRows) => {
-          const washOrderId = selectedRows[0].id;
+          const washOrder = selectedRows[0];
 
-          console.log(washOrderId);
-
-          action.loading = false;
+          this.washOrderService.approveById(washOrder.id)
+            .then((updatedWashOrder) => {
+              washOrder.status = updatedWashOrder.status;
+              this._messageService.add({ key: 'confirmDelete', severity: 'success', summary: 'Orden Actualizada', detail: `Orden COD: ${washOrder.code} aprobada!` });
+            })
+            .catch((err) => {
+              console.error(err);
+              this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
+            })
+            .finally(() => action.loading = false);
         }
       }
     ]
