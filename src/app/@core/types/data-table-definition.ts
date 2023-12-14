@@ -22,6 +22,8 @@ export type DataTableActionProps = {
   selectionConfig?: DataTableActionSelectionConfig,
   hasLoadingEnabled?: boolean,
   loading?: boolean,
+  hidden?: boolean,
+  disabled?: boolean,
   callback: (action: DataTableActionProps, selectedRows: Array<any>) => void
 }
 

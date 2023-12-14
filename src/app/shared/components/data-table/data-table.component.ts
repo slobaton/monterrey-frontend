@@ -108,6 +108,12 @@ export class DataTableComponent<TEntity> implements OnInit {
     return actions && actions.length > 0;
   }
 
+  isActionVisible(action: DataTableActionProps): boolean {
+    const actionHidden = action.hidden ?? false;
+
+    return !actionHidden && (this.isSelectionEnabled() || !this.requireSelectedRows(action));
+  }
+
   requireSelectedRows(action: DataTableActionProps): boolean {
     const selectionConfig = action.selectionConfig;
 
@@ -115,6 +121,12 @@ export class DataTableComponent<TEntity> implements OnInit {
   }
 
   isActionEnabled(action: DataTableActionProps): boolean {
+    const actionDisabled = action.disabled ?? false;
+
+    if (actionDisabled) {
+      return false;
+    }
+
     const selectionConfig = action.selectionConfig;
     const requiredMinSelectionCount = selectionConfig?.minSelectedRows ?? 1;
     const requiredMaxSelectionCount = selectionConfig?.maxSelectedRows ?? Number.MAX_VALUE;
