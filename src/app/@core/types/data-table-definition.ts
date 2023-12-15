@@ -22,6 +22,8 @@ export type DataTableActionProps = {
   selectionConfig?: DataTableActionSelectionConfig,
   hasLoadingEnabled?: boolean,
   loading?: boolean,
+  hiddenFn?: (selectedRows: any) => boolean,
+  disabledFn?: (selectedRows: any) => boolean,
   callback: (action: DataTableActionProps, selectedRows: Array<any>) => void
 }
 
@@ -50,5 +52,6 @@ export enum DataTableColumnType {
   BOOLEAN,
   DATE,
   DATETIME,
+  BADGE,
   CUSTOM
 }

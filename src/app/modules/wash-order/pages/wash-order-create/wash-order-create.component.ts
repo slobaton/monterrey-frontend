@@ -17,6 +17,7 @@ import { WashOrderDetailService } from 'src/app/@core/services/rest/wash-order-d
 import { WashOrderUpdateRequest } from 'src/app/@core/models/request/wash-order-update-request';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReportService } from 'src/app/@core/services/rest/report.service';
+import { OrderStatus } from 'src/app/@core/enums/order-status.enum';
 
 @Component({
   selector: 'app-wash-order-create',
@@ -155,6 +156,7 @@ export class WashOrderCreateComponent implements OnInit {
       .then((createdWashOrder) => {
         this.code = createdWashOrder.code.toString();
         this.washOrderId = createdWashOrder.id;
+        this.washOrder = createdWashOrder;
         this.washOrderCreated = true;
 
         this.totalQuantity = createdWashOrder.total_quantity;
@@ -299,6 +301,59 @@ export class WashOrderCreateComponent implements OnInit {
       this.reportLoading = false;
       window.open(reportUrl);
     }
+  }
+
+  async approveOrder(): Promise<void> {
+    if (this.washOrderId) {
+      const washOrderId = this.washOrderId;
+      this.reportLoading = true;
+
+      this._washOrderService.approveById(washOrderId)
+        .then((updatedWashOrder) => {
+          this.washOrder = updatedWashOrder;
+
+          this._messageService.add({
+            severity: 'success',
+            summary: `Orden COD: ${updatedWashOrder.code}`,
+            detail: 'Orden de Lavado actualizada con éxito',
+            life: 3500
+          });
+        })
+        .catch(err => {
+          if (err instanceof HttpErrorResponse) {
+            this._messageService.add({
+              severity: 'error',
+              summary: 'Error!',
+              detail: 'La acción no se pudo realizar, intente nuevamente...'
+            });
+          } else {
+            this._messageService.add({
+              severity: 'error',
+              summary: 'Error!',
+              detail: 'Error inesperado, intente nuevamente...'
+            });
+          }
+        })
+        .finally(() => {
+          this.reportLoading = false;
+        });
+    }
+  }
+
+  getWashOrderStatus(): string {
+    return WashOrder.getStatusFriendlyName(this.washOrder?.status ?? OrderStatus.UNKNOWN);
+  }
+
+  isReadyToApprove(): boolean {
+    const status = this.washOrder?.status ?? 'unknown';
+
+    return status === OrderStatus.CREATED;
+  }
+
+  isApproved(): boolean {
+    const status = this.washOrder?.status ?? 'unknown';
+
+    return status !== OrderStatus.CREATED && status !== 'unknown';
   }
 
   private retrieveWashOrderDetails() {

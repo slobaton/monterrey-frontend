@@ -1,3 +1,4 @@
+import { OrderStatus } from "../enums/order-status.enum";
 import { Client } from "./client";
 import { ClothSize } from "./cloth-size";
 import { ClothType } from "./cloth-type";
@@ -13,6 +14,7 @@ export class WashOrder {
     public date: Date,
     public total_quantity: number,
     public total_price: number,
+    public status: OrderStatus,
     public deliver_date: Date,
     public deliver_quantity: number,
     public observations: string,
@@ -23,6 +25,25 @@ export class WashOrder {
     public client: Client,
     public wash_type: WashType
   ) { }
+
+  public getStatusFriendlyName(): string {
+    return WashOrder.getStatusFriendlyName(this.status);
+  }
+
+  public static getStatusFriendlyName(status: OrderStatus): string {
+    let statusLabel = 'Nuevo';
+
+    switch (status) {
+      case OrderStatus.CREATED: statusLabel = 'Creado';
+        break;
+      case OrderStatus.APPROVED: statusLabel = 'Aprobado';
+        break;
+      case OrderStatus.DELIVERED: statusLabel = 'Entregado';
+        break;
+    }
+
+    return statusLabel;
+  }
 }
 
 export class WashOrderDetail {

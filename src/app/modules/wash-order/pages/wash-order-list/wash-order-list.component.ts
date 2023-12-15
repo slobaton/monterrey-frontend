@@ -13,6 +13,7 @@ import {
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
 import { WashOrderInfoComponent } from '../../components/wash-order-info/wash-order-info.component';
 import { ReportService } from 'src/app/@core/services/rest/report.service';
+import { OrderStatus } from 'src/app/@core/enums/order-status.enum';
 
 @Component({
   selector: 'app-wash-order-list',
@@ -45,7 +46,14 @@ export class WashOrderListComponent {
         type: DataTableColumnType.CUSTOM
       },
       { title: 'Cantidad Total', propertyRef: 'total_quantity', sortable: true, type: DataTableColumnType.TEXT },
-      { title: 'Precio Total', propertyRef: 'total_price', sortable: true, type: DataTableColumnType.TEXT },
+      { title: 'Precio Total (Bs.)', propertyRef: 'total_price', sortable: true, type: DataTableColumnType.TEXT },
+      {
+        title: 'Estado',
+        propertyRef: 'status',
+        sortable: false,
+        customValue: (status) => WashOrder.getStatusFriendlyName(status),
+        type: DataTableColumnType.BADGE
+      },
       { title: 'Creado', propertyRef: 'created_at', sortable: true, type: DataTableColumnType.DATETIME },
       { title: 'Actualizado', propertyRef: 'updated_at', sortable: true, type: DataTableColumnType.DATETIME },
     ],
@@ -138,6 +146,14 @@ export class WashOrderListComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
+        hiddenFn: (selectedRow) => {
+          if (selectedRow) {
+            const washOrder = selectedRow;
+            return washOrder.status === OrderStatus.CREATED;
+          }
+
+          return false;
+        },
         callback: async (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
 
@@ -146,6 +162,38 @@ export class WashOrderListComponent {
           action.loading = false;
 
           window.open(reportUrl);
+        }
+      },
+      {
+        title: 'Aprobar',
+        tooltip: 'Aprobar Orden de Lavado',
+        icon: 'check',
+        status: DataTableActionStatus.SUCCESS,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        hasLoadingEnabled: true,
+        hiddenFn: (selectedRow) => {
+          if (selectedRow) {
+            const washOrder = selectedRow;
+            return washOrder.status !== OrderStatus.CREATED;
+          }
+
+          return false;
+        },
+        callback: async (action, selectedRows) => {
+          const washOrder = selectedRows[0];
+
+          this.washOrderService.approveById(washOrder.id)
+            .then((updatedWashOrder) => {
+              washOrder.status = updatedWashOrder.status;
+              this._messageService.add({ key: 'confirmDelete', severity: 'success', summary: 'Orden Actualizada', detail: `Orden COD: ${washOrder.code} aprobada!` });
+            })
+            .catch((err) => {
+              console.error(err);
+              this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
+            })
+            .finally(() => action.loading = false);
         }
       }
     ]

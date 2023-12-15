@@ -108,6 +108,16 @@ export class DataTableComponent<TEntity> implements OnInit {
     return actions && actions.length > 0;
   }
 
+  isActionVisible(action: DataTableActionProps): boolean {
+    const actionHidden = action.hiddenFn && action.hiddenFn(this.selectedRows);
+
+    if (actionHidden) {
+      return false;
+    }
+
+    return this.isSelectionEnabled() || !this.requireSelectedRows(action);
+  }
+
   requireSelectedRows(action: DataTableActionProps): boolean {
     const selectionConfig = action.selectionConfig;
 
@@ -115,6 +125,12 @@ export class DataTableComponent<TEntity> implements OnInit {
   }
 
   isActionEnabled(action: DataTableActionProps): boolean {
+    const actionDisabled = action.disabledFn && action.disabledFn(this.selectedRows);
+
+    if (actionDisabled) {
+      return false;
+    }
+
     const selectionConfig = action.selectionConfig;
     const requiredMinSelectionCount = selectionConfig?.minSelectedRows ?? 1;
     const requiredMaxSelectionCount = selectionConfig?.maxSelectedRows ?? Number.MAX_VALUE;
@@ -184,6 +200,11 @@ export class DataTableComponent<TEntity> implements OnInit {
   getColumnCustomValue(col: DataTableColumnProps, row: any) {
     if (col.type === DataTableColumnType.CUSTOM && col.customValue) {
       const value = col.customValue(row);
+      return value;
+    }
+
+    if (col.type === DataTableColumnType.BADGE && col.customValue) {
+      const value = col.customValue(row[col.propertyRef]);
       return value;
     }
 

@@ -7,4 +7,5 @@ export interface IWashOrderService {
   update(request: WashOrderUpdateRequest, id: string): Promise<WashOrder>
   deleteById(id: string): Promise<void>
   getById(id: string): Promise<WashOrder>
+  approveById(id: string): Promise<WashOrder>
 }

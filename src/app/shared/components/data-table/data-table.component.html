@@ -25,7 +25,7 @@
         <ng-container *ngIf="hasActions()">
           <ng-container *ngFor="let action of tableConfig.actions">
             <p-button
-              *ngIf="isSelectionEnabled() || !requireSelectedRows(action)"
+              *ngIf="isActionVisible(action)"
               [styleClass]="'p-button-sm mx-1 ' + generateActionColor(action)"
               [icon]="generateActionIcon(action)"
               [label]="action.title ?? ''"
@@ -127,6 +127,11 @@
             </ng-container>
             <ng-container *ngSwitchCase="columnType.CUSTOM">
               {{ getColumnCustomValue(col, rowData) }}
+            </ng-container>
+            <ng-container *ngSwitchCase="columnType.BADGE">
+              <div class="p-badge p-badge-secondary">
+                {{ getColumnCustomValue(col, rowData) }}
+              </div>
             </ng-container>
           </container-element>
         </td>

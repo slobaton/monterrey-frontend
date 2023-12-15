@@ -74,4 +74,14 @@ export class WashOrderService extends BaseService implements IWashOrderService, 
       return this.handleError(error);
     }
   }
+
+  async approveById(id: string): Promise<WashOrder> {
+    try {
+      const response = await firstValueFrom(this.post<BaseResponse<WashOrder>>(`wash-orders/${id}/approve`));
+
+      return response.data;
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
 }

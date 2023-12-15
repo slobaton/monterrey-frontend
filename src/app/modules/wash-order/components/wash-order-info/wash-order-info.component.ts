@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { OrderStatus } from 'src/app/@core/enums/order-status.enum';
 import { WashOrder, WashOrderDetail } from 'src/app/@core/models/wash-order';
 import { WashOrderDetailService } from 'src/app/@core/services/rest/wash-order-detail.service';
 import { WashOrderService } from 'src/app/@core/services/rest/wash-order.service';
@@ -67,7 +68,7 @@ export class WashOrderInfoComponent implements OnInit {
     }
 
     this._washOrderService.getById(washOrderId)
-      .then(async (washOrder) => {
+      .then(async (washOrder: WashOrder) => {
         this.washOrder = washOrder;
         this.washOrderDetails = (await this._washOrderDetailService.fetchPaginatedResource({
           filter: this.washOrder.id,
@@ -110,4 +111,7 @@ export class WashOrderInfoComponent implements OnInit {
     return `${client?.name} ${client?.paternal_surname ?? ''} ${client?.maternal_surname ?? ''}`;
   }
 
+  getStatusName() {
+    return WashOrder.getStatusFriendlyName(this.washOrder?.status ?? OrderStatus.UNKNOWN);
+  }
 }
