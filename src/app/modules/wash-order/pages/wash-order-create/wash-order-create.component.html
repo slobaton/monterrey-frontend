@@ -45,18 +45,18 @@
 
             <div class="col-3">
               <app-form-label id="client_id" text="Cliente" [required]="true" />
-              <app-form-select
+              <app-form-input-search
                 [form]="washOrderForm"
                 id="client_id"
                 controlName="client_id"
                 placeholder="Seleccione un cliente..."
-                optionLabel="name"
-                optionValue="id"
-                [filterEnabled]="true"
-                [isLazy]="true"
-                [sourceDataService]="clientService"
+                title="Seleccionar Cliente..."
+                [tableConfig]="tableConfig"
+                [service]="clientService"
+                selectionProp="id"
+                [selectedLabelFn]="showClientSelectedLabel"
               >
-              </app-form-select>
+              </app-form-input-search>
             </div>
             <div class="col-3">
               <app-form-label

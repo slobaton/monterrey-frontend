@@ -32,6 +32,8 @@ import { FormSelectComponent } from './components/form-select/form-select.compon
 import { FormDatetimePickerComponent } from './components/form-datetime-picker/form-datetime-picker.component';
 import { ListPickerComponent } from './components/list-picker/list-picker.component';
 import { SimpleTableComponent } from './components/simple-table/simple-table.component';
+import { SearchOverlayComponent } from './components/search-overlay/search-overlay.component';
+import { FormInputSearchComponent } from './components/form-input-search/form-input-search.component';
 
 
 
@@ -49,7 +51,9 @@ import { SimpleTableComponent } from './components/simple-table/simple-table.com
     FormSelectComponent,
     FormDatetimePickerComponent,
     ListPickerComponent,
-    SimpleTableComponent
+    SimpleTableComponent,
+    SearchOverlayComponent,
+    FormInputSearchComponent
   ],
   imports: [
     CommonModule,
@@ -85,7 +89,9 @@ import { SimpleTableComponent } from './components/simple-table/simple-table.com
     UserRoleDirective,
     FormSelectComponent,
     FormDatetimePickerComponent,
-    ListPickerComponent
+    ListPickerComponent,
+    FormInputSearchComponent,
+    SearchOverlayComponent
   ]
 })
 export class SharedModule { }

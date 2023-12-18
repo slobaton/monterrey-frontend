@@ -18,6 +18,7 @@ import { WashOrderUpdateRequest } from 'src/app/@core/models/request/wash-order-
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReportService } from 'src/app/@core/services/rest/report.service';
 import { OrderStatus } from 'src/app/@core/enums/order-status.enum';
+import { DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 
 @Component({
   selector: 'app-wash-order-create',
@@ -49,6 +50,20 @@ export class WashOrderCreateComponent implements OnInit {
   washOrderDetails: Array<WashOrderDetail> = [];
 
   ref: DynamicDialogRef | undefined;
+
+  public tableConfig: DataTableConfiguration = {
+    columns: [
+      { title: 'Id', propertyRef: 'id', sortable: true, visible: false },
+      { title: 'Nit', propertyRef: 'nit', sortable: true },
+      { title: 'Nombre', propertyRef: 'name', sortable: true },
+      { title: 'Ap. Paterno', propertyRef: 'paternal_surname', sortable: true },
+      { title: 'Ap. Materno', propertyRef: 'maternal_surname', sortable: true },
+      { title: 'Activo', propertyRef: 'is_active', type: DataTableColumnType.BOOLEAN },
+      { title: 'Actualizado', propertyRef: 'updated_at', sortable: true, type: DataTableColumnType.DATETIME },
+    ],
+    identifierPropRef: 'id',
+    selectionType: DataTableSelectionType.SINGLE
+  };
 
   constructor(
     public _route: ActivatedRoute,
@@ -354,6 +369,10 @@ export class WashOrderCreateComponent implements OnInit {
     const status = this.washOrder?.status ?? 'unknown';
 
     return status !== OrderStatus.CREATED && status !== 'unknown';
+  }
+
+  showClientSelectedLabel(selectedClient: any) {
+    return `${selectedClient.nit} - ${selectedClient.name} ${selectedClient.paternal_surname}`;
   }
 
   private retrieveWashOrderDetails() {
