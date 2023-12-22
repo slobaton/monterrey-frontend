@@ -53,7 +53,7 @@ export class UserListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedId) => {
+        callback: (action, selectedId) => {
           const USER = selectedId[0];
           this.ref = this.dialogService.open(UpsertUserComponent, { header: 'Editar Tipo lavado', data: { user: USER } });
           this.ref.onClose.subscribe((result) => {
@@ -71,7 +71,7 @@ export class UserListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedId) => {
+        callback: (action, selectedId) => {
           const userId = selectedId[0].id;
           this.confirmationService.confirm({
             key: 'confirmDelete',
