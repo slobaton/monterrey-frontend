@@ -7,6 +7,7 @@ import { IFetchPaginatedData } from '../interfaces/fetch-paginated-data';
 import { User } from '../../models/user';
 import { PaginatedRequest } from '../../models/request/paginated-request';
 import { PaginatedResponse } from '../../models/response/paginated-response';
+import { UserUpsertRequest } from '../../models/request/user-upsert-request';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,30 @@ export class UserService extends BaseService implements IUserService, IFetchPagi
       const response = await firstValueFrom(this.get<PaginatedResponse<User>>('users', this.getPaginationParams(request)));
 
       return response;
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  async create(request: UserUpsertRequest): Promise<void> {
+    try {
+      await firstValueFrom(this.post('users', request));
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  async update(id: number, request: UserUpsertRequest): Promise<User> {
+    try {
+      return await firstValueFrom(this.put<User>(`users/${id}`, request));
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  async deleteById(id: number): Promise<void> {
+    try {
+      await firstValueFrom(this.delete(`users/${id}`));
     } catch (error) {
       return this.handleError(error);
     }
