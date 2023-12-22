@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { DataTableActionStatus, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { UserService } from 'src/app/@core/services/rest/user.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -12,7 +13,7 @@ import { UpsertUserComponent } from '../../components/upsert-user-form/upsert-us
   styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent {
-  @ViewChild('washTypeTable') table!: DataTableComponent<User>;
+  @ViewChild('userTable') table!: DataTableComponent<User>;
   ref: DynamicDialogRef | undefined;
 
   public tableConfig: DataTableConfiguration = {
@@ -47,13 +48,19 @@ export class UserListComponent {
       {
         title: 'Editar',
         tooltip: 'Editar Usuario',
-        icon: 'clone',
+        icon: 'pencil',
         status: DataTableActionStatus.WARNING,
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedIds) => {
-          console.log(selectedIds);
+        callback: (selectedId) => {
+          const USER = selectedId[0];
+          this.ref = this.dialogService.open(UpsertUserComponent, { header: 'Editar Tipo lavado', data: { user: USER } });
+          this.ref.onClose.subscribe((result) => {
+            if (result) {
+              this.table.reset();
+            }
+          });
         }
       },
       {
@@ -62,22 +69,42 @@ export class UserListComponent {
         icon: 'trash',
         status: DataTableActionStatus.DANGER,
         selectionConfig: {
-          minSelectedRows: 2
+          maxSelectedRows: 1
         },
-        callback: (selectedIds) => {
-          console.log(selectedIds);
-        }
-      },
-      {
-        title: 'Exportar',
-        tooltip: 'Exportar Usuarios',
-        icon: 'file',
-        status: DataTableActionStatus.INFO,
-        selectionConfig: {
-          isRequired: false
-        },
-        callback: () => {
-          console.log('export');
+        callback: (selectedId) => {
+          const userId = selectedId[0].id;
+          this.confirmationService.confirm({
+            key: 'confirmDelete',
+            accept: () => {
+              this.userService.deleteById(userId)
+                .then(() => {
+                  this.messageService.add({
+                    key: 'confirmDelete',
+                    severity: 'success',
+                    summary: 'Eliminado!',
+                    detail: 'El usuario ha sido eliminado!.'
+                  });
+                  this.table.reset();
+                })
+                .catch((err) => {
+                  console.error(err);
+                  this.messageService.add({
+                    key: 'confirmDelete',
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'No se pudo completar la accion.'
+                  })
+                });
+            },
+            reject: () => {
+              this.messageService.add({
+                key: 'confirmDelete',
+                severity: 'error',
+                summary: 'Cancelado',
+                detail: 'Operacion cancelada!'
+              })
+            }
+          });
         }
       },
     ]
@@ -85,6 +112,8 @@ export class UserListComponent {
 
   constructor(
     public userService: UserService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService,
   ) { }
 }

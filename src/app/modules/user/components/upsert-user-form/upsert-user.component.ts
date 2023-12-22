@@ -3,9 +3,9 @@ import { Component, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { WashTypeUpsertRequest } from 'src/app/@core/models/request/wash-type-upsert-request';
+import { UserUpsertRequest } from 'src/app/@core/models/request/user-upsert-request';
 import { ValidationService } from 'src/app/@core/services/common/validation.service';
-import { WashTypeService } from 'src/app/@core/services/rest/wash-type.service';
+import { UserService } from 'src/app/@core/services/rest/user.service';
 import { passwordMatchValidator } from 'src/app/shared/helpers/form-helpers';
 
 @Component({
@@ -20,7 +20,7 @@ export class UpsertUserComponent {
   isThereAUser: boolean = false;
 
   constructor(
-    private _washTypeService: WashTypeService,
+    private _userService: UserService,
     private messageService: MessageService,
     private ref: DynamicDialogRef,
     private config: DynamicDialogConfig,
@@ -31,7 +31,7 @@ export class UpsertUserComponent {
   }
 
   initializeForm(): void {
-    var user = this.config.data?.washType;
+    var user = this.config.data?.user;
 
     if (user) {
       this.isThereAUser = true;
@@ -43,27 +43,26 @@ export class UpsertUserComponent {
       maternal_surname: new FormControl<string>(user?.maternal_surname ?? '', [Validators.maxLength(150)]),
       username: new FormControl<string>(user?.username ?? '', [Validators.required, Validators.maxLength(150)]),
       email: new FormControl<string>(user?.email ?? '', [Validators.required, Validators.maxLength(150), Validators.email]),
-      description: new FormControl<string>(user?.description ?? ''),
       password: new FormControl<string>(user?.password ?? '', !this.isThereAUser ? [Validators.required] : []),
       password_confirmation : new FormControl<string>(user?.password ?? '', !this.isThereAUser ? [Validators.required] : []),
-      is_active: new FormControl<boolean>({
-        value: user?.is_active ?? true,
-        disabled: !this.isThereAUser
-      })
     }, { validators: passwordMatchValidator });
   }
 
   onSubmitForm(userFormValue: any): void {
     this.formProcessEvent.emit(true);
-    const washType: WashTypeUpsertRequest = userFormValue;
+    const user: UserUpsertRequest = userFormValue;
 
-    if (this.config.data?.washType) {
-      const washTypeId = this.config.data?.washType.id;
-      washType.id = washTypeId;
-      this._washTypeService.update(washTypeId, washType)
-        .then((washTypeUpdated) => {
-          this.messageService.add({ severity: 'success', summary: 'Actualizado con éxito', detail: 'Tipo lavado actualizado con éxito' });
-          this.ref.close(washTypeUpdated);
+    if (this.config.data?.user) {
+      const USER_ID = this.config.data?.user.id;
+      user.id = USER_ID;
+      this._userService.update(USER_ID, user)
+        .then((userUpdated) => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Actualización realizada',
+            detail: 'Usuario actualizado con éxito'
+          });
+          this.ref.close(userUpdated);
         })
         .catch(err => {
           if (err instanceof HttpErrorResponse) {
@@ -78,10 +77,14 @@ export class UpsertUserComponent {
         })
         .finally(() => this.formProcessEvent.emit(false));
     } else {
-      this._washTypeService.create(washType)
+      this._userService.create(user)
         .then(() => {
-          this.messageService.add({ severity: 'success', summary: 'Creado con éxito', detail: 'Tipo lavado creado con éxito' });
-          this.ref.close(washType);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Creado con éxito',
+            detail: 'Usuario creado con éxito'
+          });
+          this.ref.close(user);
         })
         .catch(err => {
           if (err instanceof HttpErrorResponse) {

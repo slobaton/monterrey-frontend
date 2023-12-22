@@ -2,7 +2,13 @@
   <div class="col-12">
     <div class="card mb-0">
       <h5>Usuarios</h5>
+      <app-confirm-dialog
+        id="confirmDelete"
+        title="Eliminar Usuario"
+        message="¿Estas seguro que deseas eliminar al usuario?"
+      ></app-confirm-dialog>
       <app-data-table
+        #userTable
         [tableConfig]="tableConfig"
         [sourceDataService]="userService"
       ></app-data-table>
