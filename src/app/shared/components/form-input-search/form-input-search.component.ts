@@ -27,7 +27,7 @@ export class FormInputSearchComponent<TEntity> implements OnInit {
   @Input() customActionIcon?: string;
   @Output() onClickCustomAction: EventEmitter<void> = new EventEmitter<void>();
 
-  onSelect: EventEmitter<any> = new EventEmitter<any>();
+  @Input() onSelect: EventEmitter<any> = new EventEmitter<any>();
 
   selectedLabel: string = '';
 
