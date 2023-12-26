@@ -375,6 +375,10 @@ export class WashOrderCreateComponent implements OnInit {
     return `${selectedClient.nit} - ${selectedClient.name} ${selectedClient.paternal_surname}`;
   }
 
+  openNewClientModal() {
+
+  }
+
   private retrieveWashOrderDetails() {
     this.washOrderDetailsLoading = true;
     this._washOrderDetailService.fetchPaginatedResource({

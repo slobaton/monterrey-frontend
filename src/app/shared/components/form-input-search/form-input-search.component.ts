@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SearchOverlayComponent } from '../search-overlay/search-overlay.component';
@@ -23,6 +23,10 @@ export class FormInputSearchComponent<TEntity> implements OnInit {
   @Input() selectionProp: string = '';
   @Input() selectedLabelFn?: (selectedValue: any) => string;
 
+  @Input() hasCustomAction?: boolean = false;
+  @Input() customActionIcon?: string;
+  @Output() onClickCustomAction: EventEmitter<void> = new EventEmitter<void>();
+
   onSelect: EventEmitter<any> = new EventEmitter<any>();
 
   selectedLabel: string = '';
@@ -39,6 +43,12 @@ export class FormInputSearchComponent<TEntity> implements OnInit {
 
   public get hasValue() {
     return this.formControl?.valid ?? false;
+  }
+
+  public get getCustomActionIcon() {
+    const icon = this.customActionIcon ?? 'pi-plus'
+
+    return `pi ${icon}`;
   }
 
   ngOnInit(): void {
@@ -77,6 +87,10 @@ export class FormInputSearchComponent<TEntity> implements OnInit {
 
     this.formControl?.markAsDirty();
     this.formControl?.markAsTouched();
+  }
+
+  executeCustomAction() {
+    this.onClickCustomAction.emit();
   }
 
   private onSelectValue(selectedValue: any): void {

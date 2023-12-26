@@ -1,28 +1,38 @@
 <ng-container [formGroup]="form">
-  <span class="p-input-icon-right">
-    <i
-      *ngIf="!hasValue; else withValueIcon"
-      class="pi pi-search"
-      (click)="openSearchOverlay()"
-    ></i>
-    <ng-template #withValueIcon>
-      <i class="pi pi-times-circle" (click)="resetValue()"></i>
-    </ng-template>
-    <input
-      pInputText
-      type="text"
-      [placeholder]="placeholder"
-      [ngClass]="
-        formControl?.errors && (formControl?.dirty || formControl?.touched)
-          ? 'ng-invalid ng-dirty'
-          : ''
-      "
-      [readonly]="true"
-      (click)="openSearchOverlay()"
-      [value]="selectedLabel"
-      (keydown)="openSearchOverlay()"
-    />
-  </span>
+  <div class="flex align-items-stretch">
+    <span class="p-input-icon-right">
+      <i
+        *ngIf="!hasValue; else withValueIcon"
+        class="pi pi-search"
+        (click)="openSearchOverlay()"
+      ></i>
+      <ng-template #withValueIcon>
+        <i class="pi pi-times-circle" (click)="resetValue()"></i>
+      </ng-template>
+      <input
+        pInputText
+        type="text"
+        [placeholder]="placeholder"
+        [ngClass]="
+          formControl?.errors && (formControl?.dirty || formControl?.touched)
+            ? 'ng-invalid ng-dirty'
+            : ''
+        "
+        [readonly]="true"
+        (click)="openSearchOverlay()"
+        [value]="selectedLabel"
+        (keydown)="openSearchOverlay()"
+      />
+    </span>
+    <button
+      *ngIf="hasCustomAction"
+      type="button"
+      pButton
+      [icon]="getCustomActionIcon"
+      styleClass="p-button-primary"
+      (click)="executeCustomAction()"
+    ></button>
+  </div>
   <input [id]="id" [formControlName]="controlName" type="hidden" />
   <div
     *ngIf="formControl?.errors && (formControl?.dirty || formControl?.touched)"
