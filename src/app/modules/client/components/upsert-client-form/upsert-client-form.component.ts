@@ -78,9 +78,9 @@ export class UpsertClientFormComponent implements OnInit {
         .finally(() => this.formProcessEvent.emit(false));
     } else {
       this._clientService.createClient(client)
-        .then(() => {
+        .then((clientCreated) => {
           this.messageService.add({ severity: 'success', summary: 'Creado con éxito', detail: 'Cliente creado con éxito' });
-          this.ref.close(client);
+          this.ref.close(clientCreated);
         })
         .catch(err => {
           if (err instanceof HttpErrorResponse) {
