@@ -19,6 +19,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ReportService } from 'src/app/@core/services/rest/report.service';
 import { OrderStatus } from 'src/app/@core/enums/order-status.enum';
 import { DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
+import { UpsertClientFormComponent } from 'src/app/modules/client/components/upsert-client-form/upsert-client-form.component';
 
 @Component({
   selector: 'app-wash-order-create',
@@ -64,6 +65,8 @@ export class WashOrderCreateComponent implements OnInit {
     identifierPropRef: 'id',
     selectionType: DataTableSelectionType.SINGLE
   };
+
+  onClientCreated: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(
     public _route: ActivatedRoute,
@@ -372,7 +375,21 @@ export class WashOrderCreateComponent implements OnInit {
   }
 
   showClientSelectedLabel(selectedClient: any) {
-    return `${selectedClient.nit} - ${selectedClient.name} ${selectedClient.paternal_surname}`;
+    return `${selectedClient.nit ?? ''} - ${selectedClient.name ?? ''} ${selectedClient.paternal_surname ?? ''} ${selectedClient.maternal_surname ?? ''}`;
+  }
+
+  openNewClientModal() {
+    const dialogProps = {
+      header: 'Nuevo Cliente'
+    };
+
+    this.ref = this._dialogService.open(UpsertClientFormComponent, dialogProps);
+
+    this.ref.onClose.subscribe((createdClient) => {
+      if (createdClient) {
+        this.onClientCreated.emit(createdClient);
+      }
+    });
   }
 
   private retrieveWashOrderDetails() {

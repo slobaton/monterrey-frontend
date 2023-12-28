@@ -55,6 +55,9 @@
                 [service]="clientService"
                 selectionProp="id"
                 [selectedLabelFn]="showClientSelectedLabel"
+                [hasCustomAction]="true"
+                (onClickCustomAction)="openNewClientModal()"
+                [onSelect]="onClientCreated"
               >
               </app-form-input-search>
             </div>
