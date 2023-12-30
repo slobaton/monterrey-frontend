@@ -5,7 +5,8 @@ import { LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
-import { AbilityModule } from '@casl/angular';
+import { AbilityModule, AbilityService, AblePipe } from '@casl/angular';
+import { Ability, PureAbility } from '@casl/ability';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -17,7 +18,7 @@ import { ErrorInterceptor } from './@core/interceptors/error-interceptor';
 import { UpsertEffectFormComponent } from './modules/effect/components/upsert-effect-form/upsert-effect-form.component';
 
 import { ProductService } from './demo/service/product.service';
-import { Ability, PureAbility } from '@casl/ability';
+import { AppAbility } from './@core/auth/ability';
 
 @NgModule({
   declarations: [
@@ -34,8 +35,9 @@ import { Ability, PureAbility } from '@casl/ability';
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: LocationStrategy, useClass: PathLocationStrategy },
-    { provide: Ability, useValue: new Ability() },
-    { provide: PureAbility, useValue: Ability },
+    { provide: AppAbility, useValue: new AppAbility() },
+    { provide: PureAbility, useExisting: AppAbility },
+    AbilityService,
     MessageService,
     ConfirmationService,
     DialogService,
