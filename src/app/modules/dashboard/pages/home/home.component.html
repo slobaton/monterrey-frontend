@@ -1,93 +1,95 @@
-<div *ngIf="reportResult; else loadingSection" class="grid">
-  <div class="col-12 lg:col-6 xl:col-3">
-    <div class="card mb-0">
-      <div class="flex justify-content-between mb-3">
-        <div>
-          <span class="block text-500 font-medium mb-3">Ordenes</span>
-          <div class="text-900 font-medium text-xl">
-            {{ reportResult.orders.count }}
+<ng-container *ngIf="'manage' | ablePure : 'all' | async">
+  <div *ngIf="reportResult; else loadingSection" class="grid">
+    <div class="col-12 lg:col-6 xl:col-3">
+      <div class="card mb-0">
+        <div class="flex justify-content-between mb-3">
+          <div>
+            <span class="block text-500 font-medium mb-3">Ordenes</span>
+            <div class="text-900 font-medium text-xl">
+              {{ reportResult.orders.count }}
+            </div>
+          </div>
+          <div
+            class="flex align-items-center justify-content-center bg-blue-100 border-round"
+            [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+          >
+            <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
           </div>
         </div>
-        <div
-          class="flex align-items-center justify-content-center bg-blue-100 border-round"
-          [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
-        >
-          <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
-        </div>
+        <span class="text-green-500 font-medium"
+          >{{ reportResult.orders.revenue }} Bs.
+        </span>
+        <span class="text-500">en Ingresos</span>
       </div>
-      <span class="text-green-500 font-medium"
-        >{{ reportResult.orders.revenue }} Bs.
-      </span>
-      <span class="text-500">en Ingresos</span>
     </div>
-  </div>
-  <div class="col-12 lg:col-6 xl:col-3">
-    <div class="card mb-0">
-      <div class="flex justify-content-between mb-3">
-        <div>
-          <span class="block text-500 font-medium mb-3">Clientes</span>
-          <div class="text-900 font-medium text-xl">
-            {{ reportResult.clients.active }}
+    <div class="col-12 lg:col-6 xl:col-3">
+      <div class="card mb-0">
+        <div class="flex justify-content-between mb-3">
+          <div>
+            <span class="block text-500 font-medium mb-3">Clientes</span>
+            <div class="text-900 font-medium text-xl">
+              {{ reportResult.clients.active }}
+            </div>
+          </div>
+          <div
+            class="flex align-items-center justify-content-center bg-bluegray-50 border-round"
+            [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+          >
+            <i class="pi pi-users text-black-alpha-50 text-xl"></i>
           </div>
         </div>
-        <div
-          class="flex align-items-center justify-content-center bg-bluegray-50 border-round"
-          [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
-        >
-          <i class="pi pi-users text-black-alpha-50 text-xl"></i>
-        </div>
+        <span class="text-green-500 font-medium"
+          >{{ reportResult.clients.inactive }}
+        </span>
+        <span class="text-500"> Inactivos</span>
       </div>
-      <span class="text-green-500 font-medium"
-        >{{ reportResult.clients.inactive }}
-      </span>
-      <span class="text-500"> Inactivos</span>
     </div>
-  </div>
-  <div class="col-12 lg:col-6 xl:col-3">
-    <div class="card mb-0">
-      <div class="flex justify-content-between mb-3">
-        <div>
-          <span class="block text-500 font-medium mb-3">Tipos de Lavado</span>
-          <div class="text-900 font-medium text-xl">
-            {{ reportResult.wash_types.active }}
+    <div class="col-12 lg:col-6 xl:col-3">
+      <div class="card mb-0">
+        <div class="flex justify-content-between mb-3">
+          <div>
+            <span class="block text-500 font-medium mb-3">Tipos de Lavado</span>
+            <div class="text-900 font-medium text-xl">
+              {{ reportResult.wash_types.active }}
+            </div>
+          </div>
+          <div
+            class="flex align-items-center justify-content-center bg-green-100 border-round"
+            [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+          >
+            <i class="pi pi-table text-green-500 text-xl"></i>
           </div>
         </div>
-        <div
-          class="flex align-items-center justify-content-center bg-green-100 border-round"
-          [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
-        >
-          <i class="pi pi-table text-green-500 text-xl"></i>
-        </div>
+        <span class="text-green-500 font-medium"
+          >{{ reportResult.wash_types.inactive }}
+        </span>
+        <span class="text-500"> Inactivos</span>
       </div>
-      <span class="text-green-500 font-medium"
-        >{{ reportResult.wash_types.inactive }}
-      </span>
-      <span class="text-500"> Inactivos</span>
     </div>
-  </div>
-  <div class="col-12 lg:col-6 xl:col-3">
-    <div class="card mb-0">
-      <div class="flex justify-content-between mb-3">
-        <div>
-          <span class="block text-500 font-medium mb-3">Efectos</span>
-          <div class="text-900 font-medium text-xl">
-            {{ reportResult.effects.active }}
+    <div class="col-12 lg:col-6 xl:col-3">
+      <div class="card mb-0">
+        <div class="flex justify-content-between mb-3">
+          <div>
+            <span class="block text-500 font-medium mb-3">Efectos</span>
+            <div class="text-900 font-medium text-xl">
+              {{ reportResult.effects.active }}
+            </div>
+          </div>
+          <div
+            class="flex align-items-center justify-content-center bg-orange-100 border-round"
+            [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
+          >
+            <i class="pi pi-star text-orange-500 text-xl"></i>
           </div>
         </div>
-        <div
-          class="flex align-items-center justify-content-center bg-orange-100 border-round"
-          [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
-        >
-          <i class="pi pi-star text-orange-500 text-xl"></i>
-        </div>
+        <span class="text-green-500 font-medium"
+          >{{ reportResult.effects.inactive }}
+        </span>
+        <span class="text-500"> Inactivos</span>
       </div>
-      <span class="text-green-500 font-medium"
-        >{{ reportResult.effects.inactive }}
-      </span>
-      <span class="text-500"> Inactivos</span>
     </div>
   </div>
-</div>
+</ng-container>
 
 <ng-template #loadingSection>
   <div class="h-10">
