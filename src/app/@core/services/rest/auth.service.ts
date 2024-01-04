@@ -10,6 +10,7 @@ import { AuthUser } from '../../models/auth-user';
 import { AuthRole } from '../../models/auth-role';
 import { Role } from '../../enums/role.enum';
 import { AuthPublicKey } from '../../models/auth-public-key';
+import { AppAbility, defineAbilitiesFor } from '../../auth/ability';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class AuthService extends BaseService implements IAuthService {
   public user: Observable<AuthUser | null>;
 
 
-  constructor(_http: HttpClient) {
+  constructor(_http: HttpClient, private _ability: AppAbility) {
     super(_http);
     this.userSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('authUser')!));
     this.user = this.userSubject.asObservable();
@@ -37,6 +38,7 @@ export class AuthService extends BaseService implements IAuthService {
       const authUser = await firstValueFrom(this.post<AuthUser>('login', request));
       localStorage.setItem('authUser', JSON.stringify(authUser));
       this.userSubject.next(authUser);
+      this.updateAbilities(authUser);
 
       return authUser;
     } catch (error) {
@@ -48,6 +50,7 @@ export class AuthService extends BaseService implements IAuthService {
     try {
       await firstValueFrom(this.post('logout'));
       this.cleanSession();
+      this._ability.update([]);
     } catch (error) {
       return this.handleError(error);
     }
@@ -78,5 +81,16 @@ export class AuthService extends BaseService implements IAuthService {
   cleanSession(): void {
     localStorage.removeItem('authUser');
     this.userSubject.next(null);
+  }
+
+  private updateAbilities(authUser: AuthUser) {
+    const roles = authUser.roles;
+
+    roles.forEach(role => {
+      const indexOfRole = Object.values(Role).indexOf(role.name as unknown as Role);
+      const keyOfRole = Object.keys(Role)[indexOfRole];
+      const selectedRole = Role[keyOfRole as keyof typeof Role];
+      this._ability.update(defineAbilitiesFor(selectedRole));
+    });
   }
 }

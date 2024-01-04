@@ -8,7 +8,6 @@ import { ReportService } from 'src/app/@core/services/rest/report.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
   reportResult?: GeneralCountReport;
 
   constructor(private _reportService: ReportService) { }
