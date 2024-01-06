@@ -1,19 +1,23 @@
 import { Component, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { AbilityService } from '@casl/angular';
+
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Client } from 'src/app/@core/models/client';
 import { ClientService } from 'src/app/@core/services/rest/client.service';
 import { DataTableActionStatus, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
+import { AppAbility } from 'src/app/@core/auth/ability';
+import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
 import { UpsertClientFormComponent } from '../../components/upsert-client-form/upsert-client-form.component';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-client-list',
   templateUrl: './client-list.component.html',
   styleUrls: ['./client-list.component.scss'],
 })
-export class ClientListComponent {
+export class ClientListComponent extends ProtectedComponent {
 
   @ViewChild('clientTable') table!: DataTableComponent<Client>;
 
@@ -43,6 +47,7 @@ export class ClientListComponent {
         selectionConfig: {
           isRequired: false
         },
+        hiddenFn: (selectedRows) => !this.ableTo('create', 'client'),
         callback: () => {
           this.ref = this._dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente' });
           this.ref.onClose.subscribe((result) => {
@@ -60,6 +65,7 @@ export class ClientListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
+        hiddenFn: (selectedRows) => !this.ableTo('update', 'client'),
         callback: (action, selectedRows) => {
           const client = selectedRows[0];
           this.ref = this._dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente', data: { client } });
@@ -79,6 +85,7 @@ export class ClientListComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
+        hiddenFn: (selectedRows) => !this.ableTo('delete', 'client'),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._confirmationService.confirm({
@@ -110,6 +117,7 @@ export class ClientListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
+        hiddenFn: (selectedRows) => !this.ableTo('read', 'parameter'),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/parameters`])
@@ -123,6 +131,7 @@ export class ClientListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
+        hiddenFn: (selectedRows) => !this.ableTo('read', 'parameter'),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/wash-type-prices`])
@@ -136,6 +145,7 @@ export class ClientListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
+        hiddenFn: (selectedRows) => !this.ableTo('read', 'parameter'),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/effect-prices`])
@@ -145,10 +155,12 @@ export class ClientListComponent {
   };
 
   constructor(
+    abilityService: AbilityService<AppAbility>,
     public clientService: ClientService,
     private _confirmationService: ConfirmationService,
     private _messageService: MessageService,
     private _dialogService: DialogService,
-    private _router: Router) { }
-
+    private _router: Router) {
+    super(abilityService);
+  }
 }

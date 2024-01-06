@@ -17,12 +17,14 @@ import { ClientEffectPriceListComponent } from './pages/client-effect-price-list
 import { UpsertEffectPriceComponent } from './components/upsert-effect-price/upsert-effect-price.component';
 import { ClientParameterPriceListComponent } from './pages/client-parameter-price-list/client-parameter-price-list.component';
 import { UpsertParameterPriceComponent } from './components/upsert-parameter-price/upsert-parameter-price.component';
+import { AbilityModule } from '@casl/angular';
 
 
 @NgModule({
   imports: [
     CommonModule,
     ClientRoutingModule,
+    AbilityModule,
     SharedModule,
     FormsModule,
     ReactiveFormsModule,

@@ -83,7 +83,23 @@ export class AuthService extends BaseService implements IAuthService {
     this.userSubject.next(null);
   }
 
-  private updateAbilities(authUser: AuthUser) {
+  hasAbilities(): boolean {
+    if (!this.authenticatedUser) {
+      return false;
+    }
+
+    return this._ability.rules.length > 0;
+  }
+
+  refreshUserAbilities(): void {
+    const authUser = this.authenticatedUser;
+
+    if (authUser) {
+      this.updateAbilities(authUser);
+    }
+  }
+
+  private updateAbilities(authUser: AuthUser): void {
     const roles = authUser.roles;
 
     roles.forEach(role => {
@@ -93,4 +109,6 @@ export class AuthService extends BaseService implements IAuthService {
       this._ability.update(defineAbilitiesFor(selectedRole));
     });
   }
+
+
 }

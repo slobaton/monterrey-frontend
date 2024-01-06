@@ -4,12 +4,14 @@ import { ClientListComponent } from './pages/client-list/client-list.component';
 import { ClientWashTypePriceListComponent } from './pages/client-wash-type-price-list/client-wash-type-price-list.component';
 import { ClientEffectPriceListComponent } from './pages/client-effect-price-list/client-effect-price-list.component';
 import { ClientParameterPriceListComponent } from './pages/client-parameter-price-list/client-parameter-price-list.component';
+import { roleGuard } from 'src/app/@core/auth/role.guard';
+import { Role } from 'src/app/@core/enums/role.enum';
 
 const routes: Routes = [
   { path: '', component: ClientListComponent },
-  { path: ':clientId/wash-type-prices', component: ClientWashTypePriceListComponent },
-  { path: ':clientId/effect-prices', component: ClientEffectPriceListComponent },
-  { path: ':clientId/parameters', component: ClientParameterPriceListComponent }
+  { path: ':clientId/wash-type-prices', component: ClientWashTypePriceListComponent, canActivate: [roleGuard([Role.ADMIN, Role.SECRETARY])] },
+  { path: ':clientId/effect-prices', component: ClientEffectPriceListComponent, canActivate: [roleGuard([Role.ADMIN, Role.SECRETARY])] },
+  { path: ':clientId/parameters', component: ClientParameterPriceListComponent, canActivate: [roleGuard([Role.ADMIN, Role.SECRETARY])] }
 ];
 
 @NgModule({

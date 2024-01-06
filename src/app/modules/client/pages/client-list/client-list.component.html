@@ -1,6 +1,6 @@
-<div class="grid">
+<div *ngIf="ability$ | async as ab" class="grid">
   <div class="col-12">
-    <div class="card mb-0">
+    <div *ngIf="ab.can('read', 'client')" class="card mb-0">
       <h5>Clientes</h5>
       <app-confirm-dialog
         id="confirmDelete"
