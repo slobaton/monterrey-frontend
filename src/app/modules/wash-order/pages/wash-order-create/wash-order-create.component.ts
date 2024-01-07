@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { MessageService } from 'primeng/api';
@@ -20,13 +20,17 @@ import { ReportService } from 'src/app/@core/services/rest/report.service';
 import { OrderStatus } from 'src/app/@core/enums/order-status.enum';
 import { DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { UpsertClientFormComponent } from 'src/app/modules/client/components/upsert-client-form/upsert-client-form.component';
+import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
+import { AbilityService } from '@casl/angular';
+import { AuthService } from 'src/app/@core/services/rest/auth.service';
+import { AppAbility } from 'src/app/@core/auth/ability';
 
 @Component({
   selector: 'app-wash-order-create',
   templateUrl: './wash-order-create.component.html',
   styleUrls: ['./wash-order-create.component.scss']
 })
-export class WashOrderCreateComponent implements OnInit {
+export class WashOrderCreateComponent extends ProtectedComponent implements OnInit {
 
   washOrderForm!: FormGroup;
   formProcessEvent: EventEmitter<boolean> = new EventEmitter();
@@ -69,6 +73,8 @@ export class WashOrderCreateComponent implements OnInit {
   onClientCreated: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(
+    abilityService: AbilityService<AppAbility>,
+    authService: AuthService,
     public _route: ActivatedRoute,
     public _router: Router,
     public clientService: ClientService,
@@ -78,7 +84,9 @@ export class WashOrderCreateComponent implements OnInit {
     private _reportService: ReportService,
     private _messageService: MessageService,
     private _validationService: ValidationService,
-    private _dialogService: DialogService) { }
+    private _dialogService: DialogService) {
+    super(abilityService, authService);
+  }
 
   ngOnInit(): void {
     this._route.params.subscribe(params => {
@@ -103,6 +111,9 @@ export class WashOrderCreateComponent implements OnInit {
               sortOrder: ''
             })).data;
 
+            setTimeout(() => {
+              this.onClientCreated.emit(washOrder.client);
+            }, 500);
           })
           .catch((err) => {
             if (err instanceof HttpErrorResponse) {
@@ -375,6 +386,7 @@ export class WashOrderCreateComponent implements OnInit {
   }
 
   showClientSelectedLabel(selectedClient: any) {
+    console.log(selectedClient);
     return `${selectedClient.nit ?? ''} - ${selectedClient.name ?? ''} ${selectedClient.paternal_surname ?? ''} ${selectedClient.maternal_surname ?? ''}`;
   }
 

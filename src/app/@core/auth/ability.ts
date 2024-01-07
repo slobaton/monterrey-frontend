@@ -17,6 +17,7 @@ export function defineAbilitiesFor(role: Role) {
   } else if (role === Role.RECEPTIONIST) {
     can('read', ['client', 'cloth-size', 'cloth-type', 'wash-type', 'wash-order', 'effect']);
     can('create', ['wash-order', 'client']);
+    can(['update', 'delete'], ['wash-order']);
   }
 
   return rules;

@@ -1,4 +1,5 @@
 <app-form
+  *ngIf="ability$ | async as ab"
   [form]="washOrderDetailForm"
   [onProcessCompleted]="formProcessEvent"
   (onSubmit)="onSubmitForm($event)"
@@ -98,20 +99,24 @@
     </div>
 
     <div class="col-3">
-      <app-form-label id="unit_price" text="Precio Unitario" />
-      <p-inputNumber
-        id="unit_price"
-        [(ngModel)]="washOrderDetailCalcResult.unit_price"
-        [disabled]="true"
-      />
+      <ng-container *ngIf="!hasReceptionistRole()">
+        <app-form-label id="unit_price" text="Precio Unitario" />
+        <p-inputNumber
+          id="unit_price"
+          [(ngModel)]="washOrderDetailCalcResult.unit_price"
+          [disabled]="true"
+        />
+      </ng-container>
     </div>
     <div class="col-3">
-      <app-form-label id="subtotal_price" text="Subtotal" />
-      <p-inputNumber
-        id="subtotal_price"
-        [(ngModel)]="washOrderDetailCalcResult.subtotal_price"
-        [disabled]="true"
-      />
+      <ng-container *ngIf="!hasReceptionistRole()">
+        <app-form-label id="subtotal_price" text="Subtotal" />
+        <p-inputNumber
+          id="subtotal_price"
+          [(ngModel)]="washOrderDetailCalcResult.subtotal_price"
+          [disabled]="true"
+        />
+      </ng-container>
     </div>
 
     <div class="col-9 py-0 my-0">
@@ -124,7 +129,10 @@
       ></app-form-textarea>
     </div>
     <div class="col-3">
-      <div class="flex justify-content-center align-items-center h-full">
+      <div
+        *ngIf="!hasReceptionistRole()"
+        class="flex justify-content-center align-items-center h-full"
+      >
         <p-overlayPanel #priceInfo>
           <h5>Detalle Precio Unitario</h5>
           <ul>
@@ -176,7 +184,8 @@
         [item]="itemTemplate"
       ></app-list-picker>
       <ng-template #itemTemplate let-item>
-        {{ item.name }} - {{ item.price }} Bs.
+        {{ item.name }}
+        <span *ngIf="!hasReceptionistRole()">- {{ item.price }} Bs.</span>
       </ng-template>
     </div>
 

@@ -14,13 +14,18 @@ import { DataTableComponent } from 'src/app/shared/components/data-table/data-ta
 import { WashOrderInfoComponent } from '../../components/wash-order-info/wash-order-info.component';
 import { ReportService } from 'src/app/@core/services/rest/report.service';
 import { OrderStatus } from 'src/app/@core/enums/order-status.enum';
+import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
+import { AbilityService } from '@casl/angular';
+import { AppAbility } from 'src/app/@core/auth/ability';
+import { AuthService } from 'src/app/@core/services/rest/auth.service';
+import { Role } from 'src/app/@core/enums/role.enum';
 
 @Component({
   selector: 'app-wash-order-list',
   templateUrl: './wash-order-list.component.html',
   styleUrls: ['./wash-order-list.component.scss']
 })
-export class WashOrderListComponent {
+export class WashOrderListComponent extends ProtectedComponent {
 
   @ViewChild('washOrderTable') table!: DataTableComponent<WashOrder>;
 
@@ -46,7 +51,13 @@ export class WashOrderListComponent {
         type: DataTableColumnType.CUSTOM
       },
       { title: 'Cantidad Total', propertyRef: 'total_quantity', sortable: true, type: DataTableColumnType.TEXT },
-      { title: 'Precio Total (Bs.)', propertyRef: 'total_price', sortable: true, type: DataTableColumnType.TEXT },
+      {
+        title: 'Precio Total (Bs.)',
+        propertyRef: 'total_price',
+        sortable: true,
+        type: DataTableColumnType.TEXT,
+        visible: !this.authService.hasRole(Role.RECEPTIONIST)
+      },
       {
         title: 'Estado',
         propertyRef: 'status',
@@ -68,6 +79,7 @@ export class WashOrderListComponent {
         selectionConfig: {
           isRequired: false
         },
+        hiddenFn: (selectedRows) => !this.ableTo('create', 'wash-order'),
         callback: () => {
           this._router.navigate(['/wash-orders/new']);
         }
@@ -80,6 +92,7 @@ export class WashOrderListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
+        hiddenFn: (selectedRows) => !this.ableTo('update', 'wash-order'),
         callback: (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
           this._router.navigate([`/wash-orders/edit/${washOrderId}`]);
@@ -94,6 +107,7 @@ export class WashOrderListComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
+        hiddenFn: (selectedRows) => !this.ableTo('delete', 'wash-order'),
         callback: (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
 
@@ -126,6 +140,7 @@ export class WashOrderListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
+        hiddenFn: (selectedRows) => !this.ableTo('read', 'wash-order'),
         callback: (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
 
@@ -147,6 +162,10 @@ export class WashOrderListComponent {
         },
         hasLoadingEnabled: true,
         hiddenFn: (selectedRow) => {
+          if (!this.ableTo('create', 'wash-order')) {
+            return true;
+          }
+
           if (selectedRow) {
             const washOrder = selectedRow;
             return washOrder.status === OrderStatus.CREATED;
@@ -174,6 +193,10 @@ export class WashOrderListComponent {
         },
         hasLoadingEnabled: true,
         hiddenFn: (selectedRow) => {
+          if (this.authService.hasRole(Role.RECEPTIONIST)) {
+            return true;
+          }
+
           if (selectedRow) {
             const washOrder = selectedRow;
             return washOrder.status !== OrderStatus.CREATED;
@@ -200,10 +223,14 @@ export class WashOrderListComponent {
   };
 
   constructor(
+    abilityService: AbilityService<AppAbility>,
+    authService: AuthService,
     public washOrderService: WashOrderService,
     private _reportService: ReportService,
     private _confirmationService: ConfirmationService,
     private _messageService: MessageService,
     private _dialogService: DialogService,
-    private _router: Router) { }
+    private _router: Router) {
+    super(abilityService, authService);
+  }
 }

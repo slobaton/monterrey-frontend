@@ -11,6 +11,7 @@ import { DataTableComponent } from 'src/app/shared/components/data-table/data-ta
 import { AppAbility } from 'src/app/@core/auth/ability';
 import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
 import { UpsertClientFormComponent } from '../../components/upsert-client-form/upsert-client-form.component';
+import { AuthService } from 'src/app/@core/services/rest/auth.service';
 
 @Component({
   selector: 'app-client-list',
@@ -117,7 +118,7 @@ export class ClientListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => !this.ableTo('read', 'parameter'),
+        hiddenFn: (selectedRows) => this.hasReceptionistRole(),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/parameters`])
@@ -131,7 +132,7 @@ export class ClientListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => !this.ableTo('read', 'parameter'),
+        hiddenFn: (selectedRows) => this.hasReceptionistRole(),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/wash-type-prices`])
@@ -145,7 +146,7 @@ export class ClientListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => !this.ableTo('read', 'parameter'),
+        hiddenFn: (selectedRows) => this.hasReceptionistRole(),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/effect-prices`])
@@ -156,11 +157,12 @@ export class ClientListComponent extends ProtectedComponent {
 
   constructor(
     abilityService: AbilityService<AppAbility>,
+    authService: AuthService,
     public clientService: ClientService,
     private _confirmationService: ConfirmationService,
     private _messageService: MessageService,
     private _dialogService: DialogService,
     private _router: Router) {
-    super(abilityService);
+    super(abilityService, authService);
   }
 }

@@ -1,5 +1,5 @@
-<div class="grid">
-  <div class="col-12">
+<div *ngIf="ability$ | async as ab" class="grid">
+  <div *ngIf="ab.can('create', 'wash-order')" class="col-12">
     <div
       *ngIf="existingWashOrder && !washOrderLoaded; else washOrderSection"
       class="card mb-0"
@@ -55,7 +55,7 @@
                 [service]="clientService"
                 selectionProp="id"
                 [selectedLabelFn]="showClientSelectedLabel"
-                [hasCustomAction]="true"
+                [hasCustomAction]="ab.can('create', 'client')"
                 (onClickCustomAction)="openNewClientModal()"
                 [onSelect]="onClientCreated"
               >
@@ -136,7 +136,7 @@
                 >
                 </p-button>
                 <p-button
-                  *ngIf="isReadyToApprove()"
+                  *ngIf="!hasReceptionistRole() && isReadyToApprove()"
                   type="button"
                   styleClass="p-button-sm p-button-success"
                   icon="pi pi-check"
@@ -176,9 +176,9 @@
                       <th style="width: 5rem"></th>
                       <th>Tipo</th>
                       <th>Tamaño</th>
-                      <th>Precio c/u (Bs.)</th>
+                      <th *ngIf="!hasReceptionistRole()">Precio c/u (Bs.)</th>
                       <th>Cantidad</th>
-                      <th>Subtotal (Bs.)</th>
+                      <th *ngIf="!hasReceptionistRole()">Subtotal (Bs.)</th>
                       <th>Acciones</th>
                     </tr>
                   </ng-template>
@@ -204,9 +204,13 @@
                       </td>
                       <td>{{ item.cloth_type.name }}</td>
                       <td>{{ item.cloth_size.name }}</td>
-                      <td>{{ item.unit_price }}</td>
+                      <td *ngIf="!hasReceptionistRole()">
+                        {{ item.unit_price }}
+                      </td>
                       <td>{{ item.quantity }}</td>
-                      <td>{{ item.subtotal_price }}</td>
+                      <td *ngIf="!hasReceptionistRole()">
+                        {{ item.subtotal_price }}
+                      </td>
                       <td>
                         <p-button
                           icon="pi pi-times"
@@ -231,40 +235,42 @@
                             <h6>Observaciones:</h6>
                             <p>{{ rowItem["observations"] }}</p>
 
-                            <p>
-                              <b>Precio Lavado:</b>
-                              {{ rowItem["wash_price"] }} Bs.
-                            </p>
-
-                            <p>
-                              <b>Precio Ojales:</b>
-                              {{
-                                rowItem["buttonholes_price"] *
-                                  rowItem["num_buttonholes"]
-                              }}
-                              Bs.
-                            </p>
-
-                            <ng-container
-                              *ngIf="rowItem['is_focalizado_active']"
-                            >
+                            <ng-component *ngIf="!hasReceptionistRole()">
                               <p>
-                                <b>Precio Focalizado:</b>
-                                {{ rowItem["focalizado_price"] }} Bs.
+                                <b>Precio Lavado:</b>
+                                {{ rowItem["wash_price"] }} Bs.
                               </p>
-                            </ng-container>
 
-                            <ng-container *ngIf="rowItem['is_nevado_active']">
                               <p>
-                                <b>Precio Nevado:</b>
-                                {{ rowItem["nevado_price"] }} Bs.
+                                <b>Precio Ojales:</b>
+                                {{
+                                  rowItem["buttonholes_price"] *
+                                    rowItem["num_buttonholes"]
+                                }}
+                                Bs.
                               </p>
-                            </ng-container>
 
-                            <p>
-                              <b>Precio Total Efectos:</b>
-                              {{ rowItem["effect_price"] }} Bs.
-                            </p>
+                              <ng-container
+                                *ngIf="rowItem['is_focalizado_active']"
+                              >
+                                <p>
+                                  <b>Precio Focalizado:</b>
+                                  {{ rowItem["focalizado_price"] }} Bs.
+                                </p>
+                              </ng-container>
+
+                              <ng-container *ngIf="rowItem['is_nevado_active']">
+                                <p>
+                                  <b>Precio Nevado:</b>
+                                  {{ rowItem["nevado_price"] }} Bs.
+                                </p>
+                              </ng-container>
+
+                              <p>
+                                <b>Precio Total Efectos:</b>
+                                {{ rowItem["effect_price"] }} Bs.
+                              </p>
+                            </ng-component>
                           </div>
                           <div class="col-6">
                             <h6>Efectos seleccionados:</h6>
@@ -286,7 +292,7 @@
               <app-form-label id="total_quantity" text="Cantidad Total" />
               <input pInputText [(ngModel)]="totalQuantity" [readonly]="true" />
             </div>
-            <div class="col-4 py-0 my-0">
+            <div *ngIf="!hasReceptionistRole()" class="col-4 py-0 my-0">
               <app-form-label id="total_price" text="Precio Total" />
               <input pInputText [(ngModel)]="totalPrice" [readonly]="true" />
             </div>
