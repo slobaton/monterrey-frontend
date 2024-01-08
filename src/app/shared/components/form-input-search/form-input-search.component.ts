@@ -8,7 +8,7 @@ import { IFetchPaginatedData } from 'src/app/@core/services/interfaces/fetch-pag
 @Component({
   selector: 'app-form-input-search',
   templateUrl: './form-input-search.component.html',
-  styleUrls: ['./form-input-search.component.scss']
+  styleUrls: ['./form-input-search.component.scss'],
 })
 export class FormInputSearchComponent<TEntity> implements OnInit {
   @Input() form!: FormGroup;
@@ -52,6 +52,7 @@ export class FormInputSearchComponent<TEntity> implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('subs');
     this.onSelect.subscribe((selectedValue) => this.onSelectValue(selectedValue));
   }
 

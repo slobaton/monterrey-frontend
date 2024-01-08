@@ -7,13 +7,17 @@ import { EffectPriceService } from 'src/app/@core/services/rest/effect-price.ser
 import { DataTableActionStatus, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
 import { UpsertEffectPriceComponent } from '../../components/upsert-effect-price/upsert-effect-price.component';
+import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
+import { AbilityService } from '@casl/angular';
+import { AppAbility } from 'src/app/@core/auth/ability';
+import { AuthService } from 'src/app/@core/services/rest/auth.service';
 
 @Component({
   selector: 'app-client-effect-price-list',
   templateUrl: './client-effect-price-list.component.html',
   styleUrls: ['./client-effect-price-list.component.scss']
 })
-export class ClientEffectPriceListComponent implements OnInit {
+export class ClientEffectPriceListComponent extends ProtectedComponent implements OnInit {
   @ViewChild('effectPricesTable') table!: DataTableComponent<EffectPrice>;
 
   public clientId: string = '';
@@ -112,12 +116,16 @@ export class ClientEffectPriceListComponent implements OnInit {
   };
 
   constructor(
+    abilityService: AbilityService<AppAbility>,
+    authService: AuthService,
     private _route: ActivatedRoute,
     private _confirmationService: ConfirmationService,
     private _dialogService: DialogService,
     private _messageService: MessageService,
     public effectPriceService: EffectPriceService
-  ) { }
+  ) {
+    super(abilityService, authService);
+  }
 
   ngOnInit(): void {
     this._route.params.subscribe(params => {

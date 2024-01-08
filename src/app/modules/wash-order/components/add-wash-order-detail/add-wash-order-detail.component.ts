@@ -16,13 +16,17 @@ import { EffectService } from 'src/app/@core/services/rest/effect.service';
 import { WashOrderDetailService } from 'src/app/@core/services/rest/wash-order-detail.service';
 import { WashOrderDetailCalcResult } from 'src/app/@core/models/wash-order-detail-calc-result';
 import { WashOrderDetailUpdateRequest } from 'src/app/@core/models/request/wash-order-detail-update-request';
+import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
+import { AbilityService } from '@casl/angular';
+import { AppAbility } from 'src/app/@core/auth/ability';
+import { AuthService } from 'src/app/@core/services/rest/auth.service';
 
 @Component({
   selector: 'app-add-wash-order-detail',
   templateUrl: './add-wash-order-detail.component.html',
   styleUrls: ['./add-wash-order-detail.component.scss']
 })
-export class AddWashOrderDetailComponent implements OnInit {
+export class AddWashOrderDetailComponent extends ProtectedComponent implements OnInit {
 
   washOrderDetailForm!: FormGroup;
   formProcessEvent: EventEmitter<boolean> = new EventEmitter();
@@ -45,6 +49,8 @@ export class AddWashOrderDetailComponent implements OnInit {
   private calculateRequest = new Subject<WashOrderDetailCalculateRequest>();
 
   constructor(
+    abilityService: AbilityService<AppAbility>,
+    authService: AuthService,
     public clothTypeService: ClothTypeService,
     public clothSizeService: ClothSizeService,
     public effectService: EffectService,
@@ -52,7 +58,9 @@ export class AddWashOrderDetailComponent implements OnInit {
     private _ref: DynamicDialogRef,
     private _config: DynamicDialogConfig,
     private _washOrderDetailService: WashOrderDetailService,
-    private _validationService: ValidationService) { }
+    private _validationService: ValidationService) {
+    super(abilityService, authService);
+  }
 
   ngOnInit(): void {
     this.initializeForm();

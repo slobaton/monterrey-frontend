@@ -1,17 +1,17 @@
 export type DataTableConfiguration = {
-  columns: Array<DataTableColumnProps>;
+  columns: Array<DataTableColumnProps>,
   identifierPropRef: string,
-  selectionType?: DataTableSelectionType;
-  actions?: Array<DataTableActionProps>;
+  selectionType?: DataTableSelectionType,
+  actions?: Array<DataTableActionProps>
 }
 
 export type DataTableColumnProps = {
-  title: string;
-  propertyRef: string;
+  title: string,
+  propertyRef: string,
   customValue?: (row: any) => string,
-  visible?: boolean;
-  sortable?: boolean;
-  type?: DataTableColumnType;
+  visible?: boolean,
+  sortable?: boolean,
+  type?: DataTableColumnType
 }
 
 export type DataTableActionProps = {
@@ -29,7 +29,7 @@ export type DataTableActionProps = {
 
 export type DataTableActionSelectionConfig = {
   isRequired?: boolean,
-  minSelectedRows?: number
+  minSelectedRows?: number,
   maxSelectedRows?: number
 }
 
