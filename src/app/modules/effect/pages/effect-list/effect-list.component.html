@@ -1,5 +1,5 @@
-<div class="grid">
-  <div class="col-12">
+<div *ngIf="ability$ | async as ab" class="grid">
+  <div *ngIf="ab.can('read', 'effect')" class="col-12">
     <div class="card mb-0">
       <h5>Efectos</h5>
       <app-confirm-dialog

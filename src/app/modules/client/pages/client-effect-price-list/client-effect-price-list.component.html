@@ -1,5 +1,5 @@
-<div class="grid">
-  <div class="col-12">
+<div *ngIf="ability$ | async as ab" class="grid">
+  <div *ngIf="!hasReceptionistRole()" class="col-12">
     <div class="card mb-0">
       <h5>Precios de Efectos</h5>
       <app-confirm-dialog
