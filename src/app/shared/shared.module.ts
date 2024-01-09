@@ -36,6 +36,8 @@ import { ListPickerComponent } from './components/list-picker/list-picker.compon
 import { SimpleTableComponent } from './components/simple-table/simple-table.component';
 import { SearchOverlayComponent } from './components/search-overlay/search-overlay.component';
 import { FormInputSearchComponent } from './components/form-input-search/form-input-search.component';
+import { PageCardComponent } from './components/page-card/page-card.component';
+import { MenuModule } from 'primeng/menu';
 
 
 
@@ -56,7 +58,8 @@ import { FormInputSearchComponent } from './components/form-input-search/form-in
     ListPickerComponent,
     SimpleTableComponent,
     SearchOverlayComponent,
-    FormInputSearchComponent
+    FormInputSearchComponent,
+    PageCardComponent
   ],
   imports: [
     CommonModule,
@@ -78,7 +81,8 @@ import { FormInputSearchComponent } from './components/form-input-search/form-in
     NgSelectModule,
     CalendarModule,
     PickListModule,
-    PasswordModule
+    PasswordModule,
+    MenuModule
   ],
   exports: [
     DataTableComponent,
@@ -97,6 +101,7 @@ import { FormInputSearchComponent } from './components/form-input-search/form-in
     FormInputSearchComponent,
     SearchOverlayComponent,
     FormInputPasswordComponent,
+    PageCardComponent
   ]
 })
 export class SharedModule { }
