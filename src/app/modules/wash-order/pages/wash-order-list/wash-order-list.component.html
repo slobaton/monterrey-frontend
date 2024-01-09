@@ -1,7 +1,9 @@
 <div *ngIf="ability$ | async as ab" class="grid">
   <div class="col-12">
-    <div *ngIf="ab.can('read', 'wash-order')" class="card mb-0">
-      <h5>Ordenes de Lavado</h5>
+    <app-page-card
+      *ngIf="ab.can('read', 'wash-order')"
+      title="Ordenes de Lavado"
+    >
       <app-confirm-dialog
         id="confirmDelete"
         title="Eliminar Orden de Lavado"
@@ -22,6 +24,6 @@
           </div>
         </div>
       </ng-template>
-    </div>
+    </app-page-card>
   </div>
 </div>

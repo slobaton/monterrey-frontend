@@ -1,7 +1,6 @@
 <div *ngIf="ability$ | async as ab" class="grid">
   <div *ngIf="ab.can('read', 'cloth-size')" class="col-12">
-    <div class="card mb-0">
-      <h5>Tamaños de Ropa</h5>
+    <app-page-card title="Tamaños de Ropa">
       <app-confirm-dialog
         id="confirmDelete"
         title="Eliminar Tamaño de Ropa"
@@ -12,6 +11,6 @@
         [tableConfig]="tableConfig"
         [sourceDataService]="clothSizeService"
       ></app-data-table>
-    </div>
+    </app-page-card>
   </div>
 </div>

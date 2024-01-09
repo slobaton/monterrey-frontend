@@ -1,13 +1,12 @@
 <div *ngIf="ability$ | async as ab" class="grid">
   <div *ngIf="ab.can('read', 'parameter')" class="col-12">
-    <div class="card mb-0">
-      <h5>Parametrización de Precios</h5>
+    <app-page-card title="Parametrización de Precios">
       <app-data-table
         #paramTable
         [tableConfig]="tableConfig"
         [searchEnabled]="false"
         [sourceDataService]="parameterService"
       ></app-data-table>
-    </div>
+    </app-page-card>
   </div>
 </div>

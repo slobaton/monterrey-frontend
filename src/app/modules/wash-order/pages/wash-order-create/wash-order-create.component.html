@@ -1,13 +1,12 @@
 <div *ngIf="ability$ | async as ab" class="grid">
   <div *ngIf="ab.can('create', 'wash-order')" class="col-12">
-    <div
+    <app-page-card
       *ngIf="existingWashOrder && !washOrderLoaded; else washOrderSection"
-      class="card mb-0"
     >
       <div class="flex justify-content-center align-items-center">
         <p-progressSpinner></p-progressSpinner>
       </div>
-    </div>
+    </app-page-card>
     <ng-template #washOrderSection>
       <div class="card mb-0">
         <div class="p-card-title">
