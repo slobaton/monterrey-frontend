@@ -1,0 +1,12 @@
+<div class="card mb-0">
+  <div class="flex flex-row justify-content-between align-items-center h-3rem">
+    <h5 class="line-height-1">{{ title }}</h5>
+    <p-button
+      icon="pi pi-ellipsis-v"
+      styleClass="p-button-rounded p-button-text"
+      (click)="contextMenu.toggle($event)"
+    ></p-button>
+  </div>
+  <p-menu #contextMenu [popup]="true" [model]="menuItems"></p-menu>
+  <ng-content></ng-content>
+</div>

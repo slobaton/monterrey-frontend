@@ -56,7 +56,8 @@ import { FormInputSearchComponent } from './components/form-input-search/form-in
     ListPickerComponent,
     SimpleTableComponent,
     SearchOverlayComponent,
-    FormInputSearchComponent
+    FormInputSearchComponent,
+    PageCardComponent
   ],
   imports: [
     CommonModule,
@@ -78,7 +79,8 @@ import { FormInputSearchComponent } from './components/form-input-search/form-in
     NgSelectModule,
     CalendarModule,
     PickListModule,
-    PasswordModule
+    PasswordModule,
+    MenuModule
   ],
   exports: [
     DataTableComponent,
