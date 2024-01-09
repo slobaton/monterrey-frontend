@@ -1,7 +1,6 @@
 <div *ngIf="ability$ | async as ab" class="grid">
   <div *ngIf="!hasReceptionistRole()" class="col-12">
-    <div class="card mb-0">
-      <h5>Precios de Efectos</h5>
+    <app-page-card title="Precios de Efectos">
       <app-confirm-dialog
         id="confirmEffectPriceDelete"
         title="Eliminar Precio Efecto"
@@ -14,6 +13,6 @@
         [sourceDataService]="effectPriceService"
         [extraParams]="clientId"
       ></app-data-table>
-    </div>
+    </app-page-card>
   </div>
 </div>
