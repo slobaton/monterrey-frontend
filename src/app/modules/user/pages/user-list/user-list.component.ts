@@ -1,6 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { DataTableActionStatus, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { UserService } from 'src/app/@core/services/rest/user.service';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
+import { User } from 'src/app/@core/models/user';
+import { UpsertUserComponent } from '../../components/upsert-user-form/upsert-user.component';
 
 @Component({
   selector: 'app-user-list',
@@ -8,6 +13,8 @@ import { UserService } from 'src/app/@core/services/rest/user.service';
   styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent {
+  @ViewChild('userTable') table!: DataTableComponent<User>;
+  ref: DynamicDialogRef | undefined;
 
   public tableConfig: DataTableConfiguration = {
     columns: [
@@ -22,15 +29,38 @@ export class UserListComponent {
     selectionType: DataTableSelectionType.MULTIPLE,
     actions: [
       {
+        title: 'Nuevo',
+        tooltip: 'Crear usuario',
+        icon: 'plus',
+        status: DataTableActionStatus.SUCCESS,
+        selectionConfig: {
+          isRequired: false
+        },
+        callback: () => {
+          this.ref = this.dialogService.open(UpsertUserComponent, { header: 'Crear usuario' });
+          this.ref.onClose.subscribe((result) => {
+            if (result) {
+              this.table.reset();
+            }
+          });
+        }
+      },
+      {
         title: 'Editar',
         tooltip: 'Editar Usuario',
-        icon: 'clone',
+        icon: 'pencil',
         status: DataTableActionStatus.WARNING,
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedIds) => {
-          console.log(selectedIds);
+        callback: (action, selectedId) => {
+          const USER = selectedId[0];
+          this.ref = this.dialogService.open(UpsertUserComponent, { header: 'Editar Tipo lavado', data: { user: USER } });
+          this.ref.onClose.subscribe((result) => {
+            if (result) {
+              this.table.reset();
+            }
+          });
         }
       },
       {
@@ -39,26 +69,51 @@ export class UserListComponent {
         icon: 'trash',
         status: DataTableActionStatus.DANGER,
         selectionConfig: {
-          minSelectedRows: 2
+          maxSelectedRows: 1
         },
-        callback: (selectedIds) => {
-          console.log(selectedIds);
-        }
-      },
-      {
-        title: 'Exportar',
-        tooltip: 'Exportar Usuarios',
-        icon: 'file',
-        status: DataTableActionStatus.INFO,
-        selectionConfig: {
-          isRequired: false
-        },
-        callback: () => {
-          console.log('export');
+        callback: (action, selectedId) => {
+          const userId = selectedId[0].id;
+          this.confirmationService.confirm({
+            key: 'confirmDelete',
+            accept: () => {
+              this.userService.deleteById(userId)
+                .then(() => {
+                  this.messageService.add({
+                    key: 'confirmDelete',
+                    severity: 'success',
+                    summary: 'Eliminado!',
+                    detail: 'El usuario ha sido eliminado!.'
+                  });
+                  this.table.reset();
+                })
+                .catch((err) => {
+                  console.error(err);
+                  this.messageService.add({
+                    key: 'confirmDelete',
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'No se pudo completar la accion.'
+                  })
+                });
+            },
+            reject: () => {
+              this.messageService.add({
+                key: 'confirmDelete',
+                severity: 'error',
+                summary: 'Cancelado',
+                detail: 'Operacion cancelada!'
+              })
+            }
+          });
         }
       },
     ]
   };
 
-  constructor(public userService: UserService) { }
+  constructor(
+    public userService: UserService,
+    private dialogService: DialogService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService,
+  ) { }
 }
