@@ -6,13 +6,17 @@ import { DataTableActionStatus, DataTableColumnType, DataTableConfiguration, Dat
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
 import { ClothSizeService } from 'src/app/@core/services/rest/cloth-size.service';
 import { UpsertClothSizeComponent } from '../../components/upsert-cloth-size/upsert-cloth-size.component';
+import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
+import { AbilityService } from '@casl/angular';
+import { AppAbility } from 'src/app/@core/auth/ability';
+import { AuthService } from 'src/app/@core/services/rest/auth.service';
 
 @Component({
   selector: 'app-cloth-size-list',
   templateUrl: './cloth-size-list.component.html',
   styleUrls: ['./cloth-size-list.component.scss']
 })
-export class ClothSizeListComponent {
+export class ClothSizeListComponent extends ProtectedComponent {
   @ViewChild('clothSizeTable') table!: DataTableComponent<ClothSize>;
 
   ref: DynamicDialogRef | undefined;
@@ -37,6 +41,7 @@ export class ClothSizeListComponent {
         selectionConfig: {
           isRequired: false
         },
+        hiddenFn: (selectedRows) => !this.ableTo('create', 'cloth-size'),
         callback: () => {
           this.ref = this.dialogService.open(UpsertClothSizeComponent, { header: 'Crear nuevo Tamaño de Ropa' });
           this.ref.onClose.subscribe((result) => {
@@ -54,6 +59,7 @@ export class ClothSizeListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
+        hiddenFn: (selectedRows) => !this.ableTo('update', 'cloth-size'),
         callback: (action, selectedRows) => {
           const clothSize = selectedRows[0];
           this.ref = this.dialogService.open(UpsertClothSizeComponent, { header: 'Editar Tamaño de ropa', data: { clothSize: clothSize } });
@@ -73,6 +79,7 @@ export class ClothSizeListComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
+        hiddenFn: (selectedRows) => !this.ableTo('delete', 'cloth-size'),
         callback: (action, selectedRows) => {
           const clothSizeId = selectedRows[0].id;
           this.confirmationService.confirm({
@@ -100,8 +107,12 @@ export class ClothSizeListComponent {
   };
 
   constructor(
+    abilityService: AbilityService<AppAbility>,
+    authService: AuthService,
     public clothSizeService: ClothSizeService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private dialogService: DialogService) { }
+    private dialogService: DialogService) {
+    super(abilityService, authService);
+  }
 }

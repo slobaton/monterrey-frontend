@@ -7,13 +7,17 @@ import { UpsertParameterPriceComponent } from '../../components/upsert-parameter
 import { ActivatedRoute } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ParameterPriceService } from 'src/app/@core/services/rest/parameter-price.service';
+import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
+import { AbilityService } from '@casl/angular';
+import { AppAbility } from 'src/app/@core/auth/ability';
+import { AuthService } from 'src/app/@core/services/rest/auth.service';
 
 @Component({
   selector: 'app-client-parameter-price-list',
   templateUrl: './client-parameter-price-list.component.html',
   styleUrls: ['./client-parameter-price-list.component.scss']
 })
-export class ClientParameterPriceListComponent {
+export class ClientParameterPriceListComponent extends ProtectedComponent {
   @ViewChild('parameterPricesTable') table!: DataTableComponent<ParameterPrice>;
 
   public clientId: string = '';
@@ -43,6 +47,7 @@ export class ClientParameterPriceListComponent {
         selectionConfig: {
           isRequired: false
         },
+        hiddenFn: (selectedRows) => !this.ableTo('create', 'parameter'),
         callback: () => {
           this.ref = this._dialogService.open(UpsertParameterPriceComponent, { header: 'Asignar Precio', data: { clientId: this.clientId } });
           this.ref.onClose.subscribe((result) => {
@@ -60,6 +65,7 @@ export class ClientParameterPriceListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
+        hiddenFn: (selectedRows) => !this.ableTo('update', 'parameter'),
         callback: (action, selectedRows) => {
           const parameterPrice = selectedRows[0];
           this.ref = this._dialogService.open(UpsertParameterPriceComponent, { header: 'Asignar Precio', data: { parameterPrice, clientId: this.clientId } });
@@ -79,6 +85,7 @@ export class ClientParameterPriceListComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
+        hiddenFn: (selectedRows) => !this.ableTo('delete', 'parameter'),
         callback: (action, selectedRows) => {
           const parameterId = selectedRows[0].id;
           const priceId = selectedRows[0].parameter_price.id;
@@ -112,12 +119,16 @@ export class ClientParameterPriceListComponent {
   };
 
   constructor(
+    abilityService: AbilityService<AppAbility>,
+    authService: AuthService,
     private _route: ActivatedRoute,
     private _confirmationService: ConfirmationService,
     private _dialogService: DialogService,
     private _messageService: MessageService,
     public parameterPriceService: ParameterPriceService
-  ) { }
+  ) {
+    super(abilityService, authService);
+  }
 
   ngOnInit(): void {
     this._route.params.subscribe(params => {

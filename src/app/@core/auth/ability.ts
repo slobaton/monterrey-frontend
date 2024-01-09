@@ -14,6 +14,7 @@ export function defineAbilitiesFor(role: Role) {
     can('manage', 'all');
   } else if (role === Role.SECRETARY) {
     can(['create', 'read'], 'all');
+    can(['update', 'delete'], ['wash-order']);
   } else if (role === Role.RECEPTIONIST) {
     can('read', ['client', 'cloth-size', 'cloth-type', 'wash-type', 'wash-order', 'effect']);
     can('create', ['wash-order', 'client']);

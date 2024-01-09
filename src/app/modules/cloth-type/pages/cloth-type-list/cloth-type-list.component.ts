@@ -6,13 +6,17 @@ import { DataTableActionStatus, DataTableColumnType, DataTableConfiguration, Dat
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
 import { ClothTypeService } from 'src/app/@core/services/rest/cloth-type.service';
 import { ClothType } from 'src/app/@core/models/cloth-type';
+import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
+import { AbilityService } from '@casl/angular';
+import { AppAbility } from 'src/app/@core/auth/ability';
+import { AuthService } from 'src/app/@core/services/rest/auth.service';
 
 @Component({
   selector: 'app-cloth-type-list',
   templateUrl: './cloth-type-list.component.html',
   styleUrls: ['./cloth-type-list.component.scss']
 })
-export class ClothTypeListComponent {
+export class ClothTypeListComponent extends ProtectedComponent {
   @ViewChild('clothTypeTable') table!: DataTableComponent<ClothType>;
 
   ref: DynamicDialogRef | undefined;
@@ -36,6 +40,7 @@ export class ClothTypeListComponent {
         selectionConfig: {
           isRequired: false
         },
+        hiddenFn: (selectedRows) => !this.ableTo('create', 'cloth-type'),
         callback: () => {
           this.ref = this.dialogService.open(UpsertClothTypeComponent, { header: 'Crear nuevo Tipo Ropa' });
           this.ref.onClose.subscribe((result) => {
@@ -53,6 +58,7 @@ export class ClothTypeListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
+        hiddenFn: (selectedRows) => !this.ableTo('update', 'cloth-type'),
         callback: (action, selectedRows) => {
           const clothType = selectedRows[0];
           this.ref = this.dialogService.open(UpsertClothTypeComponent, { header: 'Editar Tipo de ropa', data: { clothType: clothType } });
@@ -72,6 +78,7 @@ export class ClothTypeListComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
+        hiddenFn: (selectedRows) => !this.ableTo('delete', 'cloth-type'),
         callback: (action, selectedRows) => {
           const clothTypeId = selectedRows[0].id;
           this.confirmationService.confirm({
@@ -99,8 +106,12 @@ export class ClothTypeListComponent {
   };
 
   constructor(
+    abilityService: AbilityService<AppAbility>,
+    authService: AuthService,
     public clothTypeService: ClothTypeService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private dialogService: DialogService) { }
+    private dialogService: DialogService) {
+    super(abilityService, authService);
+  }
 }

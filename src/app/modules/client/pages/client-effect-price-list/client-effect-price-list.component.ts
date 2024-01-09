@@ -47,6 +47,7 @@ export class ClientEffectPriceListComponent extends ProtectedComponent implement
         selectionConfig: {
           isRequired: false
         },
+        hiddenFn: (selectedRows) => !this.ableTo('create', 'parameter'),
         callback: () => {
           this.ref = this._dialogService.open(UpsertEffectPriceComponent, { header: 'Asignar Precio', data: { clientId: this.clientId } });
           this.ref.onClose.subscribe((result) => {
@@ -64,6 +65,7 @@ export class ClientEffectPriceListComponent extends ProtectedComponent implement
         selectionConfig: {
           maxSelectedRows: 1
         },
+        hiddenFn: (selectedRows) => !this.ableTo('update', 'parameter'),
         callback: (action, selectedRows) => {
           const effectPrice = selectedRows[0];
           this.ref = this._dialogService.open(UpsertEffectPriceComponent, { header: 'Asignar Precio', data: { effectPrice, clientId: this.clientId } });
@@ -83,6 +85,7 @@ export class ClientEffectPriceListComponent extends ProtectedComponent implement
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
+        hiddenFn: (selectedRows) => !this.ableTo('delete', 'parameter'),
         callback: (action, selectedRows) => {
           const effectId = selectedRows[0].id;
           const priceId = selectedRows[0].effect_price.id;

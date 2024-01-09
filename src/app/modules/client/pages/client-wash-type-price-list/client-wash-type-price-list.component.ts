@@ -12,13 +12,17 @@ import { WashTypePriceService } from 'src/app/@core/services/rest/wash-type-pric
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { UpsertWashTypePriceComponent } from '../../components/upsert-wash-type-price/upsert-wash-type-price.component';
+import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
+import { AbilityService } from '@casl/angular';
+import { AppAbility } from 'src/app/@core/auth/ability';
+import { AuthService } from 'src/app/@core/services/rest/auth.service';
 
 @Component({
   selector: 'app-client-wash-type-price-list',
   templateUrl: './client-wash-type-price-list.component.html',
   styleUrls: ['./client-wash-type-price-list.component.scss']
 })
-export class ClientWashTypePriceListComponent implements OnInit {
+export class ClientWashTypePriceListComponent extends ProtectedComponent implements OnInit {
 
   @ViewChild('washPricesTable') table!: DataTableComponent<WashTypePrice>;
 
@@ -49,6 +53,7 @@ export class ClientWashTypePriceListComponent implements OnInit {
         selectionConfig: {
           isRequired: false
         },
+        hiddenFn: (selectedRows) => !this.ableTo('create', 'parameter'),
         callback: () => {
           this.ref = this._dialogService.open(UpsertWashTypePriceComponent, { header: 'Asignar Precio', data: { clientId: this.clientId } });
           this.ref.onClose.subscribe((result) => {
@@ -66,6 +71,7 @@ export class ClientWashTypePriceListComponent implements OnInit {
         selectionConfig: {
           maxSelectedRows: 1
         },
+        hiddenFn: (selectedRows) => !this.ableTo('update', 'parameter'),
         callback: (action, selectedRows) => {
           const washTypePrice = selectedRows[0];
           this.ref = this._dialogService.open(UpsertWashTypePriceComponent, { header: 'Asignar Precio', data: { washTypePrice, clientId: this.clientId } });
@@ -85,6 +91,7 @@ export class ClientWashTypePriceListComponent implements OnInit {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
+        hiddenFn: (selectedRows) => !this.ableTo('delete', 'parameter'),
         callback: (action, selectedRows) => {
           const washTypeId = selectedRows[0].id;
           const priceId = selectedRows[0].wash_type_price.id;
@@ -118,12 +125,16 @@ export class ClientWashTypePriceListComponent implements OnInit {
   };
 
   constructor(
+    abilityService: AbilityService<AppAbility>,
+    authService: AuthService,
     private _route: ActivatedRoute,
     private _confirmationService: ConfirmationService,
     private _dialogService: DialogService,
     private _messageService: MessageService,
     public washTypePriceService: WashTypePriceService
-  ) { }
+  ) {
+    super(abilityService, authService);
+  }
 
   ngOnInit(): void {
     this._route.params.subscribe(params => {
