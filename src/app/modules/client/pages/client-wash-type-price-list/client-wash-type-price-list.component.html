@@ -1,7 +1,6 @@
 <div class="grid">
   <div class="col-12">
-    <div class="card mb-0">
-      <h5>Precios de Lavado</h5>
+    <app-page-card title="Precios de Lavado">
       <app-confirm-dialog
         id="confirmWashTypePriceDelete"
         title="Eliminar Precio Lavado"
@@ -14,6 +13,6 @@
         [sourceDataService]="washTypePriceService"
         [extraParams]="clientId"
       ></app-data-table>
-    </div>
+    </app-page-card>
   </div>
 </div>
