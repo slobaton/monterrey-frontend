@@ -6,7 +6,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { UserUpsertRequest } from 'src/app/@core/models/request/user-upsert-request';
 import { ValidationService } from 'src/app/@core/services/common/validation.service';
 import { UserService } from 'src/app/@core/services/rest/user.service';
-import { passwordMatchValidator } from 'src/app/shared/helpers/form-helpers';
+import { passwordMatchValidator } from 'src/app/shared/validators/password-match-validator';
 
 @Component({
   selector: 'app-upsert-user',
