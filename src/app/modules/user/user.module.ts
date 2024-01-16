@@ -6,6 +6,7 @@ import { UserListComponent } from './pages/user-list/user-list.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 import { UpsertUserComponent } from './components/upsert-user-form/upsert-user.component'
+import { AssignRoleComponent } from "./components/assign-role-form/assign-role.component";
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { UpsertUserComponent } from './components/upsert-user-form/upsert-user.c
   ],
   declarations: [
     UserListComponent,
-    UpsertUserComponent
+    UpsertUserComponent,
+    AssignRoleComponent
   ]
 })
 export class UserModule { }

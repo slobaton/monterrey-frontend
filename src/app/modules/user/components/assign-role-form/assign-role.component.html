@@ -1,0 +1,17 @@
+<app-form
+  [form]="roleUserForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+>
+  <div class="form-container p-fluid p-form grid">
+    <div *ngFor="let role of roles" class="col-12">
+      <app-form-checkbox
+        id="role.id"
+        controlName="role_ids"
+        [form]="roleUserForm"
+        [value]="role.id"
+        [label]="role.name"
+      ></app-form-checkbox>
+    </div>
+  </div>
+</app-form>

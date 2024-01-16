@@ -6,6 +6,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
 import { User } from 'src/app/@core/models/user';
 import { UpsertUserComponent } from '../../components/upsert-user-form/upsert-user.component';
+import { AssignRoleComponent } from "../../components/assign-role-form/assign-role.component";
 
 @Component({
   selector: 'app-user-list',
@@ -31,7 +32,7 @@ export class UserListComponent {
       {
         title: 'Nuevo',
         tooltip: 'Crear usuario',
-        icon: 'plus',
+        icon: 'user-plus',
         status: DataTableActionStatus.SUCCESS,
         selectionConfig: {
           isRequired: false
@@ -48,7 +49,7 @@ export class UserListComponent {
       {
         title: 'Editar',
         tooltip: 'Editar Usuario',
-        icon: 'pencil',
+        icon: 'user-edit',
         status: DataTableActionStatus.WARNING,
         selectionConfig: {
           maxSelectedRows: 1
@@ -66,7 +67,7 @@ export class UserListComponent {
       {
         title: 'Eliminar',
         tooltip: 'Eliminar Usuario',
-        icon: 'trash',
+        icon: 'user-minus',
         status: DataTableActionStatus.DANGER,
         selectionConfig: {
           maxSelectedRows: 1
@@ -103,6 +104,24 @@ export class UserListComponent {
                 summary: 'Cancelado',
                 detail: 'Operacion cancelada!'
               })
+            }
+          });
+        }
+      },
+      {
+        title: 'Asignar rol',
+        tooltip: 'Asignar rol al usuario',
+        icon: 'user',
+        status: DataTableActionStatus.INFO,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        callback: (action, selectedId) => {
+          const USER = selectedId[0];
+          this.ref = this.dialogService.open(AssignRoleComponent, { header: 'Asignar rol al usuario', data: { user: USER } });
+          this.ref.onClose.subscribe((result) => {
+            if (result) {
+              this.table.reset();
             }
           });
         }

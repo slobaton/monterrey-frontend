@@ -36,6 +36,7 @@ import { ListPickerComponent } from './components/list-picker/list-picker.compon
 import { SimpleTableComponent } from './components/simple-table/simple-table.component';
 import { SearchOverlayComponent } from './components/search-overlay/search-overlay.component';
 import { FormInputSearchComponent } from './components/form-input-search/form-input-search.component';
+import {FormCheckboxComponent} from "./components/form-checkbox/form-checkbox.component";
 
 
 
@@ -56,7 +57,8 @@ import { FormInputSearchComponent } from './components/form-input-search/form-in
     ListPickerComponent,
     SimpleTableComponent,
     SearchOverlayComponent,
-    FormInputSearchComponent
+    FormInputSearchComponent,
+    FormCheckboxComponent
   ],
   imports: [
     CommonModule,
@@ -97,6 +99,7 @@ import { FormInputSearchComponent } from './components/form-input-search/form-in
     FormInputSearchComponent,
     SearchOverlayComponent,
     FormInputPasswordComponent,
+    FormCheckboxComponent,
   ]
 })
 export class SharedModule { }
