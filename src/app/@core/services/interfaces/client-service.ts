@@ -1,7 +1,9 @@
+import { AddPaymentRequest } from './../../models/request/add-payment-request';
 import { ClientUpsertRequest } from 'src/app/@core/models/request/client-upsert-request';
 import { Client } from '../../models/client';
 export interface IClientService {
   createClient(request: ClientUpsertRequest): Promise<Client>;
   updateClient(id: string, request: ClientUpsertRequest): Promise<Client>;
   deleteClient(id: string): Promise<void>;
+  addPayment(id: string, washOrderId: string, request: AddPaymentRequest): Promise<void>;
 }

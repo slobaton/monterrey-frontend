@@ -9,6 +9,7 @@ import { PaginatedResponse } from '../../models/response/paginated-response';
 import { firstValueFrom } from 'rxjs';
 import { ClientUpsertRequest } from '../../models/request/client-upsert-request';
 import { BaseResponse } from '../../models/response/base-response';
+import { AddPaymentRequest } from '../../models/request/add-payment-request';
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +53,14 @@ export class ClientService extends BaseService implements IClientService, IFetch
   async deleteClient(id: string): Promise<void> {
     try {
       await firstValueFrom(this.delete(`clients/${id}`));
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  async addPayment(id: string, washOrderId: string, request: AddPaymentRequest): Promise<void> {
+    try {
+      await firstValueFrom(this.post<BaseResponse<Client>>(`clients/{${id}}/wash-orders/${washOrderId}/payment`, request));
     } catch (error) {
       return this.handleError(error);
     }
