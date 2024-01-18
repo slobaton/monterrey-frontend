@@ -18,8 +18,23 @@ export class RoleService extends BaseService implements IUserService, IFetchPagi
 
   async fetchPaginatedResource(): Promise<any> {
     try {
-      const response: Role[] = await firstValueFrom(this.get<Array<Role>>('roles'));
-      return response;
+      return await firstValueFrom(this.get<Array<Role>>('roles'));
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  async assignRolesToUser(userID: string, ids: Array<string>): Promise<void> {
+    try {
+      await firstValueFrom(this.post(`user/${userID}/assign-roles`, { role_ids: ids }));
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  async getUserRoles(userID: string): Promise<void> {
+    try {
+      return await firstValueFrom(this.get(`user/${userID}/roles`));
     } catch (error) {
       return this.handleError(error);
     }

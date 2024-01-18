@@ -8,11 +8,17 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { UpsertUserComponent } from './components/upsert-user-form/upsert-user.component'
 import { AssignRoleComponent } from "./components/assign-role-form/assign-role.component";
 
+import { CheckboxModule } from 'primeng/checkbox';
+import {ReactiveFormsModule} from "@angular/forms";
+
+
 @NgModule({
   imports: [
     CommonModule,
     UserRoutingModule,
-    SharedModule
+    SharedModule,
+    CheckboxModule,
+    ReactiveFormsModule
   ],
   declarations: [
     UserListComponent,

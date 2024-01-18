@@ -1,18 +1,16 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { UserUpsertRequest } from 'src/app/@core/models/request/user-upsert-request';
 import { ValidationService } from 'src/app/@core/services/common/validation.service';
-import { UserService } from 'src/app/@core/services/rest/user.service';
 import { minSelectedCheckboxes } from 'src/app/shared/validators/min-selected-checkboxes';
 import { RoleService } from "src/app/@core/services/rest/role.service";
 import { Role } from "src/app/@core/models/role";
 import { AbilityService } from '@casl/angular';
 import { AppAbility } from 'src/app/@core/auth/ability';
 import { AuthService } from 'src/app/@core/services/rest/auth.service';
-import { ProtectedComponent } from "src/app/@core/models/common/protected-component";
+import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
 
 @Component({
   selector: 'app-upsert-user',
@@ -23,11 +21,11 @@ export class AssignRoleComponent extends ProtectedComponent {
   roleUserForm!: FormGroup;
   formProcessEvent: EventEmitter<boolean> = new EventEmitter();
 
-  isThereAUser: boolean = false;
   roles: Array<Role> = [];
+  assignedRoles: Array<Role> = [];
+  roleIdsToIndexMap: Map<number, string> = new Map();
 
   constructor(
-    private _userService: UserService,
     private _roleService: RoleService,
     private messageService: MessageService,
     private ref: DynamicDialogRef,
@@ -37,38 +35,63 @@ export class AssignRoleComponent extends ProtectedComponent {
     authService: AuthService,
     ) {
     super(abilityService, authService);
+    this.initializeForm();
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void { }
+
+  getRoles () {
     this._roleService.fetchPaginatedResource()
-      .then(roles => {
-        this.roles = roles;
-        console.log(roles)
+      .then(({ data }) => {
+        this.roles = data;
+        this.addRoleControls();
       })
       .catch(err => this.handleError(err));
-    this.initializeForm();
   }
 
   initializeForm(): void {
     let user = this.config.data?.user;
-    let assignedRoles: Array<Role> = [];
     if (user) {
-      assignedRoles = [];
+      this._roleService.getUserRoles(user.id)
+        .then(({ data }: any) => {
+          this.assignedRoles = data;
+          this.getRoles();
+        })
+        .catch(err => {
+          this.handleError(err);
+        });
     }
 
     this.roleUserForm = new FormGroup({
-      role_ids: new FormControl<Array<Role>>([], minSelectedCheckboxes(1)),
+      roleIds: new FormArray([], minSelectedCheckboxes(1)),
     });
   }
 
-  onSubmitForm(userFormValue: any): void {
+  private addRoleControls(): void {
+    this.roles.forEach((role: Role, index: number): void => {
+      this.roleIdsToIndexMap.set(index, role.id);
+      const assignedRoleIds: Array<string> = this.assignedRoles.map(role => role.id);
+      this.rolesFormArray.push(new FormControl(assignedRoleIds.includes(role.id)))
+    });
+  }
+
+  get rolesFormArray(): FormArray {
+    return this.roleUserForm.get('roleIds') as FormArray;
+  }
+  get rolesFormControl(): FormControl[] {
+    return (this.roleUserForm.get('roleIds') as FormArray).controls as FormControl[];
+  }
+
+  onSubmitForm({roleIds}: any): void {
     this.formProcessEvent.emit(true);
-    const user: UserUpsertRequest = userFormValue;
+    const selectedIds = roleIds
+      .map((selectedId: boolean, index: number) => selectedId ? this.roleIdsToIndexMap.get(index) : false)
+      .filter((selected: string|boolean) => selected)
 
     if (this.config.data?.user) {
       const USER_ID = this.config.data?.user.id;
-      user.id = USER_ID;
-      this._userService.update(USER_ID, user)
+
+      this._roleService.assignRolesToUser(USER_ID, selectedIds)
         .then((userUpdated) => {
           this.messageService.add({
             severity: 'success',
@@ -80,17 +103,7 @@ export class AssignRoleComponent extends ProtectedComponent {
         .catch(err => this.handleError(err))
         .finally(() => this.formProcessEvent.emit(false));
     } else {
-      this._userService.create(user)
-        .then(() => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Creado con éxito',
-            detail: 'Usuario creado con éxito'
-          });
-          this.ref.close(user);
-        })
-        .catch(err => this.handleError(err))
-        .finally(() => this.formProcessEvent.emit(false));
+      this.showErrorMessage('No se tiene un usuario seleccionado')
     }
   }
 
