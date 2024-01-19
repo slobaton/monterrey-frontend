@@ -6,6 +6,7 @@
     [showIcon]="showIcon"
     [showTime]="timeEnabled"
     dateFormat="dd/mm/yy"
+    appendTo="body"
   ></p-calendar>
   <div
     *ngIf="formControl?.errors && (formControl?.dirty || formControl?.touched)"
