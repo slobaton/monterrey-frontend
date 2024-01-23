@@ -1,5 +1,6 @@
-import { AccountBalance } from "../../models/account-balance";
+import { AccountBalance, AccountMovement } from "../../models/account-balance";
 
 export interface IAccountMovementService {
-  getMovements(clientId: string, balanceMonth: number, balanceYear: number): Promise<AccountBalance>;
+  getMovements(clientId: string): Promise<AccountBalance>;
+  getMovementById(id: string): Promise<AccountMovement>;
 }

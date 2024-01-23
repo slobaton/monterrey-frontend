@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BaseService } from './base.service';
-import { IAccountMovementService } from '../interfaces/account-movement-service';
-import { AccountBalance } from '../../models/account-balance';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { BaseService } from './base.service';
+import { IAccountMovementService } from '../interfaces/account-movement-service';
+import { AccountBalance, AccountMovement } from '../../models/account-balance';
 
 @Injectable({
   providedIn: 'root'
@@ -14,17 +14,23 @@ export class AccountMovementService extends BaseService implements IAccountMovem
     super(_http);
   }
 
-  async getMovements(clientId: string, balanceMonth: number, balanceYear: number): Promise<AccountBalance> {
+  async getMovementById(id: string): Promise<AccountMovement> {
     try {
+      return await firstValueFrom(this.get<AccountMovement>(`account-movements/${id}`));
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
 
-      const params = new HttpParams()
-        .append('clientId', clientId)
-        .append('balanceMoth', balanceMonth)
-        .append('balanceYear', balanceYear);
+  async getMovements(clientId: string | null): Promise<AccountBalance> {
+    try {
+      let params = new HttpParams();
 
-      const response = await firstValueFrom(this.get<AccountBalance>('clients', params));
+      if (clientId !== null) {
+        params = params.append('clientId', clientId);
+      }
 
-      return response;
+      return await firstValueFrom(this.get<AccountBalance>('account-movements', params));
     } catch (error) {
       return this.handleError(error);
     }

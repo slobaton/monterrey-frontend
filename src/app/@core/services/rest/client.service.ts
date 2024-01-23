@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import { BaseService } from './base.service';
 import { IClientService } from '../interfaces/client-service';
-import { HttpClient } from '@angular/common/http';
 import { IFetchPaginatedData } from '../interfaces/fetch-paginated-data';
 import { Client } from '../../models/client';
 import { PaginatedRequest } from '../../models/request/paginated-request';
 import { PaginatedResponse } from '../../models/response/paginated-response';
-import { firstValueFrom } from 'rxjs';
 import { ClientUpsertRequest } from '../../models/request/client-upsert-request';
 import { BaseResponse } from '../../models/response/base-response';
 import { AddPaymentRequest } from '../../models/request/add-payment-request';
+import { AccountBalance } from '../../models/account-balance';
 
 @Injectable({
   providedIn: 'root'
@@ -58,9 +59,24 @@ export class ClientService extends BaseService implements IClientService, IFetch
     }
   }
 
+  async getMovements(id: string, balanceMonth: number, balanceYear: number): Promise<AccountBalance> {
+    try {
+
+      const params = new HttpParams()
+        .append('balanceMoth', balanceMonth)
+        .append('balanceYear', balanceYear);
+
+      const response = await firstValueFrom(this.get<AccountBalance>(`clients/${id}/movements`, params));
+
+      return response;
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
   async addPayment(id: string, washOrderId: string, request: AddPaymentRequest): Promise<void> {
     try {
-      await firstValueFrom(this.post<BaseResponse<Client>>(`clients/{${id}}/wash-orders/${washOrderId}/payment`, request));
+      await firstValueFrom(this.post(`clients/${id}/wash-orders/${washOrderId}/payment`, request));
     } catch (error) {
       return this.handleError(error);
     }
