@@ -3,16 +3,26 @@
   [onProcessCompleted]="formProcessEvent"
   (onSubmit)="onSubmitForm($event)"
 >
-  <div [formGroup]="roleUserForm">
-    <div formArrayName="roleIds">
-      <div *ngFor="let control of rolesFormControl; let i = index">
-        <p-checkbox
-          [formControl]="control"
-          [label]="roles[i].name || ''"
-          [value]="roles[i]"
-          [binary]="true">
-        </p-checkbox>
+  <div *ngIf="!loading; else loadingSection" class="wash-order-section">
+    <div [formGroup]="roleUserForm">
+      <div formArrayName="roleIds">
+        <div *ngFor="let control of rolesFormControl; let i = index" class="field-checkbox">
+          <p-checkbox
+            [formControl]="control"
+            [label]="roles[i].name || ''"
+            [value]="roles[i]"
+            [binary]="true">
+          </p-checkbox>
+        </div>
       </div>
     </div>
   </div>
+  <ng-template #loadingSection>
+    <div class="h-10">
+      <p-progressBar
+        mode="indeterminate"
+        [style]="{ height: '6px' }"
+      ></p-progressBar>
+    </div>
+  </ng-template>
 </app-form>

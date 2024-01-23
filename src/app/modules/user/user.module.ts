@@ -10,16 +10,18 @@ import { AssignRoleComponent } from "./components/assign-role-form/assign-role.c
 
 import { CheckboxModule } from 'primeng/checkbox';
 import {ReactiveFormsModule} from "@angular/forms";
+import {ProgressBarModule} from "primeng/progressbar";
 
 
 @NgModule({
-  imports: [
-    CommonModule,
-    UserRoutingModule,
-    SharedModule,
-    CheckboxModule,
-    ReactiveFormsModule
-  ],
+    imports: [
+        CommonModule,
+        UserRoutingModule,
+        SharedModule,
+        CheckboxModule,
+        ReactiveFormsModule,
+        ProgressBarModule
+    ],
   declarations: [
     UserListComponent,
     UpsertUserComponent,

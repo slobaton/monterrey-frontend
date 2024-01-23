@@ -19,6 +19,7 @@ import { ProtectedComponent } from 'src/app/@core/models/common/protected-compon
 })
 export class AssignRoleComponent extends ProtectedComponent {
   roleUserForm!: FormGroup;
+  loading: boolean = true;
   formProcessEvent: EventEmitter<boolean> = new EventEmitter();
 
   roles: Array<Role> = [];
@@ -72,6 +73,7 @@ export class AssignRoleComponent extends ProtectedComponent {
       this.roleIdsToIndexMap.set(index, role.id);
       const assignedRoleIds: Array<string> = this.assignedRoles.map(role => role.id);
       this.rolesFormArray.push(new FormControl(assignedRoleIds.includes(role.id)))
+      this.loading = false;
     });
   }
 
