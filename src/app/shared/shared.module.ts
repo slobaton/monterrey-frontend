@@ -36,6 +36,8 @@ import { ListPickerComponent } from './components/list-picker/list-picker.compon
 import { SimpleTableComponent } from './components/simple-table/simple-table.component';
 import { SearchOverlayComponent } from './components/search-overlay/search-overlay.component';
 import { FormInputSearchComponent } from './components/form-input-search/form-input-search.component';
+import { PageCardComponent } from './components/page-card/page-card.component';
+import { MenuModule } from 'primeng/menu';
 
 
 
@@ -98,7 +100,8 @@ import { FormInputSearchComponent } from './components/form-input-search/form-in
     ListPickerComponent,
     FormInputSearchComponent,
     SearchOverlayComponent,
-    FormInputPasswordComponent
+    FormInputPasswordComponent,
+    PageCardComponent
   ]
 })
 export class SharedModule { }
