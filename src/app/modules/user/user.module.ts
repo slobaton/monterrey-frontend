@@ -6,16 +6,26 @@ import { UserListComponent } from './pages/user-list/user-list.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 import { UpsertUserComponent } from './components/upsert-user-form/upsert-user.component'
+import { AssignRoleComponent } from "./components/assign-role-form/assign-role.component";
+
+import { CheckboxModule } from 'primeng/checkbox';
+import {ReactiveFormsModule} from "@angular/forms";
+import {ProgressBarModule} from "primeng/progressbar";
+
 
 @NgModule({
-  imports: [
-    CommonModule,
-    UserRoutingModule,
-    SharedModule
-  ],
+    imports: [
+        CommonModule,
+        UserRoutingModule,
+        SharedModule,
+        CheckboxModule,
+        ReactiveFormsModule,
+        ProgressBarModule
+    ],
   declarations: [
     UserListComponent,
-    UpsertUserComponent
+    UpsertUserComponent,
+    AssignRoleComponent
   ]
 })
 export class UserModule { }
