@@ -19,6 +19,7 @@ import { AbilityService } from '@casl/angular';
 import { AppAbility } from 'src/app/@core/auth/ability';
 import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { Role } from 'src/app/@core/enums/role.enum';
+import { AddPaymentComponent } from '../../components/add-payment/add-payment.component';
 
 @Component({
   selector: 'app-wash-order-list',
@@ -217,6 +218,40 @@ export class WashOrderListComponent extends ProtectedComponent {
               this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
             })
             .finally(() => action.loading = false);
+        }
+      },
+      {
+        title: 'Registrar Pago',
+        tooltip: 'Registrar nuevo pago',
+        icon: 'dollar',
+        status: DataTableActionStatus.SUCCESS,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        hasLoadingEnabled: true,
+        hiddenFn: (selectedRow) => {
+          if (this.authService.hasRole(Role.RECEPTIONIST)) {
+            return true;
+          }
+
+          if (selectedRow) {
+            const washOrder = selectedRow;
+            return washOrder.status === OrderStatus.CREATED;
+          }
+
+          return false;
+        },
+        callback: async (action, selectedRows) => {
+          const washOrder = selectedRows[0];
+
+          this.ref = this._dialogService.open(AddPaymentComponent, { header: 'Registrar pago', data: { washOrder } });
+          this.ref.onClose.subscribe(result => {
+            if (result) {
+
+            }
+
+            action.loading = false;
+          });
         }
       }
     ]

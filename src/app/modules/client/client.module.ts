@@ -18,6 +18,7 @@ import { UpsertEffectPriceComponent } from './components/upsert-effect-price/ups
 import { ClientParameterPriceListComponent } from './pages/client-parameter-price-list/client-parameter-price-list.component';
 import { UpsertParameterPriceComponent } from './components/upsert-parameter-price/upsert-parameter-price.component';
 import { AbilityModule } from '@casl/angular';
+import { ClientMovementListComponent } from './pages/client-movement-list/client-movement-list.component';
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { AbilityModule } from '@casl/angular';
     ClientEffectPriceListComponent,
     UpsertEffectPriceComponent,
     ClientParameterPriceListComponent,
-    UpsertParameterPriceComponent
+    UpsertParameterPriceComponent,
+    ClientMovementListComponent
   ]
 })
 export class ClientModule { }

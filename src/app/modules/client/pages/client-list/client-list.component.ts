@@ -121,7 +121,7 @@ export class ClientListComponent extends ProtectedComponent {
         hiddenFn: (selectedRows) => this.hasReceptionistRole(),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
-          this._router.navigate([`clients/${clientId}/parameters`])
+          this._router.navigate([`clients/${clientId}/parameters`]);
         }
       },
       {
@@ -135,7 +135,7 @@ export class ClientListComponent extends ProtectedComponent {
         hiddenFn: (selectedRows) => this.hasReceptionistRole(),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
-          this._router.navigate([`clients/${clientId}/wash-type-prices`])
+          this._router.navigate([`clients/${clientId}/wash-type-prices`]);
         }
       },
       {
@@ -149,7 +149,21 @@ export class ClientListComponent extends ProtectedComponent {
         hiddenFn: (selectedRows) => this.hasReceptionistRole(),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
-          this._router.navigate([`clients/${clientId}/effect-prices`])
+          this._router.navigate([`clients/${clientId}/effect-prices`]);
+        }
+      },
+      {
+        title: 'Cuenta',
+        tooltip: 'Estado cuenta',
+        icon: 'money-bill',
+        status: DataTableActionStatus.PRIMARY,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        hiddenFn: (selectedRows) => this.hasReceptionistRole(),
+        callback: (action, selectedRows) => {
+          const clientId = selectedRows[0].id;
+          this._router.navigate([`clients/${clientId}/movements`]);
         }
       }
     ]

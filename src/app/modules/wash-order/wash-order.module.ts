@@ -20,13 +20,15 @@ import { WashOrderListComponent } from './pages/wash-order-list/wash-order-list.
 import { WashOrderCreateComponent } from './pages/wash-order-create/wash-order-create.component';
 import { AddWashOrderDetailComponent } from './components/add-wash-order-detail/add-wash-order-detail.component';
 import { WashOrderInfoComponent } from './components/wash-order-info/wash-order-info.component';
+import { AddPaymentComponent } from './components/add-payment/add-payment.component';
 
 @NgModule({
   declarations: [
     WashOrderListComponent,
     WashOrderCreateComponent,
     AddWashOrderDetailComponent,
-    WashOrderInfoComponent
+    WashOrderInfoComponent,
+    AddPaymentComponent
   ],
   imports: [
     CommonModule,

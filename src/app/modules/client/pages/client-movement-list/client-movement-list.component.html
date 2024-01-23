@@ -1,0 +1,6 @@
+<div *ngIf="ability$ | async as ab" class="grid">
+  <div class="col-12">
+    <app-page-card *ngIf="!hasReceptionistRole()" title="Estado de Cuenta">
+    </app-page-card>
+  </div>
+</div>
