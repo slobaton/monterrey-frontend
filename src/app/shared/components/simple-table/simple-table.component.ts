@@ -41,6 +41,11 @@ export class SimpleTableComponent<TEntity> implements OnInit {
       return value;
     }
 
+    if (col.type === SimpleTableColumnType.BADGE && col.customValue) {
+      const value = col.customValue(row[col.propertyRef]);
+      return value;
+    }
+
     return '';
   }
 }

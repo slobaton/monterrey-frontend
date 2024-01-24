@@ -19,6 +19,8 @@ import { ClientParameterPriceListComponent } from './pages/client-parameter-pric
 import { UpsertParameterPriceComponent } from './components/upsert-parameter-price/upsert-parameter-price.component';
 import { AbilityModule } from '@casl/angular';
 import { ClientMovementListComponent } from './pages/client-movement-list/client-movement-list.component';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { CalendarModule } from 'primeng/calendar';
 
 
 @NgModule({
@@ -30,9 +32,11 @@ import { ClientMovementListComponent } from './pages/client-movement-list/client
     FormsModule,
     ReactiveFormsModule,
     InputTextModule,
+    InputNumberModule,
     InputTextareaModule,
     InputSwitchModule,
-    DynamicDialogModule
+    DynamicDialogModule,
+    CalendarModule
   ],
   declarations: [
     ClientListComponent,

@@ -17,5 +17,6 @@ export enum SimpleTableColumnType {
   BOOLEAN,
   DATE,
   DATETIME,
-  CUSTOM
+  CUSTOM,
+  BADGE
 }
