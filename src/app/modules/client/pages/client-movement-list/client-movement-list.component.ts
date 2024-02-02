@@ -105,17 +105,7 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
         }
       }
     ],
-    identifierPropRef: 'id',
-    actions: [
-      {
-        icon: 'info-circle',
-        status: SimpleTableActionStatus.INFO,
-        callback: (action, selectedRow) => {
-          const movement = selectedRow;
-          this._dialogService.open(WashOrderInfoComponent, { header: 'Información Orden de Lavado', data: { washOrderId: movement.wash_order_id } });
-        }
-      }
-    ]
+    identifierPropRef: 'id'
   };
 
   constructor(
