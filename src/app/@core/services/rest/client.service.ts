@@ -32,6 +32,16 @@ export class ClientService extends BaseService implements IClientService, IFetch
     }
   }
 
+  async getById(id: string): Promise<Client> {
+    try {
+      const response = await firstValueFrom(this.get<BaseResponse<Client>>(`clients/${id}`));
+
+      return response.data;
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
   async createClient(request: ClientUpsertRequest): Promise<Client> {
     try {
       const response = await firstValueFrom(this.post<BaseResponse<Client>>('clients', request));

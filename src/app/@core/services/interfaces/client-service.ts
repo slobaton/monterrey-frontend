@@ -4,6 +4,7 @@ import { AccountBalance } from '../../models/account-balance';
 import { AddPaymentRequest } from './../../models/request/add-payment-request';
 import { AddDiscountRequest } from '../../models/request/add-discount-request';
 export interface IClientService {
+  getById(id: string): Promise<Client>;
   createClient(request: ClientUpsertRequest): Promise<Client>;
   updateClient(id: string, request: ClientUpsertRequest): Promise<Client>;
   deleteClient(id: string): Promise<void>;

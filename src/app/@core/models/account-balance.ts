@@ -4,6 +4,8 @@ export class AccountBalance {
   constructor(
     public start_balance: number,
     public final_balance: number,
+    public start_date: string | null,
+    public end_date: string | null,
     public movements: Array<AccountMovement>
   ) { }
 }

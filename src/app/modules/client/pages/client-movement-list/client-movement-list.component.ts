@@ -1,4 +1,3 @@
-import { AccountBalance, AccountMovement } from './../../../../@core/models/account-balance';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbilityService } from '@casl/angular';
@@ -12,6 +11,8 @@ import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { ClientService } from 'src/app/@core/services/rest/client.service';
 import { SimpleTableActionStatus, SimpleTableColumnType, SimpleTableConfiguration } from 'src/app/@core/types/simple-table-definition';
 import { WashOrderInfoComponent } from 'src/app/modules/wash-order/components/wash-order-info/wash-order-info.component';
+import { AccountMovement } from 'src/app/@core/models/account-balance';
+import { Client } from 'src/app/@core/models/client';
 
 @Component({
   selector: 'app-client-movement-list',
@@ -21,12 +22,12 @@ import { WashOrderInfoComponent } from 'src/app/modules/wash-order/components/wa
 export class ClientMovementListComponent extends ProtectedComponent implements OnInit {
 
   clientId: string = '';
-  accountBalance: AccountBalance | null = null;
+  client: Client | null = null;
   balance: number = 0;
 
   currentDate: Date = new Date();
-  selectedDate: string = `${(this.currentDate.getMonth() + 1)}/${this.currentDate.getFullYear()}`;
-
+  startDate: Date = this.currentDate;
+  endDate: Date = this.currentDate;
   processedMovements: any[] = [];
 
   public tableConfig: SimpleTableConfiguration = {
@@ -99,7 +100,7 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
             case AccountMovementType.DISCOUNT:
               return 'Descuento'
             default:
-              return 'desconocido'
+              return 'Desconocido'
           }
         }
       }
@@ -132,13 +133,26 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
   ngOnInit(): void {
     this._route.params.subscribe(params => {
       this.clientId = params['clientId'];
+
+      this.fetchClient();
+
       this._clientService.getMovements(this.clientId)
         .then((accountBalance) => {
-          this.accountBalance = accountBalance;
+          if (accountBalance.start_date) {
+            const startDate = new Date(accountBalance.start_date);
+            this.startDate = startDate;
+          }
+
+          if (accountBalance.end_date) {
+            const endDate = new Date(accountBalance.end_date);
+            this.endDate = endDate;
+          }
+
           this.balance = accountBalance.final_balance;
           this.getMovements(accountBalance.movements);
         })
         .catch((err) => {
+          console.error(err);
           this._messageService.add({
             severity: 'error',
             summary: 'Error',
@@ -151,7 +165,15 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
   }
 
   showMonthlyReport() {
-    console.log(this.selectedDate);
+    console.log(this.startDate);
+  }
+
+  getTitle(): string {
+    return `Cliente: ${this.client?.name} ${this.client?.paternal_surname} ${this.client?.maternal_surname} - Estado de Cuenta`;
+  }
+
+  private async fetchClient(): Promise<void> {
+    this.client = await this._clientService.getById(this.clientId);
   }
 
   private getMovements(movements: AccountMovement[]) {
