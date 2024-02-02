@@ -21,6 +21,7 @@ import { AbilityModule } from '@casl/angular';
 import { ClientMovementListComponent } from './pages/client-movement-list/client-movement-list.component';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CalendarModule } from 'primeng/calendar';
+import { WashOrderModule } from '../wash-order/wash-order.module';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { CalendarModule } from 'primeng/calendar';
     InputTextareaModule,
     InputSwitchModule,
     DynamicDialogModule,
-    CalendarModule
+    CalendarModule,
+    WashOrderModule
   ],
   declarations: [
     ClientListComponent,

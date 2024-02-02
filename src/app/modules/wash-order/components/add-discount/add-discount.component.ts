@@ -1,21 +1,19 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { AddPaymentRequest } from 'src/app/@core/models/request/add-payment-request';
-import { WashOrder } from 'src/app/@core/models/wash-order';
+import { AddDiscountRequest } from 'src/app/@core/models/request/add-discount-request';
 import { ValidationService } from 'src/app/@core/services/common/validation.service';
 import { ClientService } from 'src/app/@core/services/rest/client.service';
 
 @Component({
-  selector: 'app-add-payment',
-  templateUrl: './add-payment.component.html',
-  styleUrls: ['./add-payment.component.scss']
+  selector: 'app-add-discount',
+  templateUrl: './add-discount.component.html',
+  styleUrls: ['./add-discount.component.scss']
 })
-export class AddPaymentComponent implements OnInit {
-
-  paymentForm!: FormGroup;
+export class AddDiscountComponent {
+  discountForm!: FormGroup;
   formProcessEvent: EventEmitter<boolean> = new EventEmitter();
 
   clientId: string | null = null;
@@ -34,8 +32,8 @@ export class AddPaymentComponent implements OnInit {
   }
 
   initializeForm(): void {
-    this.paymentForm = new FormGroup({
-      receipt_number: new FormControl<number>(0, [Validators.required]),
+    this.discountForm = new FormGroup({
+      concept: new FormControl<string>('', [Validators.required]),
       date: new FormControl<Date>(new Date(), []),
       amount: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
     });
@@ -49,18 +47,18 @@ export class AddPaymentComponent implements OnInit {
 
     this.formProcessEvent.emit(true);
 
-    const payment: AddPaymentRequest = paymentFormValue;
+    const discount: AddDiscountRequest = paymentFormValue;
     const clientId = this.clientId;
 
-    this._clientService.addPayment(clientId, payment)
+    this._clientService.addDiscount(clientId, discount)
       .then(() => {
-        this._messageService.add({ severity: 'success', summary: 'Pago registrado!', detail: 'Pago registrado con éxito' });
+        this._messageService.add({ severity: 'success', summary: 'Descuento registrado!', detail: 'Descuento registrado con éxito' });
         this._ref.close(true);
       })
       .catch((err) => {
         if (err instanceof HttpErrorResponse) {
           if (err.status === 422) {
-            this._validationService.handleValidationErrors(this.paymentForm, err.error.errors);
+            this._validationService.handleValidationErrors(this.discountForm, err.error.errors);
           } else {
             this._messageService.add({ severity: 'error', summary: 'Error!', detail: 'La acción no se pudo realizar, intente nuevamente...' });
           }

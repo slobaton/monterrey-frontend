@@ -24,10 +24,7 @@
           ></p-inputNumber>
         </div>
       </div>
-      <app-simple-table
-        [tableConfig]="tableConfig"
-        [data]="accountBalance?.movements ?? []"
-      >
+      <app-simple-table [tableConfig]="tableConfig" [data]="processedMovements">
       </app-simple-table>
     </app-page-card>
   </div>

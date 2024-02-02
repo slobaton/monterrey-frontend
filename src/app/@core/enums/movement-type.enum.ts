@@ -1,4 +1,5 @@
 export enum AccountMovementType {
   CHARGE = 'charge',
-  PAYMENT = 'payment'
+  PAYMENT = 'payment',
+  DISCOUNT = 'discount'
 }

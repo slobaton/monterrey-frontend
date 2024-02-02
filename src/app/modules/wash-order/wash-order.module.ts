@@ -21,6 +21,7 @@ import { WashOrderCreateComponent } from './pages/wash-order-create/wash-order-c
 import { AddWashOrderDetailComponent } from './components/add-wash-order-detail/add-wash-order-detail.component';
 import { WashOrderInfoComponent } from './components/wash-order-info/wash-order-info.component';
 import { AddPaymentComponent } from './components/add-payment/add-payment.component';
+import { AddDiscountComponent } from './components/add-discount/add-discount.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { AddPaymentComponent } from './components/add-payment/add-payment.compon
     WashOrderCreateComponent,
     AddWashOrderDetailComponent,
     WashOrderInfoComponent,
-    AddPaymentComponent
+    AddPaymentComponent,
+    AddDiscountComponent
   ],
   imports: [
     CommonModule,
@@ -45,6 +47,9 @@ import { AddPaymentComponent } from './components/add-payment/add-payment.compon
     ProgressBarModule,
     ChipModule,
     OverlayPanelModule
+  ],
+  exports: [
+    WashOrderInfoComponent
   ]
 })
 export class WashOrderModule { }

@@ -32,6 +32,8 @@
           </ng-template>
         </ng-container>
       </ng-container>
+
+      <th *ngIf="hasActions()">Acciones</th>
     </tr>
   </ng-template>
 
@@ -91,6 +93,20 @@
           </container-element>
         </td>
       </ng-container>
+
+      <td *ngIf="hasActions()">
+        <button
+          *ngFor="let action of tableConfig.actions"
+          pButton
+          pRipple
+          [icon]="generateActionIcon(action)"
+          [ngClass]="
+            'p-button-sm p-button-rounded mx-1 ' + generateActionColor(action)
+          "
+          (click)="executeActionCallback(action, rowData)"
+          [pTooltip]="action.tooltip ?? ''"
+        ></button>
+      </td>
     </tr>
   </ng-template>
 

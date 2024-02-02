@@ -1,5 +1,4 @@
 import { AccountMovementType } from "../enums/movement-type.enum";
-import { Client } from "./client";
 
 export class AccountBalance {
   constructor(
@@ -11,12 +10,14 @@ export class AccountBalance {
 
 export class AccountMovement {
   constructor(
-    public date: string,
-    public code: number,
-    public type: AccountMovementType,
-    public wash_order_id: string,
+    public id: number,
     public client_id: string,
-    public client: Client,
+    public receipt_number: number | null,
+    public date: string,
+    public concept: string,
+    public type: AccountMovementType,
+    public code: number | null,
+    public wash_order_id: string | null,
     public amount: number,
     public details: Array<AccountMovementDetail> | null,
     public balance_debt: number

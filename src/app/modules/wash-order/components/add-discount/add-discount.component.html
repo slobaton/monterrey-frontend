@@ -1,5 +1,5 @@
 <app-form
-  [form]="paymentForm"
+  [form]="discountForm"
   [onProcessCompleted]="formProcessEvent"
   (onSubmit)="onSubmitForm($event)"
 >
@@ -7,7 +7,7 @@
     <div class="col-12">
       <app-form-label id="date" text="Fecha" [required]="false" />
       <app-form-datetime-picker
-        [form]="paymentForm"
+        [form]="discountForm"
         id="date"
         controlName="date"
         placeholder="Fecha de Pago (opcional)"
@@ -15,22 +15,18 @@
       />
     </div>
     <div class="col-12">
-      <app-form-label
-        id="receipt_number"
-        text="Num. Recibo"
-        [required]="true"
-      />
-      <app-form-input-number
-        [form]="paymentForm"
-        id="receipt_number"
-        controlName="receipt_number"
-        placeholder="Ingrese el número de recibo..."
+      <app-form-label id="concept" text="Concepto" [required]="true" />
+      <app-form-input-text
+        [form]="discountForm"
+        id="concept"
+        controlName="concept"
+        placeholder="Ingrese el concepto por descuento..."
       />
     </div>
     <div class="col-12">
       <app-form-label id="amount" text="Monto" [required]="true" />
       <app-form-input-number
-        [form]="paymentForm"
+        [form]="discountForm"
         id="amount"
         controlName="amount"
         placeholder="Ingrese el monto de pago..."

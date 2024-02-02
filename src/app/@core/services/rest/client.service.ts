@@ -11,6 +11,7 @@ import { ClientUpsertRequest } from '../../models/request/client-upsert-request'
 import { BaseResponse } from '../../models/response/base-response';
 import { AddPaymentRequest } from '../../models/request/add-payment-request';
 import { AccountBalance } from '../../models/account-balance';
+import { AddDiscountRequest } from '../../models/request/add-discount-request';
 
 @Injectable({
   providedIn: 'root'
@@ -59,14 +60,9 @@ export class ClientService extends BaseService implements IClientService, IFetch
     }
   }
 
-  async getMovements(id: string, balanceMonth: number, balanceYear: number): Promise<AccountBalance> {
+  async getMovements(id: string): Promise<AccountBalance> {
     try {
-
-      const params = new HttpParams()
-        .append('balanceMoth', balanceMonth)
-        .append('balanceYear', balanceYear);
-
-      const response = await firstValueFrom(this.get<AccountBalance>(`clients/${id}/movements`, params));
+      const response = await firstValueFrom(this.get<AccountBalance>(`clients/${id}/movements`));
 
       return response;
     } catch (error) {
@@ -74,9 +70,17 @@ export class ClientService extends BaseService implements IClientService, IFetch
     }
   }
 
-  async addPayment(id: string, washOrderId: string, request: AddPaymentRequest): Promise<void> {
+  async addPayment(id: string, request: AddPaymentRequest): Promise<void> {
     try {
-      await firstValueFrom(this.post(`clients/${id}/wash-orders/${washOrderId}/payment`, request));
+      await firstValueFrom(this.post(`clients/${id}/payment`, request));
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  async addDiscount(id: string, request: AddDiscountRequest): Promise<void> {
+    try {
+      await firstValueFrom(this.post(`clients/${id}/discount`, request));
     } catch (error) {
       return this.handleError(error);
     }

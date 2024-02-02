@@ -1,15 +1,17 @@
-import { AccountBalance } from './../../../../@core/models/account-balance';
+import { AccountBalance, AccountMovement } from './../../../../@core/models/account-balance';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbilityService } from '@casl/angular';
 import { MessageService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
 import { AppAbility } from 'src/app/@core/auth/ability';
 import { AccountMovementType } from 'src/app/@core/enums/movement-type.enum';
 import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
 import { AccountMovementService } from 'src/app/@core/services/rest/account-movement.service';
 import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { ClientService } from 'src/app/@core/services/rest/client.service';
-import { SimpleTableColumnType, SimpleTableConfiguration } from 'src/app/@core/types/simple-table-definition';
+import { SimpleTableActionStatus, SimpleTableColumnType, SimpleTableConfiguration } from 'src/app/@core/types/simple-table-definition';
+import { WashOrderInfoComponent } from 'src/app/modules/wash-order/components/wash-order-info/wash-order-info.component';
 
 @Component({
   selector: 'app-client-movement-list',
@@ -25,36 +27,94 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
   currentDate: Date = new Date();
   selectedDate: string = `${(this.currentDate.getMonth() + 1)}/${this.currentDate.getFullYear()}`;
 
+  processedMovements: any[] = [];
+
   public tableConfig: SimpleTableConfiguration = {
     columns: [
+      {
+        title: 'COD.',
+        propertyRef: 'code',
+        type: SimpleTableColumnType.TEXT
+      },
       {
         title: 'Fecha',
         propertyRef: 'date',
         type: SimpleTableColumnType.DATE
       },
       {
-        title: '# Orden',
-        propertyRef: 'code',
+        title: 'N.R.',
+        propertyRef: 'receipt_number',
         type: SimpleTableColumnType.TEXT
       },
       {
-        title: 'Tipo Movimiento',
-        propertyRef: 'type',
-        type: SimpleTableColumnType.BADGE,
-        customValue: (type) => type === AccountMovementType.PAYMENT ? 'Pago' : 'Deuda'
+        title: 'Prenda',
+        propertyRef: 'cloth_type',
+        type: SimpleTableColumnType.TEXT
       },
       {
-        title: 'Monto',
+        title: 'Tam.',
+        propertyRef: 'cloth_size',
+        type: SimpleTableColumnType.TEXT
+      },
+      {
+        title: 'Detalle',
+        propertyRef: 'description',
+        type: SimpleTableColumnType.TEXT
+      },
+      {
+        title: 'Cant.',
+        propertyRef: 'quantity',
+        type: SimpleTableColumnType.TEXT
+      },
+      {
+        title: 'P/U',
+        propertyRef: 'unit_price',
+        type: SimpleTableColumnType.TEXT
+      },
+      {
+        title: 'Total',
+        propertyRef: 'subtotal_price',
+        type: SimpleTableColumnType.TEXT
+      },
+      {
+        title: 'Pago/C',
         propertyRef: 'amount',
         type: SimpleTableColumnType.TEXT
       },
       {
-        title: 'Balance',
+        title: 'Saldo',
         propertyRef: 'balance_debt',
         type: SimpleTableColumnType.TEXT
+      },
+      {
+        title: 'Tipo',
+        propertyRef: 'type',
+        type: SimpleTableColumnType.BADGE,
+        customValue: (type) => {
+          switch (type) {
+            case AccountMovementType.CHARGE:
+              return 'Deuda'
+            case AccountMovementType.PAYMENT:
+              return 'Pago'
+            case AccountMovementType.DISCOUNT:
+              return 'Descuento'
+            default:
+              return 'desconocido'
+          }
+        }
       }
     ],
-    identifierPropRef: 'id'
+    identifierPropRef: 'id',
+    actions: [
+      {
+        icon: 'info-circle',
+        status: SimpleTableActionStatus.INFO,
+        callback: (action, selectedRow) => {
+          const movement = selectedRow;
+          this._dialogService.open(WashOrderInfoComponent, { header: 'Información Orden de Lavado', data: { washOrderId: movement.wash_order_id } });
+        }
+      }
+    ]
   };
 
   constructor(
@@ -63,6 +123,7 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
     private _route: ActivatedRoute,
     private _router: Router,
     private _messageService: MessageService,
+    private _dialogService: DialogService,
     private _movementService: AccountMovementService,
     private _clientService: ClientService) {
     super(abilityService, authService);
@@ -71,10 +132,11 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
   ngOnInit(): void {
     this._route.params.subscribe(params => {
       this.clientId = params['clientId'];
-      this._movementService.getMovements(this.clientId)
+      this._clientService.getMovements(this.clientId)
         .then((accountBalance) => {
           this.accountBalance = accountBalance;
           this.balance = accountBalance.final_balance;
+          this.getMovements(accountBalance.movements);
         })
         .catch((err) => {
           this._messageService.add({
@@ -90,5 +152,46 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
 
   showMonthlyReport() {
     console.log(this.selectedDate);
+  }
+
+  private getMovements(movements: AccountMovement[]) {
+    movements.forEach((movement) => {
+      if (movement.details && movement.details.length) {
+        const processedDetails = movement.details.map(detail => {
+          return {
+            id: movement.id,
+            code: movement.code,
+            date: movement.date,
+            receipt_number: null,
+            cloth_type: detail.cloth_type,
+            cloth_size: detail.cloth_size,
+            description: detail.details,
+            quantity: detail.quantity,
+            unit_price: detail.unit_price,
+            subtotal_price: detail.subtotal_price,
+            amount: null,
+            balance_debt: detail.balance_debt,
+            type: movement.type
+          };
+        });
+        this.processedMovements = [...this.processedMovements, ...processedDetails]
+      } else {
+        this.processedMovements.push({
+          id: movement.id,
+          code: null,
+          date: movement.date,
+          receipt_number: movement.receipt_number,
+          cloth_type: null,
+          cloth_size: null,
+          description: movement.concept,
+          quantity: null,
+          unit_price: null,
+          subtotal_price: null,
+          amount: Math.abs(movement.amount),
+          balance_debt: movement.balance_debt,
+          type: movement.type
+        });
+      }
+    });
   }
 }
