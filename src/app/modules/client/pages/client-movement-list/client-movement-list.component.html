@@ -40,8 +40,11 @@
           ></p-button>
         </div>
       </div>
-      <app-simple-table [tableConfig]="tableConfig" [data]="processedMovements">
-      </app-simple-table>
+      <app-movement-list-table
+        [tableConfig]="tableConfig"
+        [data]="processedMovements"
+      >
+      </app-movement-list-table>
     </app-page-card>
   </div>
 </div>

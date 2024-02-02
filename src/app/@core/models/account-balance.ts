@@ -38,3 +38,21 @@ export class AccountMovementDetail {
     public balance_debt: number
   ) { }
 }
+
+export class ProcessedAccountMovement {
+  constructor(
+    public id: number,
+    public code: number | null,
+    public date: string,
+    public receipt_number: number | null,
+    public cloth_type: string | null,
+    public cloth_size: string | null,
+    public description: string,
+    public unit_price: number | null,
+    public quantity: number | null,
+    public subtotal_price: number | null,
+    public amount: number | null,
+    public balance_debt: number,
+    public type: AccountMovementType
+  ) { }
+}

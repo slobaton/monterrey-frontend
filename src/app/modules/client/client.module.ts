@@ -22,6 +22,10 @@ import { ClientMovementListComponent } from './pages/client-movement-list/client
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CalendarModule } from 'primeng/calendar';
 import { WashOrderModule } from '../wash-order/wash-order.module';
+import { MovementListTableComponent } from './components/movement-list-table/movement-list-table.component';
+import { TableModule } from 'primeng/table';
+import { CheckboxModule } from 'primeng/checkbox';
+import { TooltipModule } from 'primeng/tooltip';
 
 
 @NgModule({
@@ -38,7 +42,10 @@ import { WashOrderModule } from '../wash-order/wash-order.module';
     InputSwitchModule,
     DynamicDialogModule,
     CalendarModule,
-    WashOrderModule
+    WashOrderModule,
+    TableModule,
+    CheckboxModule,
+    TooltipModule
   ],
   declarations: [
     ClientListComponent,
@@ -49,7 +56,8 @@ import { WashOrderModule } from '../wash-order/wash-order.module';
     UpsertEffectPriceComponent,
     ClientParameterPriceListComponent,
     UpsertParameterPriceComponent,
-    ClientMovementListComponent
+    ClientMovementListComponent,
+    MovementListTableComponent
   ]
 })
 export class ClientModule { }

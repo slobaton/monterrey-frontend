@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbilityService } from '@casl/angular';
 import { MessageService } from 'primeng/api';
@@ -11,7 +11,7 @@ import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { ClientService } from 'src/app/@core/services/rest/client.service';
 import { SimpleTableActionStatus, SimpleTableColumnType, SimpleTableConfiguration } from 'src/app/@core/types/simple-table-definition';
 import { WashOrderInfoComponent } from 'src/app/modules/wash-order/components/wash-order-info/wash-order-info.component';
-import { AccountMovement } from 'src/app/@core/models/account-balance';
+import { AccountMovement, ProcessedAccountMovement } from 'src/app/@core/models/account-balance';
 import { Client } from 'src/app/@core/models/client';
 
 @Component({
@@ -28,7 +28,7 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
   currentDate: Date = new Date();
   startDate: Date = this.currentDate;
   endDate: Date = this.currentDate;
-  processedMovements: any[] = [];
+  processedMovements: ProcessedAccountMovement[] = [];
 
   public tableConfig: SimpleTableConfiguration = {
     columns: [
@@ -188,8 +188,8 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
             cloth_type: detail.cloth_type,
             cloth_size: detail.cloth_size,
             description: detail.details,
-            quantity: detail.quantity,
             unit_price: detail.unit_price,
+            quantity: detail.quantity,
             subtotal_price: detail.subtotal_price,
             amount: null,
             balance_debt: detail.balance_debt,
@@ -206,8 +206,8 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
           cloth_type: null,
           cloth_size: null,
           description: movement.concept,
-          quantity: null,
           unit_price: null,
+          quantity: null,
           subtotal_price: null,
           amount: Math.abs(movement.amount),
           balance_debt: movement.balance_debt,
