@@ -12,6 +12,8 @@ import { AppAbility } from 'src/app/@core/auth/ability';
 import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
 import { UpsertClientFormComponent } from '../../components/upsert-client-form/upsert-client-form.component';
 import { AuthService } from 'src/app/@core/services/rest/auth.service';
+import { AddPaymentComponent } from '../../components/add-payment/add-payment.component';
+import { AddDiscountComponent } from '../../components/add-discount/add-discount.component';
 
 @Component({
   selector: 'app-client-list',
@@ -164,6 +166,52 @@ export class ClientListComponent extends ProtectedComponent {
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/movements`]);
+        }
+      },
+      {
+        title: 'Registrar Pago',
+        tooltip: 'Registrar nuevo pago',
+        icon: 'dollar',
+        status: DataTableActionStatus.SUCCESS,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        hasLoadingEnabled: true,
+        hiddenFn: (selectedRow) => this.hasReceptionistRole(),
+        callback: async (action, selectedRows) => {
+          const client = selectedRows[0];
+
+          this.ref = this._dialogService.open(AddPaymentComponent, { header: 'Registrar pago', data: { clientId: client.id } });
+          this.ref.onClose.subscribe(result => {
+            if (result) {
+
+            }
+
+            action.loading = false;
+          });
+        }
+      },
+      {
+        title: 'Registrar Descuento',
+        tooltip: 'Registrar descuento',
+        icon: 'dollar',
+        status: DataTableActionStatus.WARNING,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        hasLoadingEnabled: true,
+        hiddenFn: (selectedRow) => this.hasReceptionistRole(),
+        callback: async (action, selectedRows) => {
+          const client = selectedRows[0];
+
+          this.ref = this._dialogService.open(AddDiscountComponent, { header: 'Registrar descuento', data: { clientId: client.id } });
+          this.ref.onClose.subscribe(result => {
+            if (result) {
+
+            }
+
+            action.loading = false;
+          });
         }
       }
     ]

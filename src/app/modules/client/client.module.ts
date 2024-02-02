@@ -26,6 +26,8 @@ import { MovementListTableComponent } from './components/movement-list-table/mov
 import { TableModule } from 'primeng/table';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TooltipModule } from 'primeng/tooltip';
+import { AddPaymentComponent } from './components/add-payment/add-payment.component';
+import { AddDiscountComponent } from './components/add-discount/add-discount.component';
 
 
 @NgModule({
@@ -57,7 +59,9 @@ import { TooltipModule } from 'primeng/tooltip';
     ClientParameterPriceListComponent,
     UpsertParameterPriceComponent,
     ClientMovementListComponent,
-    MovementListTableComponent
+    MovementListTableComponent,
+    AddPaymentComponent,
+    AddDiscountComponent
   ]
 })
 export class ClientModule { }

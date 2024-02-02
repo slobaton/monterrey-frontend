@@ -4,7 +4,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AddPaymentRequest } from 'src/app/@core/models/request/add-payment-request';
-import { WashOrder } from 'src/app/@core/models/wash-order';
 import { ValidationService } from 'src/app/@core/services/common/validation.service';
 import { ClientService } from 'src/app/@core/services/rest/client.service';
 

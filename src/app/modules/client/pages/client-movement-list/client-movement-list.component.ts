@@ -159,7 +159,7 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
   }
 
   getTitle(): string {
-    return `Cliente: ${this.client?.name} ${this.client?.paternal_surname} ${this.client?.maternal_surname} - Estado de Cuenta`;
+    return `Cliente: ${this.client?.name ?? ''} ${this.client?.paternal_surname ?? ''} ${this.client?.maternal_surname ?? ''} - Estado de Cuenta`;
   }
 
   private async fetchClient(): Promise<void> {

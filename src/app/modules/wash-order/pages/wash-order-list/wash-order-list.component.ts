@@ -19,8 +19,8 @@ import { AbilityService } from '@casl/angular';
 import { AppAbility } from 'src/app/@core/auth/ability';
 import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { Role } from 'src/app/@core/enums/role.enum';
-import { AddPaymentComponent } from '../../components/add-payment/add-payment.component';
-import { AddDiscountComponent } from '../../components/add-discount/add-discount.component';
+import { AddPaymentComponent } from '../../../client/components/add-payment/add-payment.component';
+import { AddDiscountComponent } from '../../../client/components/add-discount/add-discount.component';
 
 @Component({
   selector: 'app-wash-order-list',
@@ -219,74 +219,6 @@ export class WashOrderListComponent extends ProtectedComponent {
               this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
             })
             .finally(() => action.loading = false);
-        }
-      },
-      {
-        title: 'Registrar Pago',
-        tooltip: 'Registrar nuevo pago',
-        icon: 'dollar',
-        status: DataTableActionStatus.SUCCESS,
-        selectionConfig: {
-          maxSelectedRows: 1
-        },
-        hasLoadingEnabled: true,
-        hiddenFn: (selectedRow) => {
-          if (this.authService.hasRole(Role.RECEPTIONIST)) {
-            return true;
-          }
-
-          if (selectedRow) {
-            const washOrder = selectedRow;
-            return washOrder.status === OrderStatus.CREATED;
-          }
-
-          return false;
-        },
-        callback: async (action, selectedRows) => {
-          const washOrder = selectedRows[0];
-
-          this.ref = this._dialogService.open(AddPaymentComponent, { header: 'Registrar pago', data: { clientId: washOrder.client_id } });
-          this.ref.onClose.subscribe(result => {
-            if (result) {
-
-            }
-
-            action.loading = false;
-          });
-        }
-      },
-      {
-        title: 'Registrar Descuento',
-        tooltip: 'Registrar descuento',
-        icon: 'dollar',
-        status: DataTableActionStatus.WARNING,
-        selectionConfig: {
-          maxSelectedRows: 1
-        },
-        hasLoadingEnabled: true,
-        hiddenFn: (selectedRow) => {
-          if (this.authService.hasRole(Role.RECEPTIONIST)) {
-            return true;
-          }
-
-          if (selectedRow) {
-            const washOrder = selectedRow;
-            return washOrder.status === OrderStatus.CREATED;
-          }
-
-          return false;
-        },
-        callback: async (action, selectedRows) => {
-          const washOrder = selectedRows[0];
-
-          this.ref = this._dialogService.open(AddDiscountComponent, { header: 'Registrar descuento', data: { clientId: washOrder.client_id } });
-          this.ref.onClose.subscribe(result => {
-            if (result) {
-
-            }
-
-            action.loading = false;
-          });
         }
       }
     ]
