@@ -41,9 +41,7 @@ export class ChangePasswordComponent {
   onSubmitForm(passwordInformation: UserUpdatePassword): void {
     this.formProcessEvent.emit(true);
 
-    const userPasswords: UserUpdatePassword = passwordInformation;
-
-    this._userService.updatePassword(userPasswords)
+    this._userService.updatePassword(passwordInformation)
       .then((userUpdated) => {
         this.messageService.add({
           severity: 'success',
