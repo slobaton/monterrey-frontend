@@ -21,9 +21,7 @@ export class UserService extends BaseService implements IUserService, IFetchPagi
 
   async fetchPaginatedResource(request: PaginatedRequest): Promise<PaginatedResponse<User>> {
     try {
-      const response = await firstValueFrom(this.get<PaginatedResponse<User>>('users', this.getPaginationParams(request)));
-
-      return response;
+     return await firstValueFrom(this.get<PaginatedResponse<User>>('users', this.getPaginationParams(request)));
     } catch (error) {
       return this.handleError(error);
     }

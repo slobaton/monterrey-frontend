@@ -45,7 +45,7 @@ export class UpsertUserComponent {
       email: new FormControl<string>(user?.email ?? '', [Validators.required, Validators.maxLength(150), Validators.email]),
       password: new FormControl<string>(user?.password ?? '', !this.isThereAUser ? [Validators.required] : []),
       password_confirmation : new FormControl<string>(user?.password ?? '', !this.isThereAUser ? [Validators.required] : []),
-    }, { validators: passwordMatchValidator });
+    }, { validators: passwordMatchValidator() });
   }
 
   onSubmitForm(userFormValue: any): void {
