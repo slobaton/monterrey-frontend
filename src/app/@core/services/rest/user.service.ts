@@ -8,6 +8,7 @@ import { User } from '../../models/user';
 import { PaginatedRequest } from '../../models/request/paginated-request';
 import { PaginatedResponse } from '../../models/response/paginated-response';
 import { UserUpsertRequest } from '../../models/request/user-upsert-request';
+import { UserUpdatePassword } from "../../models/request/user-update-password-request";
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +48,14 @@ export class UserService extends BaseService implements IUserService, IFetchPagi
   async deleteById(id: number): Promise<void> {
     try {
       await firstValueFrom(this.delete(`users/${id}`));
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  async updatePassword(request: UserUpdatePassword): Promise<void> {
+    try {
+      await firstValueFrom(this.post('users/update-password', request))
     } catch (error) {
       return this.handleError(error);
     }
