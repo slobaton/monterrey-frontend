@@ -1,10 +1,12 @@
-import { ValidatorFn, AbstractControl } from '@angular/forms';
+import { AbstractControl, ValidatorFn } from '@angular/forms';
 
-// Custom validation function to check if the password fields match
-export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): { [key: string]: boolean } | null => {
-  const password = control.get('password')?.value;
-  const confirmPassword = control.get('password_confirmation')?.value;
+// Factory function for the validator
+export function passwordMatchValidator(field: string = 'password', confirmationField = 'password_confirmation'): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    const password = control.get(field)?.value; // Usando el parámetro 'field'
+    const confirmPassword = control.get(confirmationField)?.value;
 
-  // Checking if the fields are equal
-  return password === confirmPassword ? null : { 'passwordMismatch': true };
-};
+    //  Checking if the fields are equal
+    return password === confirmPassword ? null : { 'passwordMismatch': true };
+  };
+}
