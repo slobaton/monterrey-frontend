@@ -11,6 +11,7 @@ import { AssignRoleComponent } from "./components/assign-role-form/assign-role.c
 import { CheckboxModule } from 'primeng/checkbox';
 import {ReactiveFormsModule} from "@angular/forms";
 import {ProgressBarModule} from "primeng/progressbar";
+import {ChangePasswordComponent} from "./components/change-password-form/change-password.component";
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import {ProgressBarModule} from "primeng/progressbar";
   declarations: [
     UserListComponent,
     UpsertUserComponent,
-    AssignRoleComponent
+    AssignRoleComponent,
+    ChangePasswordComponent
   ]
 })
 export class UserModule { }
