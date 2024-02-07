@@ -1,7 +1,7 @@
 <p-table
   #simpleTableRef
   [columns]="tableConfig.columns"
-  [value]="data"
+  [value]="processedData"
   styleClass="p-datatable-sm"
   [tableStyle]="{ 'min-width': '50rem' }"
   [paginator]="false"
@@ -10,8 +10,6 @@
 >
   <ng-template pTemplate="header" let-columns>
     <tr>
-      <th *ngIf="rowDetails" style="width: 5rem"></th>
-
       <ng-container *ngFor="let col of columns">
         <ng-container *ngIf="col.visible ?? true">
           <th
@@ -48,18 +46,8 @@
       [pSelectableRowDisabled]="true"
       [pSelectableRow]="rowData"
       [pSelectableRowIndex]="rowIndex"
+      *ngIf="!rowData['monthHeader']; else monthHeader"
     >
-      <td *ngIf="rowDetails">
-        <button
-          type="button"
-          pButton
-          pRipple
-          [pRowToggler]="rowData"
-          class="p-button-sm p-button-text p-button-rounded p-button-plain"
-          [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
-        ></button>
-      </td>
-
       <ng-container *ngFor="let col of columns">
         <td
           *ngIf="col.visible ?? true"
@@ -108,16 +96,18 @@
         ></button>
       </td>
     </tr>
-  </ng-template>
 
-  <ng-template *ngIf="rowDetails" pTemplate="rowexpansion" let-rowItem>
-    <tr>
-      <td colspan="12">
-        <ng-container
-          [ngTemplateOutlet]="rowDetails"
-          [ngTemplateOutletContext]="{ $implicit: rowItem }"
-        ></ng-container>
-      </td>
-    </tr>
+    <ng-template #monthHeader>
+      <tr>
+        <td
+          [colSpan]="hasActions() ? columns.length + 1 : columns.length"
+          class="text-center bg-blue-500"
+        >
+          <span class="font-bold">{{ rowData["monthHeader"] }} </span>
+          - Balance Mes Anterior:
+          <span class="font-bold">{{ rowData["monthBalanceDebt"] ?? 0 }}</span>
+        </td>
+      </tr>
+    </ng-template>
   </ng-template>
 </p-table>

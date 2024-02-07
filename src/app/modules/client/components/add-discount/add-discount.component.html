@@ -1,0 +1,36 @@
+<app-form
+  [form]="discountForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-12">
+      <app-form-label id="date" text="Fecha" [required]="false" />
+      <app-form-datetime-picker
+        [form]="discountForm"
+        id="date"
+        controlName="date"
+        placeholder="Fecha de Pago (opcional)"
+        [showIcon]="true"
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label id="concept" text="Concepto" [required]="true" />
+      <app-form-input-text
+        [form]="discountForm"
+        id="concept"
+        controlName="concept"
+        placeholder="Ingrese el concepto por descuento..."
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label id="amount" text="Monto" [required]="true" />
+      <app-form-input-number
+        [form]="discountForm"
+        id="amount"
+        controlName="amount"
+        placeholder="Ingrese el monto de pago..."
+      />
+    </div>
+  </div>
+</app-form>

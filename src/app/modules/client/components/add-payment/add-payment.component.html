@@ -1,0 +1,40 @@
+<app-form
+  [form]="paymentForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-12">
+      <app-form-label id="date" text="Fecha" [required]="false" />
+      <app-form-datetime-picker
+        [form]="paymentForm"
+        id="date"
+        controlName="date"
+        placeholder="Fecha de Pago (opcional)"
+        [showIcon]="true"
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label
+        id="receipt_number"
+        text="Num. Recibo"
+        [required]="true"
+      />
+      <app-form-input-number
+        [form]="paymentForm"
+        id="receipt_number"
+        controlName="receipt_number"
+        placeholder="Ingrese el número de recibo..."
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label id="amount" text="Monto" [required]="true" />
+      <app-form-input-number
+        [form]="paymentForm"
+        id="amount"
+        controlName="amount"
+        placeholder="Ingrese el monto de pago..."
+      />
+    </div>
+  </div>
+</app-form>

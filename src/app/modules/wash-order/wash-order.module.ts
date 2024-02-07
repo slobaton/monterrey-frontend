@@ -43,6 +43,9 @@ import { WashOrderInfoComponent } from './components/wash-order-info/wash-order-
     ProgressBarModule,
     ChipModule,
     OverlayPanelModule
+  ],
+  exports: [
+    WashOrderInfoComponent
   ]
 })
 export class WashOrderModule { }

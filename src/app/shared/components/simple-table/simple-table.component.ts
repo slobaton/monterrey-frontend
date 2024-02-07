@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Table } from 'primeng/table';
-import { SimpleTableColumnProps, SimpleTableColumnType, SimpleTableConfiguration } from 'src/app/@core/types/simple-table-definition';
+import { SimpleTableActionProps, SimpleTableColumnProps, SimpleTableColumnType, SimpleTableConfiguration } from 'src/app/@core/types/simple-table-definition';
 
 @Component({
   selector: 'app-simple-table',
@@ -23,6 +23,12 @@ export class SimpleTableComponent<TEntity> implements OnInit {
   ngOnInit(): void {
   }
 
+  hasActions(): boolean {
+    const actions = this.tableConfig.actions ?? [];
+
+    return actions && actions.length > 0;
+  }
+
   getColumnStyleByType(type: SimpleTableColumnType): string {
     let classStyles = '';
 
@@ -41,6 +47,34 @@ export class SimpleTableComponent<TEntity> implements OnInit {
       return value;
     }
 
+    if (col.type === SimpleTableColumnType.BADGE && col.customValue) {
+      const value = col.customValue(row[col.propertyRef]);
+      return value;
+    }
+
     return '';
+  }
+
+  generateActionColor(action: SimpleTableActionProps): string {
+    const baseClassName = 'p-button-';
+    const defaultName = 'success';
+
+    return baseClassName.concat(action.status ?? defaultName);
+  }
+
+  generateActionIcon(action: SimpleTableActionProps): string {
+    const baseIconClassName = 'pi pi-';
+    const defaultName = 'eye';
+
+    return baseIconClassName.concat(action.icon ?? defaultName);
+  }
+
+  executeActionCallback(action: SimpleTableActionProps, selectedRow?: any): void {
+
+    if (action.hasLoadingEnabled) {
+      action.loading = true;
+    }
+
+    action.callback(action, selectedRow);
   }
 }
