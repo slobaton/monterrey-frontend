@@ -52,7 +52,6 @@ export class FormInputSearchComponent<TEntity> implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('subs');
     this.onSelect.subscribe((selectedValue) => this.onSelectValue(selectedValue));
   }
 
