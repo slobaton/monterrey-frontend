@@ -24,6 +24,7 @@ import { ProtectedComponent } from 'src/app/@core/models/common/protected-compon
 import { AbilityService } from '@casl/angular';
 import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { AppAbility } from 'src/app/@core/auth/ability';
+import { DateService } from 'src/app/@core/services/common/date.service';
 
 @Component({
   selector: 'app-wash-order-create',
@@ -84,7 +85,8 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
     private _reportService: ReportService,
     private _messageService: MessageService,
     private _validationService: ValidationService,
-    private _dialogService: DialogService) {
+    private _dialogService: DialogService,
+    private _dateService: DateService) {
     super(abilityService, authService);
   }
 
@@ -148,8 +150,8 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   }
 
   initializeForm(): void {
-    const todayDate = new Date();
-    const existingDate = this.washOrder ? new Date(this.washOrder.date) : null;
+    const todayDate = this._dateService.getCurrentDate();
+    const existingDate = this.washOrder ? this._dateService.getDateFromString(this.washOrder.date) : null;
 
     this.washOrderForm = new FormGroup({
       client_id: new FormControl<string>(this.washOrder?.client_id ?? '', [Validators.required]),
