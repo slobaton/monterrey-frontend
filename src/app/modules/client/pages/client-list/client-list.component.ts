@@ -155,7 +155,7 @@ export class ClientListComponent extends ProtectedComponent {
         }
       },
       {
-        title: 'Cuenta',
+        title: 'Estado Cuenta',
         tooltip: 'Estado cuenta',
         icon: 'money-bill',
         status: DataTableActionStatus.PRIMARY,

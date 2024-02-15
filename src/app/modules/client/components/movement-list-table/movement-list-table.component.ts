@@ -3,6 +3,7 @@ import { Table } from 'primeng/table';
 import { SimpleTableActionProps, SimpleTableColumnProps, SimpleTableColumnType, SimpleTableConfiguration } from 'src/app/@core/types/simple-table-definition';
 import { ProcessedAccountMovement } from 'src/app/@core/models/account-balance';
 import { ConstantsService } from 'src/app/@core/services/common/constants.service';
+import { DateService } from 'src/app/@core/services/common/date.service';
 
 @Component({
   selector: 'app-movement-list-table',
@@ -20,7 +21,9 @@ export class MovementListTableComponent implements OnInit, OnChanges {
 
   processedData: Array<any> = [];
 
-  constructor(private _constantsService: ConstantsService) { }
+  constructor(
+    private _constantsService: ConstantsService,
+    private _dateService: DateService) { }
 
   ngOnInit(): void {
   }
@@ -29,7 +32,7 @@ export class MovementListTableComponent implements OnInit, OnChanges {
     if (this.data && this.data.length) {
       if (this.data && this.data.length) {
         const groupedItems = this.data.reduce((prev, current) => {
-          const date = new Date(current.date);
+          const date = this._dateService.getDateFromString(current.date);
           const month = date.getMonth();
           const year = date.getFullYear();
 
@@ -60,8 +63,6 @@ export class MovementListTableComponent implements OnInit, OnChanges {
 
           balancePrevMonth = items[items.length - 1]?.balance_debt ?? 0;
         })
-
-        console.log(this.processedData);
       }
     }
   }

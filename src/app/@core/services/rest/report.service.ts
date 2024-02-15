@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { IReportService } from '../interfaces/report-service';
 import { BaseService } from './base.service';
 import { AuthService } from './auth.service';
@@ -19,6 +19,14 @@ export class ReportService extends BaseService implements IReportService {
     return await this.getValidReportUrl(`washOrder/${washOrderId}`);
   }
 
+  async getAccountMovementsPrintReportUrl(clientId: string, startDate: string, endDate: string): Promise<string> {
+    const params = new HttpParams()
+      .append('startDate', startDate)
+      .append('endDate', endDate);
+
+    return await this.getValidReportUrl(`clients/${clientId}/accountMovements`, params);
+  }
+
   async getGeneralReportCount(): Promise<GeneralCountReport> {
     try {
       const data = await firstValueFrom(this.get<GeneralCountReport>('reports/general-count'));
@@ -29,9 +37,13 @@ export class ReportService extends BaseService implements IReportService {
     }
   }
 
-  private async getValidReportUrl(reportUrlSection: string): Promise<string> {
+  private async getValidReportUrl(reportUrlSection: string, params?: HttpParams): Promise<string> {
     const publickey = await this._authService.getPublicKey();
 
-    return `${this.baseUrl}/reports/${reportUrlSection}?key=${publickey.key}`;
+    const reqParams = params
+      ? params.append('key', publickey.key)
+      : new HttpParams().append('key', publickey.key);
+
+    return `${this.baseUrl}/reports/${reportUrlSection}?${reqParams.toString()}`;
   }
 }

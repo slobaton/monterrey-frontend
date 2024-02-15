@@ -37,6 +37,7 @@
             icon="pi pi-print"
             label="Imprimir Reporte"
             (onClick)="showMonthlyReport()"
+            [loading]="isProcessingReport"
           ></p-button>
         </div>
       </div>
