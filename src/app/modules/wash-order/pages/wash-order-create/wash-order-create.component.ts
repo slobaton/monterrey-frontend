@@ -25,6 +25,8 @@ import { AbilityService } from '@casl/angular';
 import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { AppAbility } from 'src/app/@core/auth/ability';
 import { DateService } from 'src/app/@core/services/common/date.service';
+import { PrintService } from 'src/app/@core/services/common/print.service';
+
 
 @Component({
   selector: 'app-wash-order-create',
@@ -86,7 +88,8 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
     private _messageService: MessageService,
     private _validationService: ValidationService,
     private _dialogService: DialogService,
-    private _dateService: DateService) {
+    private _dateService: DateService,
+    private _printService: PrintService) {
     super(abilityService, authService);
   }
 
@@ -329,8 +332,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
       const washOrderId = this.washOrderId;
       this.reportLoading = true;
       const reportUrl = await this._reportService.getWashOrderPrintReportUrl(washOrderId);
-      this.reportLoading = false;
-      window.open(reportUrl);
+      this._printService.printPdf(reportUrl, () => this.reportLoading = false);
     }
   }
 
