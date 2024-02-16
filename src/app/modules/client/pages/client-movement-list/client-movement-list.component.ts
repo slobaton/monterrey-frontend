@@ -1,18 +1,20 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbilityService } from '@casl/angular';
 import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
+import { DateTime } from 'luxon';
 import { AppAbility } from 'src/app/@core/auth/ability';
 import { AccountMovementType } from 'src/app/@core/enums/movement-type.enum';
 import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
 import { AccountMovementService } from 'src/app/@core/services/rest/account-movement.service';
 import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { ClientService } from 'src/app/@core/services/rest/client.service';
-import { SimpleTableActionStatus, SimpleTableColumnType, SimpleTableConfiguration } from 'src/app/@core/types/simple-table-definition';
-import { WashOrderInfoComponent } from 'src/app/modules/wash-order/components/wash-order-info/wash-order-info.component';
+import { SimpleTableColumnType, SimpleTableConfiguration } from 'src/app/@core/types/simple-table-definition';
 import { AccountMovement, ProcessedAccountMovement } from 'src/app/@core/models/account-balance';
 import { Client } from 'src/app/@core/models/client';
+import { DateService } from 'src/app/@core/services/common/date.service';
+import { ReportService } from 'src/app/@core/services/rest/report.service';
 
 @Component({
   selector: 'app-client-movement-list',
@@ -25,10 +27,12 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
   client: Client | null = null;
   balance: number = 0;
 
-  currentDate: Date = new Date();
+  currentDate: Date = this._dateService.getCurrentDate();
   startDate: Date = this.currentDate;
   endDate: Date = this.currentDate;
   processedMovements: ProcessedAccountMovement[] = [];
+
+  isProcessingReport: boolean = false;
 
   public tableConfig: SimpleTableConfiguration = {
     columns: [
@@ -116,7 +120,9 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
     private _messageService: MessageService,
     private _dialogService: DialogService,
     private _movementService: AccountMovementService,
-    private _clientService: ClientService) {
+    private _clientService: ClientService,
+    private _reportService: ReportService,
+    private _dateService: DateService) {
     super(abilityService, authService);
   }
 
@@ -129,13 +135,13 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
       this._clientService.getMovements(this.clientId)
         .then((accountBalance) => {
           if (accountBalance.start_date) {
-            const startDate = new Date(accountBalance.start_date);
-            this.startDate = startDate;
+            const startDate = DateTime.fromISO(accountBalance.start_date, { zone: 'America/La_Paz' });
+            this.startDate = startDate.toJSDate();
           }
 
           if (accountBalance.end_date) {
-            const endDate = new Date(accountBalance.end_date);
-            this.endDate = endDate;
+            const endDate = DateTime.fromISO(accountBalance.end_date, { zone: 'America/La_Paz' });
+            this.endDate = endDate.toJSDate();
           }
 
           this.balance = accountBalance.final_balance;
@@ -155,7 +161,24 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
   }
 
   showMonthlyReport() {
-    console.log(this.startDate);
+    this.isProcessingReport = true;
+    this._reportService.getAccountMovementsPrintReportUrl(
+      this.clientId,
+      this._dateService.getOnlyDateString(this.startDate),
+      this._dateService.getOnlyDateString(this.endDate)
+    )
+      .then((url) => {
+        window.open(url);
+      })
+      .catch((err) => {
+        console.error(err);
+        this._messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo cargar el reporte.'
+        });
+      })
+      .finally(() => this.isProcessingReport = false);
   }
 
   getTitle(): string {

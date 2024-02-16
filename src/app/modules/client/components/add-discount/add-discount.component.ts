@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AddDiscountRequest } from 'src/app/@core/models/request/add-discount-request';
+import { DateService } from 'src/app/@core/services/common/date.service';
 import { ValidationService } from 'src/app/@core/services/common/validation.service';
 import { ClientService } from 'src/app/@core/services/rest/client.service';
 
@@ -22,7 +23,8 @@ export class AddDiscountComponent {
     private _messageService: MessageService,
     private _ref: DynamicDialogRef,
     private _config: DynamicDialogConfig,
-    private _validationService: ValidationService) {
+    private _validationService: ValidationService,
+    private _dateService: DateService) {
 
   }
 
@@ -34,7 +36,7 @@ export class AddDiscountComponent {
   initializeForm(): void {
     this.discountForm = new FormGroup({
       concept: new FormControl<string>('', [Validators.required]),
-      date: new FormControl<Date>(new Date(), []),
+      date: new FormControl<Date>(this._dateService.getCurrentDate(), []),
       amount: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
     });
   }
