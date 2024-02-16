@@ -18,7 +18,7 @@ export class AppMenuComponent implements OnInit {
       {
         label: 'Configuracion',
         items: [
-          { label: 'Precios', icon: 'pi pi-fw pi-dollar', routerLink: ['/parameters/prices'] }
+          { label: 'Parametros', icon: 'pi pi-fw pi-box', routerLink: ['/parameters'] }
         ],
         roles: [Role.ADMIN]
       },

@@ -5,7 +5,16 @@
 >
   <div class="form-container p-fluid p-formgrid grid">
     <div class="col-12">
-      <app-form-label id="price" text="Descripción" [required]="true" />
+      <app-form-label id="name" text="Nombre" [required]="true" />
+      <app-form-textarea
+        [form]="parameterForm"
+        id="name"
+        controlName="name"
+        placeholder="Ingrese el nombre del parametro.."
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label id="description" text="Descripción" [required]="true" />
       <app-form-textarea
         [form]="parameterForm"
         id="description"
@@ -14,12 +23,12 @@
       />
     </div>
     <div class="col-12">
-      <app-form-label id="price" text="Precio (Bs.)" [required]="true" />
+      <app-form-label id="value" text="Valor" [required]="true" />
       <app-form-input-number
         [form]="parameterForm"
-        id="price"
-        controlName="price"
-        placeholder="Ingrese el precio.."
+        id="value"
+        controlName="value"
+        placeholder="Ingrese el valor.."
         mode="decimal"
       />
     </div>

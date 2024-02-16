@@ -1,16 +1,16 @@
 <div *ngIf="ability$ | async as ab" class="grid">
   <div *ngIf="!hasReceptionistRole()" class="col-12">
-    <app-page-card title="Precios de Parametros">
+    <app-page-card title="Valores de Parametros">
       <app-confirm-dialog
-        id="confirmParameterPriceDelete"
-        title="Eliminar Precio Efecto"
-        message="¿Estas seguro de eliminar el precio para cliente?"
+        id="confirmParameterValueDelete"
+        title="Eliminar valor de parametro?"
+        message="¿Estas seguro de eliminar el valor para cliente?"
       ></app-confirm-dialog>
       <app-data-table
-        #parameterPricesTable
+        #paramsTable
         [searchEnabled]="false"
         [tableConfig]="tableConfig"
-        [sourceDataService]="parameterPriceService"
+        [sourceDataService]="parameterValueService"
         [extraParams]="clientId"
       ></app-data-table>
     </app-page-card>

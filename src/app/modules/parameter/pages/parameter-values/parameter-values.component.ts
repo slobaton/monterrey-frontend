@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AbilityService } from '@casl/angular';
-import { ChargeParameter } from 'src/app/@core/models/charge-parameter';
-import { ChargeParameterService } from 'src/app/@core/services/rest/charge-parameter.service';
+import { SystemParameter } from 'src/app/@core/models/system-parameter';
+import { SystemParameterService } from 'src/app/@core/services/rest/system-parameter.service';
 import { DataTableActionStatus, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
 import { UpdateParameterFormComponent } from '../../components/update-parameter-form/update-parameter-form.component';
@@ -11,22 +11,22 @@ import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
 
 @Component({
-  selector: 'app-parameter-prices',
-  templateUrl: './parameter-prices.component.html',
-  styleUrls: ['./parameter-prices.component.scss']
+  selector: 'app-parameter-values',
+  templateUrl: './parameter-values.component.html',
+  styleUrls: ['./parameter-values.component.scss']
 })
-export class ParameterPricesComponent extends ProtectedComponent implements OnInit {
-  @ViewChild('paramTable') table!: DataTableComponent<ChargeParameter>;
+export class ParameterValuesComponent extends ProtectedComponent implements OnInit {
+  @ViewChild('paramTable') table!: DataTableComponent<SystemParameter>;
 
-  parameters: Array<ChargeParameter> = [];
+  parameters: Array<SystemParameter> = [];
 
   ref: DynamicDialogRef | undefined;
 
   public tableConfig: DataTableConfiguration = {
     columns: [
-      { title: 'Código', propertyRef: 'name', type: DataTableColumnType.TEXT, visible: true, sortable: false },
+      { title: 'Nombre', propertyRef: 'name', type: DataTableColumnType.TEXT, visible: true, sortable: false },
       { title: 'Descripción', propertyRef: 'description', type: DataTableColumnType.TEXT, visible: true, sortable: false },
-      { title: 'Precio (Bs.)', propertyRef: 'price', type: DataTableColumnType.TEXT, visible: true, sortable: false },
+      { title: 'Valor', propertyRef: 'value', type: DataTableColumnType.TEXT, visible: true, sortable: false },
       { title: 'Actualizado', propertyRef: 'updated_at', type: DataTableColumnType.DATETIME, visible: true, sortable: false }
     ],
     identifierPropRef: 'id',
@@ -57,7 +57,7 @@ export class ParameterPricesComponent extends ProtectedComponent implements OnIn
   constructor(
     abilityService: AbilityService<AppAbility>,
     authService: AuthService,
-    public parameterService: ChargeParameterService,
+    public parameterService: SystemParameterService,
     private _dialogService: DialogService
   ) {
     super(abilityService, authService);
