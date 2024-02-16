@@ -45,7 +45,7 @@ export class AddWashOrderDetailComponent extends ProtectedComponent implements O
 
   private readonly defaultDebounceTime = 500;
 
-  washOrderDetailCalcResult: WashOrderDetailCalcResult = new WashOrderDetailCalcResult(0, 0, 0, 0, 0, 0, 0);
+  washOrderDetailCalcResult: WashOrderDetailCalcResult = new WashOrderDetailCalcResult(0, 0, 0, 0, 0, 0, 0, 0, 0);
   private calculateRequest = new Subject<WashOrderDetailCalculateRequest>();
 
   constructor(
@@ -98,7 +98,6 @@ export class AddWashOrderDetailComponent extends ProtectedComponent implements O
       is_nevado_active: new FormControl<boolean>(washOrderDetail?.is_nevado_active ?? false, [Validators.required]),
       quantity: new FormControl<number>(washOrderDetail?.quantity ?? 0, [Validators.required, Validators.min(0)]),
       num_buttonholes: new FormControl<number>(washOrderDetail?.num_buttonholes ?? 0, [Validators.required, Validators.min(0)]),
-      buttonholes_price: new FormControl<number>(washOrderDetail?.buttonholes_price ?? 0, [Validators.required, Validators.min(0)]),
       observations: new FormControl<string>(washOrderDetail?.observations ?? '', []),
       effects: new FormControl<Array<string>>(selectedEffects, [])
     });
@@ -215,7 +214,6 @@ export class AddWashOrderDetailComponent extends ProtectedComponent implements O
         wash_order_id: washOrderId,
         is_focalizado_active: false,
         is_nevado_active: false,
-        buttonholes_price: 0,
         num_buttonholes: 0,
         quantity: 0
       });
