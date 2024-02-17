@@ -138,28 +138,24 @@
         <p-overlayPanel #priceInfo>
           <h5>Detalle Precio Unitario</h5>
           <ul>
-            <li>
-              Precio Lavado: {{ washOrderDetailCalcResult.wash_price }} Bs.
-            </li>
+            <li>Precio Lavado: {{ washOrderDetailCalcResult.wash_price }} $</li>
             <li>
               Precio Ojales:
-              {{ washOrderDetailCalcResult.buttonholes_total_price }} Bs.
+              {{ washOrderDetailCalcResult.buttonholes_total_price }} $
             </li>
             <li>
               Precio Focalizado:
-              {{ washOrderDetailCalcResult.focalizado_price }} Bs.
+              {{ washOrderDetailCalcResult.focalizado_price }} $
             </li>
             <li>
-              Precio Nevado: {{ washOrderDetailCalcResult.nevado_price }} Bs.
+              Precio Nevado: {{ washOrderDetailCalcResult.nevado_price }} $
             </li>
             <li>
               Precio Efectos:
-              {{ washOrderDetailCalcResult.effect_total_price }} Bs.
+              {{ washOrderDetailCalcResult.effect_total_price }} $
             </li>
           </ul>
-          <h6>
-            Precio Unitario: {{ washOrderDetailCalcResult.unit_price }} Bs.
-          </h6>
+          <h6>Precio Unitario: {{ washOrderDetailCalcResult.unit_price }} $</h6>
         </p-overlayPanel>
         <p-button
           styleClass="p-button-info"
@@ -187,7 +183,7 @@
       ></app-list-picker>
       <ng-template #itemTemplate let-item>
         {{ item.name }}
-        <span *ngIf="!hasReceptionistRole()">- {{ item.price }} Bs.</span>
+        <span *ngIf="!hasReceptionistRole()">- {{ item.price }} $</span>
       </ng-template>
     </div>
 

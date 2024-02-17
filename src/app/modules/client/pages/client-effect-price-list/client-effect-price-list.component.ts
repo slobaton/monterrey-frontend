@@ -28,9 +28,9 @@ export class ClientEffectPriceListComponent extends ProtectedComponent implement
     columns: [
       { title: 'Id', propertyRef: 'id', sortable: true, visible: false },
       { title: 'Efecto', propertyRef: 'name', sortable: false },
-      { title: 'Precio Original (Bs.)', propertyRef: 'price' },
+      { title: 'Precio Original ($)', propertyRef: 'price' },
       {
-        title: 'Precio Cliente (Bs.)',
+        title: 'Precio Cliente ($)',
         propertyRef: 'effect_price.price',
         type: DataTableColumnType.CUSTOM,
         customValue: (row: EffectPrice) => `${row.effect_price.price}`

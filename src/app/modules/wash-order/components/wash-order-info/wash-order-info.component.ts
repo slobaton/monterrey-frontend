@@ -39,7 +39,7 @@ export class WashOrderInfoComponent extends ProtectedComponent implements OnInit
         customValue: (row) => row.cloth_size.name,
       },
       {
-        title: 'Precio Unidad (Bs.)',
+        title: 'Precio Unidad ($)',
         type: SimpleTableColumnType.TEXT,
         propertyRef: 'unit_price',
         visible: !this.hasReceptionistRole()
@@ -50,7 +50,7 @@ export class WashOrderInfoComponent extends ProtectedComponent implements OnInit
         propertyRef: 'quantity'
       },
       {
-        title: 'Subtotal (Bs.)',
+        title: 'Subtotal ($)',
         type: SimpleTableColumnType.TEXT,
         propertyRef: 'subtotal_price',
         visible: !this.hasReceptionistRole()
