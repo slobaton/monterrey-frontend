@@ -44,21 +44,7 @@
       >
       </app-form-select>
     </div>
-    <div class="col-3">
-      <app-form-label
-        id="buttonholes_price"
-        text="Precio Ojal (Bs.)"
-        [required]="true"
-      />
-      <app-form-input-number
-        [form]="washOrderDetailForm"
-        id="buttonholes_price"
-        controlName="buttonholes_price"
-        placeholder="Precio Ojal..."
-        mode="decimal"
-      />
-    </div>
-    <div class="col-3">
+    <div class="col-2">
       <app-form-label
         id="num_buttonholes"
         text="Num. Ojales"
@@ -69,6 +55,22 @@
         id="num_buttonholes"
         controlName="num_buttonholes"
         placeholder="Num. Ojales..."
+      />
+    </div>
+    <div class="col-2">
+      <app-form-label id="min_buttonholes" text="Ojales Disp. Regalo" />
+      <p-inputNumber
+        id="min_buttonholes"
+        [(ngModel)]="washOrderDetailCalcResult.min_buttonholes"
+        [disabled]="true"
+      />
+    </div>
+    <div class="col-2">
+      <app-form-label id="price_per_buttonhole" text="Precio Ojal (Bs.)" />
+      <p-inputNumber
+        id="price_per_buttonhole"
+        [(ngModel)]="washOrderDetailCalcResult.price_per_buttonhole"
+        [disabled]="true"
       />
     </div>
 

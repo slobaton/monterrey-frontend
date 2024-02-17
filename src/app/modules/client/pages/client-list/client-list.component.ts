@@ -113,9 +113,9 @@ export class ClientListComponent extends ProtectedComponent {
         }
       },
       {
-        title: 'Precios General',
-        tooltip: 'Ver Precios General',
-        icon: 'dollar',
+        title: 'Parametros',
+        tooltip: 'Ver Parametros',
+        icon: 'box',
         status: DataTableActionStatus.INFO,
         selectionConfig: {
           maxSelectedRows: 1

@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ParameterPricesComponent } from './pages/parameter-prices/parameter-prices.component';
+import { ParameterValuesComponent } from './pages/parameter-values/parameter-values.component';
 
 const routes: Routes = [
-  { path: 'prices', component: ParameterPricesComponent }
+  { path: '', component: ParameterValuesComponent }
 ];
 
 @NgModule({

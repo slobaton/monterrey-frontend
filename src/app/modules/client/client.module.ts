@@ -15,8 +15,8 @@ import { ClientWashTypePriceListComponent } from './pages/client-wash-type-price
 import { UpsertWashTypePriceComponent } from './components/upsert-wash-type-price/upsert-wash-type-price.component';
 import { ClientEffectPriceListComponent } from './pages/client-effect-price-list/client-effect-price-list.component';
 import { UpsertEffectPriceComponent } from './components/upsert-effect-price/upsert-effect-price.component';
-import { ClientParameterPriceListComponent } from './pages/client-parameter-price-list/client-parameter-price-list.component';
-import { UpsertParameterPriceComponent } from './components/upsert-parameter-price/upsert-parameter-price.component';
+import { ClientParameterValueListComponent } from './pages/client-parameter-value-list/client-parameter-value-list.component';
+import { UpsertParameterValueComponent } from './components/upsert-parameter-value/upsert-parameter-value.component';
 import { AbilityModule } from '@casl/angular';
 import { ClientMovementListComponent } from './pages/client-movement-list/client-movement-list.component';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -56,8 +56,8 @@ import { AddDiscountComponent } from './components/add-discount/add-discount.com
     UpsertWashTypePriceComponent,
     ClientEffectPriceListComponent,
     UpsertEffectPriceComponent,
-    ClientParameterPriceListComponent,
-    UpsertParameterPriceComponent,
+    ClientParameterValueListComponent,
+    UpsertParameterValueComponent,
     ClientMovementListComponent,
     MovementListTableComponent,
     AddPaymentComponent,

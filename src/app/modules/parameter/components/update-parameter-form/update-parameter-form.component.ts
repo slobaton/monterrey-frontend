@@ -3,9 +3,9 @@ import { Component, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ChargeParameterUpdateRequest } from 'src/app/@core/models/request/charge-parameter-update-request';
+import { SystemParameterUpdateRequest } from 'src/app/@core/models/request/system-parameter-update-request';
 import { ValidationService } from 'src/app/@core/services/common/validation.service';
-import { ChargeParameterService } from 'src/app/@core/services/rest/charge-parameter.service';
+import { SystemParameterService } from 'src/app/@core/services/rest/system-parameter.service';
 
 @Component({
   selector: 'app-update-parameter-form',
@@ -17,7 +17,7 @@ export class UpdateParameterFormComponent {
   formProcessEvent: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
-    private _parameterService: ChargeParameterService,
+    private _parameterService: SystemParameterService,
     private _messageService: MessageService,
     private _ref: DynamicDialogRef,
     private _config: DynamicDialogConfig,
@@ -35,16 +35,18 @@ export class UpdateParameterFormComponent {
     }
 
     this.parameterForm = new FormGroup({
+      name: new FormControl<string>(parameter?.name ?? '', [Validators.required]),
       description: new FormControl<string>(parameter?.description ?? '', [Validators.required]),
-      price: new FormControl<number>(parameter?.price ?? 0, [Validators.required]),
+      value: new FormControl<number>(parameter?.value ?? 0, [Validators.required]),
     });
   }
 
   onSubmitForm(parameterFormValue: any): void {
     this.formProcessEvent.emit(true);
-    const parameter: ChargeParameterUpdateRequest = {
+    const parameter: SystemParameterUpdateRequest = {
+      name: parameterFormValue.name,
       description: parameterFormValue.description,
-      price: parameterFormValue.price
+      value: parameterFormValue.value
     };
 
     if (!this._config.data?.parameter) {
