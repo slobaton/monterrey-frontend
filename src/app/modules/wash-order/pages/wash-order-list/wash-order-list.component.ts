@@ -21,6 +21,7 @@ import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { Role } from 'src/app/@core/enums/role.enum';
 import { AddPaymentComponent } from '../../../client/components/add-payment/add-payment.component';
 import { AddDiscountComponent } from '../../../client/components/add-discount/add-discount.component';
+import { PrintService } from 'src/app/@core/services/common/print.service';
 
 @Component({
   selector: 'app-wash-order-list',
@@ -180,9 +181,7 @@ export class WashOrderListComponent extends ProtectedComponent {
 
           const reportUrl = await this._reportService.getWashOrderPrintReportUrl(washOrderId);
 
-          action.loading = false;
-
-          window.open(reportUrl);
+          this._printService.printPdf(reportUrl, () => action.loading = false);
         }
       },
       {
@@ -232,7 +231,8 @@ export class WashOrderListComponent extends ProtectedComponent {
     private _confirmationService: ConfirmationService,
     private _messageService: MessageService,
     private _dialogService: DialogService,
-    private _router: Router) {
+    private _router: Router,
+    private _printService: PrintService) {
     super(abilityService, authService);
   }
 }

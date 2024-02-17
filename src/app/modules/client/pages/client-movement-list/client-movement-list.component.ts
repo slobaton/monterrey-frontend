@@ -15,6 +15,7 @@ import { AccountMovement, ProcessedAccountMovement } from 'src/app/@core/models/
 import { Client } from 'src/app/@core/models/client';
 import { DateService } from 'src/app/@core/services/common/date.service';
 import { ReportService } from 'src/app/@core/services/rest/report.service';
+import { PrintService } from 'src/app/@core/services/common/print.service';
 
 @Component({
   selector: 'app-client-movement-list',
@@ -122,7 +123,8 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
     private _movementService: AccountMovementService,
     private _clientService: ClientService,
     private _reportService: ReportService,
-    private _dateService: DateService) {
+    private _dateService: DateService,
+    private _printService: PrintService) {
     super(abilityService, authService);
   }
 
@@ -160,25 +162,15 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
     })
   }
 
-  showMonthlyReport() {
+  async printMonthlyReport() {
     this.isProcessingReport = true;
-    this._reportService.getAccountMovementsPrintReportUrl(
+    const reportUrl = await this._reportService.getAccountMovementsPrintReportUrl(
       this.clientId,
       this._dateService.getOnlyDateString(this.startDate),
       this._dateService.getOnlyDateString(this.endDate)
-    )
-      .then((url) => {
-        window.open(url);
-      })
-      .catch((err) => {
-        console.error(err);
-        this._messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'No se pudo cargar el reporte.'
-        });
-      })
-      .finally(() => this.isProcessingReport = false);
+    );
+
+    this._printService.printPdf(reportUrl, () => this.isProcessingReport = false);
   }
 
   getTitle(): string {
