@@ -23,13 +23,26 @@
         placeholder="Ingrese el concepto por descuento..."
       />
     </div>
-    <div class="col-12">
-      <app-form-label id="amount" text="Monto" [required]="true" />
+    <div class="col-6">
+      <app-form-label id="amount" text="Monto ($)" [required]="true" />
       <app-form-input-number
         [form]="discountForm"
         id="amount"
+        mode="decimal"
         controlName="amount"
-        placeholder="Ingrese el monto de pago..."
+        placeholder="Ingrese el monto de pago en $..."
+      />
+    </div>
+    <div class="col-6">
+      <app-form-label id="amount-currency" text="Monto (Bs.)" />
+      <p-inputNumber
+        id="amount-currency"
+        [(ngModel)]="amountCurrency"
+        (ngModelChange)="onAmountCurrencyChanged($event)"
+        mode="decimal"
+        [minFractionDigits]="2"
+        [maxFractionDigits]="2"
+        placeholder="Ingrese el monto de pago en Bs..."
       />
     </div>
   </div>
