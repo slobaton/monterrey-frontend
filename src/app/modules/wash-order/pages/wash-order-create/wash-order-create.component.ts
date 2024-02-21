@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { MessageService } from 'primeng/api';
@@ -289,7 +289,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
 
     this.ref = this._dialogService.open(AddWashOrderDetailComponent, dialogProps);
 
-    this.ref.onClose.subscribe((result) => {
+    this.ref.onClose.subscribe(() => {
       this.retrieveWashOrderDetails();
     });
   }
@@ -423,7 +423,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
     }).then((result) => {
       this.washOrderDetails = result.data
       this.updateWashOrderTotal();
-    }).catch(err => {
+    }).catch(() => {
       this._messageService.add({
         severity: 'error',
         summary: 'Error inesperado',
@@ -458,7 +458,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
         .then((client) => {
           this._clientDataService.setData(client);
         })
-        .catch((err) => {
+        .catch(() => {
           this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
         })
     }
