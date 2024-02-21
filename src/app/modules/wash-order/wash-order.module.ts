@@ -20,10 +20,12 @@ import { WashOrderListComponent } from './pages/wash-order-list/wash-order-list.
 import { WashOrderCreateComponent } from './pages/wash-order-create/wash-order-create.component';
 import { AddWashOrderDetailComponent } from './components/add-wash-order-detail/add-wash-order-detail.component';
 import { WashOrderInfoComponent } from './components/wash-order-info/wash-order-info.component';
+import { WashOrderListByClientComponent } from './pages/wash-order-list-by-client/wash-order-list-by-client.component';
 
 @NgModule({
   declarations: [
     WashOrderListComponent,
+    WashOrderListByClientComponent,
     WashOrderCreateComponent,
     AddWashOrderDetailComponent,
     WashOrderInfoComponent
