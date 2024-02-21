@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbilityService } from '@casl/angular';
 import { AppAbility } from 'src/app/@core/auth/ability';
+import { AuthUser } from 'src/app/@core/models/auth-user';
 import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
 import { GeneralCountReport } from 'src/app/@core/models/general-report';
 import { AuthService } from 'src/app/@core/services/rest/auth.service';
@@ -13,6 +14,7 @@ import { ReportService } from 'src/app/@core/services/rest/report.service';
 })
 export class HomeComponent extends ProtectedComponent implements OnInit {
   reportResult?: GeneralCountReport;
+  authUser: AuthUser | null = null;
 
   constructor(
     abilityService: AbilityService<AppAbility>,
@@ -23,9 +25,15 @@ export class HomeComponent extends ProtectedComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authUser = this.authService.authenticatedUser;
+
     if (this.hasAdminRole()) {
       this.retrieveReports();
     }
+  }
+
+  getUserFullName() {
+    return this.authUser ? `${this.authUser.name} ${this.authUser.paternal_surname} ${this.authUser.maternal_surname}` : '';
   }
 
   async retrieveReports(): Promise<void> {

@@ -21,10 +21,11 @@
     </div>
     <div class="col-12">
       <app-form-label id="price" text="Precio ($)" [required]="true" />
-      <app-form-input-text
+      <app-form-input-number
         [form]="effectPriceForm"
         id="price"
         controlName="price"
+        mode="decimal"
         placeholder="Ingrese el precio del cliente.."
       />
     </div>

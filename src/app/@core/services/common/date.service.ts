@@ -23,8 +23,14 @@ export class DateService {
   }
 
   public getOnlyDateString(date: Date): string {
-    const currentDate = DateTime.fromJSDate(date, { zone: this.currentTimeZone });
+    const specifiedDate = DateTime.fromJSDate(date, { zone: this.currentTimeZone });
 
-    return currentDate.toISODate() ?? '';
+    return specifiedDate.toISODate() ?? '';
+  }
+
+  public formatDate(date: Date, format: string = 'yyyy/MM/dd'): string {
+    const specifiedDate = DateTime.fromJSDate(date, { zone: this.currentTimeZone });
+
+    return specifiedDate.toFormat('yyyy/MM/dd');
   }
 }

@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: ':clientId/wash-type-prices', component: ClientWashTypePriceListComponent, canActivate: [roleGuard([Role.ADMIN, Role.SECRETARY])] },
   { path: ':clientId/effect-prices', component: ClientEffectPriceListComponent, canActivate: [roleGuard([Role.ADMIN, Role.SECRETARY])] },
   { path: ':clientId/parameters', component: ClientParameterValueListComponent, canActivate: [roleGuard([Role.ADMIN, Role.SECRETARY])] },
-  { path: ':clientId/movements', component: ClientMovementListComponent, canActivate: [roleGuard([Role.ADMIN, Role.RECEPTIONIST])] }
+  { path: ':clientId/movements', component: ClientMovementListComponent, canActivate: [roleGuard([Role.ADMIN, Role.SECRETARY])] }
 ];
 
 @NgModule({

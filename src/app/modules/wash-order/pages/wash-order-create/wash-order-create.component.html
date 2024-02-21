@@ -234,7 +234,7 @@
                             <h6>Observaciones:</h6>
                             <p>{{ rowItem["observations"] }}</p>
 
-                            <ng-component *ngIf="!hasReceptionistRole()">
+                            <ng-container *ngIf="!hasReceptionistRole()">
                               <p>
                                 <b>Precio Lavado:</b>
                                 {{ rowItem["wash_price"] }} $
@@ -269,7 +269,7 @@
                                 <b>Precio Total Efectos:</b>
                                 {{ rowItem["effect_price"] }} $
                               </p>
-                            </ng-component>
+                            </ng-container>
                           </div>
                           <div class="col-6">
                             <h6>Efectos seleccionados:</h6>

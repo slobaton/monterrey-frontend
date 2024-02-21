@@ -1,4 +1,3 @@
-import { formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -187,7 +186,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   private saveWashOrder(washOrderFormValue: any) {
     const washOrder: WashOrderCreateRequest = {
       ...washOrderFormValue,
-      date: formatDate(washOrderFormValue.date, 'yyyy/MM/dd', 'en_US')
+      date: this._dateService.formatDate(washOrderFormValue.date)
     }
 
     this._washOrderService.create(washOrder)
@@ -235,7 +234,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   private updateWashOrder(washOrderFormValue: any) {
     const washOrder: WashOrderUpdateRequest = {
       ...washOrderFormValue,
-      date: formatDate(washOrderFormValue.date, 'yyyy/MM/dd', 'en_US')
+      date: this._dateService.formatDate(washOrderFormValue.date)
     }
 
     this._washOrderService.update(washOrder, this.washOrderId)

@@ -21,9 +21,10 @@
     </div>
     <div class="col-12">
       <app-form-label id="price" text="Precio ($)" [required]="true" />
-      <app-form-input-text
+      <app-form-input-number
         [form]="washTypePriceForm"
         id="price"
+        mode="decimal"
         controlName="price"
         placeholder="Ingrese el precio del cliente.."
       />
