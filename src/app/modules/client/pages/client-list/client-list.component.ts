@@ -14,6 +14,7 @@ import { UpsertClientFormComponent } from '../../components/upsert-client-form/u
 import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { AddPaymentComponent } from '../../components/add-payment/add-payment.component';
 import { AddDiscountComponent } from '../../components/add-discount/add-discount.component';
+import { ClientDataService } from '../../../../@core/services/common/client-data.service';
 
 @Component({
   selector: 'app-client-list',
@@ -215,7 +216,22 @@ export class ClientListComponent extends ProtectedComponent {
             action.loading = false;
           });
         }
-      }
+      },
+      {
+        title: 'Ordenes de lavado',
+        tooltip: 'Lista las ordenes de lavado del cliente',
+        icon: 'list',
+        status: DataTableActionStatus.INFO,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        hiddenFn: (selectedRows) => this.hasReceptionistRole(),
+        callback: (action, selectedRows) => {
+          const selectedClient = selectedRows[0];
+          this._clientDataService.setData(selectedClient);
+          this._router.navigate([`wash-orders/${selectedClient.id}/client`]);
+        }
+      },
     ]
   };
 
@@ -226,6 +242,7 @@ export class ClientListComponent extends ProtectedComponent {
     private _confirmationService: ConfirmationService,
     private _messageService: MessageService,
     private _dialogService: DialogService,
+    private _clientDataService: ClientDataService,
     private _router: Router) {
     super(abilityService, authService);
   }
