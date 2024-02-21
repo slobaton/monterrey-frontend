@@ -19,6 +19,10 @@ export class AddDiscountComponent {
 
   clientId: string | null = null;
 
+  currencyRateValue: number = 0;
+
+  amountCurrency: number = 0;
+
   constructor(private _clientService: ClientService,
     private _messageService: MessageService,
     private _ref: DynamicDialogRef,
@@ -30,6 +34,7 @@ export class AddDiscountComponent {
 
   ngOnInit(): void {
     this.clientId = this._config.data?.clientId;
+    this.currencyRateValue = this._config.data?.currencyRate?.value;
     this.initializeForm();
   }
 
@@ -39,6 +44,8 @@ export class AddDiscountComponent {
       date: new FormControl<Date>(this._dateService.getCurrentDate(), []),
       amount: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
     });
+
+    this.discountForm.get('amount')?.valueChanges.subscribe(() => this.onAmountChanged());
   }
 
   onSubmitForm(paymentFormValue: any): void {
@@ -69,5 +76,17 @@ export class AddDiscountComponent {
         }
       })
       .finally(() => this.formProcessEvent.emit(false));
+  }
+
+  onAmountChanged() {
+    const currentValue = this.discountForm.get('amount')?.value;
+    const convertedValue = currentValue * this.currencyRateValue;
+    this.amountCurrency = convertedValue;
+  }
+
+  onAmountCurrencyChanged(amount?: number) {
+    const currentValue = this.amountCurrency;
+    const convertedValue = currentValue / this.currencyRateValue;
+    this.discountForm.get('amount')?.setValue(convertedValue);
   }
 }

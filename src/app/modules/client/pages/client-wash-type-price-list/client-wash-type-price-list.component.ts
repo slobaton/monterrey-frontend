@@ -34,9 +34,9 @@ export class ClientWashTypePriceListComponent extends ProtectedComponent impleme
     columns: [
       { title: 'Id', propertyRef: 'id', sortable: true, visible: false },
       { title: 'Tipo Lavado', propertyRef: 'name', sortable: false },
-      { title: 'Precio Original (Bs.)', propertyRef: 'price' },
+      { title: 'Precio Original ($)', propertyRef: 'price' },
       {
-        title: 'Precio Cliente (Bs.)',
+        title: 'Precio Cliente ($)',
         propertyRef: 'wash_type_price.price',
         type: DataTableColumnType.CUSTOM,
         customValue: (row: WashTypePrice) => `${row.wash_type_price.price}`

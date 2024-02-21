@@ -175,9 +175,9 @@
                       <th style="width: 5rem"></th>
                       <th>Tipo</th>
                       <th>Tamaño</th>
-                      <th *ngIf="!hasReceptionistRole()">Precio c/u (Bs.)</th>
+                      <th *ngIf="!hasReceptionistRole()">Precio c/u ($)</th>
                       <th>Cantidad</th>
-                      <th *ngIf="!hasReceptionistRole()">Subtotal (Bs.)</th>
+                      <th *ngIf="!hasReceptionistRole()">Subtotal ($)</th>
                       <th>Acciones</th>
                     </tr>
                   </ng-template>
@@ -237,7 +237,7 @@
                             <ng-component *ngIf="!hasReceptionistRole()">
                               <p>
                                 <b>Precio Lavado:</b>
-                                {{ rowItem["wash_price"] }} Bs.
+                                {{ rowItem["wash_price"] }} $
                               </p>
 
                               <p>
@@ -246,7 +246,7 @@
                                   rowItem["buttonholes_price"] *
                                     rowItem["num_buttonholes"]
                                 }}
-                                Bs.
+                                $
                               </p>
 
                               <ng-container
@@ -254,20 +254,20 @@
                               >
                                 <p>
                                   <b>Precio Focalizado:</b>
-                                  {{ rowItem["focalizado_price"] }} Bs.
+                                  {{ rowItem["focalizado_price"] }} $
                                 </p>
                               </ng-container>
 
                               <ng-container *ngIf="rowItem['is_nevado_active']">
                                 <p>
                                   <b>Precio Nevado:</b>
-                                  {{ rowItem["nevado_price"] }} Bs.
+                                  {{ rowItem["nevado_price"] }} $
                                 </p>
                               </ng-container>
 
                               <p>
                                 <b>Precio Total Efectos:</b>
-                                {{ rowItem["effect_price"] }} Bs.
+                                {{ rowItem["effect_price"] }} $
                               </p>
                             </ng-component>
                           </div>

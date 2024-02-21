@@ -180,8 +180,9 @@ export class ClientListComponent extends ProtectedComponent {
         hiddenFn: (selectedRow) => this.hasReceptionistRole(),
         callback: async (action, selectedRows) => {
           const client = selectedRows[0];
+          const currencyRate = await this.clientService.getCurrencyRate(client.id);
 
-          this.ref = this._dialogService.open(AddPaymentComponent, { header: 'Registrar pago', data: { clientId: client.id } });
+          this.ref = this._dialogService.open(AddPaymentComponent, { header: 'Registrar pago', data: { clientId: client.id, currencyRate } });
           this.ref.onClose.subscribe(result => {
             if (result) {
 
@@ -203,8 +204,9 @@ export class ClientListComponent extends ProtectedComponent {
         hiddenFn: (selectedRow) => this.hasReceptionistRole(),
         callback: async (action, selectedRows) => {
           const client = selectedRows[0];
+          const currencyRate = await this.clientService.getCurrencyRate(client.id);
 
-          this.ref = this._dialogService.open(AddDiscountComponent, { header: 'Registrar descuento', data: { clientId: client.id } });
+          this.ref = this._dialogService.open(AddDiscountComponent, { header: 'Registrar descuento', data: { clientId: client.id, currencyRate } });
           this.ref.onClose.subscribe(result => {
             if (result) {
 

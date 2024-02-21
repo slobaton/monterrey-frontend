@@ -31,7 +31,7 @@ export class EffectListComponent extends ProtectedComponent {
     columns: [
       { title: 'Id', propertyRef: 'id', sortable: false, visible: false },
       { title: 'Nombre', propertyRef: 'name', sortable: true },
-      { title: 'Precio (Bs.)', propertyRef: 'price', sortable: true },
+      { title: 'Precio ($)', propertyRef: 'price', sortable: true },
       { title: 'Activo', propertyRef: 'is_active', type: DataTableColumnType.BOOLEAN },
       { title: 'Creado', propertyRef: 'created_at', sortable: true, type: DataTableColumnType.DATETIME },
       { title: 'Actualizado', propertyRef: 'updated_at', sortable: true, type: DataTableColumnType.DATETIME },
