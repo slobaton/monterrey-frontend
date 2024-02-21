@@ -85,7 +85,7 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
         selectionConfig: {
           isRequired: false
         },
-        hiddenFn: (selectedRows) => !this.ableTo('create', 'wash-order'),
+        hiddenFn: () => !this.ableTo('create', 'wash-order'),
         callback: () => {
           this._router.navigate([`/wash-orders/${this.clientId}/new`]);
         }
@@ -98,7 +98,7 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => !this.ableTo('update', 'wash-order'),
+        hiddenFn: () => !this.ableTo('update', 'wash-order'),
         callback: (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
           this._router.navigate([`/wash-orders/edit/${washOrderId}`]);
@@ -113,7 +113,7 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
-        hiddenFn: (selectedRows) => !this.ableTo('delete', 'wash-order'),
+        hiddenFn: () => !this.ableTo('delete', 'wash-order'),
         callback: (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
 
@@ -146,7 +146,7 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => !this.ableTo('read', 'wash-order'),
+        hiddenFn: () => !this.ableTo('read', 'wash-order'),
         callback: (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
 
@@ -167,14 +167,13 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
-        hiddenFn: (selectedRow) => {
+        hiddenFn: (selectedWashOrder) => {
           if (!this.ableTo('create', 'wash-order')) {
             return true;
           }
 
-          if (selectedRow) {
-            const washOrder = selectedRow;
-            return washOrder.status === OrderStatus.CREATED;
+          if (selectedWashOrder) {
+            return selectedWashOrder.status === OrderStatus.CREATED;
           }
 
           return false;
@@ -198,14 +197,13 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
-        hiddenFn: (selectedRow) => {
+        hiddenFn: (selectedWashOrder) => {
           if (this.authService.hasRole(Role.RECEPTIONIST)) {
             return true;
           }
 
-          if (selectedRow) {
-            const washOrder = selectedRow;
-            return washOrder.status !== OrderStatus.CREATED;
+          if (selectedWashOrder) {
+            return selectedWashOrder.status !== OrderStatus.CREATED;
           }
 
           return false;
@@ -256,7 +254,7 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
           this._clientDataService.setData(client);
           this.title = `Ordenes de lavado de: ${client.name || ''} ${client.paternal_surname || ''} ${client.maternal_surname || ''}`;
         })
-        .catch((err) => {
+        .catch(() => {
           this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
         })
     } else {
