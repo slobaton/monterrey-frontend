@@ -51,7 +51,7 @@ export class ClientListComponent extends ProtectedComponent {
         selectionConfig: {
           isRequired: false
         },
-        hiddenFn: (selectedRows) => !this.ableTo('create', 'client'),
+        hiddenFn: () => !this.ableTo('create', 'client'),
         callback: () => {
           this.ref = this._dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente' });
           this.ref.onClose.subscribe((result) => {
@@ -69,7 +69,7 @@ export class ClientListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => !this.ableTo('update', 'client'),
+        hiddenFn: () => !this.ableTo('update', 'client'),
         callback: (action, selectedRows) => {
           const client = selectedRows[0];
           this.ref = this._dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente', data: { client } });
@@ -89,7 +89,7 @@ export class ClientListComponent extends ProtectedComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
-        hiddenFn: (selectedRows) => !this.ableTo('delete', 'client'),
+        hiddenFn: () => !this.ableTo('delete', 'client'),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._confirmationService.confirm({
@@ -121,7 +121,7 @@ export class ClientListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => this.hasReceptionistRole(),
+        hiddenFn: () => this.hasReceptionistRole(),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/parameters`]);
@@ -135,7 +135,7 @@ export class ClientListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => this.hasReceptionistRole(),
+        hiddenFn: () => this.hasReceptionistRole(),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/wash-type-prices`]);
@@ -149,7 +149,7 @@ export class ClientListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => this.hasReceptionistRole(),
+        hiddenFn: () => this.hasReceptionistRole(),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/effect-prices`]);
@@ -163,7 +163,7 @@ export class ClientListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => this.hasReceptionistRole(),
+        hiddenFn: () => this.hasReceptionistRole(),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/movements`]);
@@ -178,7 +178,7 @@ export class ClientListComponent extends ProtectedComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
-        hiddenFn: (selectedRow) => this.hasReceptionistRole(),
+        hiddenFn: () => this.hasReceptionistRole(),
         callback: async (action, selectedRows) => {
           const client = selectedRows[0];
           const currencyRate = await this.clientService.getCurrencyRate(client.id);
@@ -202,7 +202,7 @@ export class ClientListComponent extends ProtectedComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
-        hiddenFn: (selectedRow) => this.hasReceptionistRole(),
+        hiddenFn: () => this.hasReceptionistRole(),
         callback: async (action, selectedRows) => {
           const client = selectedRows[0];
           const currencyRate = await this.clientService.getCurrencyRate(client.id);
@@ -225,7 +225,7 @@ export class ClientListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => this.hasReceptionistRole(),
+        hiddenFn: () => this.hasReceptionistRole(),
         callback: (action, selectedRows) => {
           const selectedClient = selectedRows[0];
           this._clientDataService.setData(selectedClient);
