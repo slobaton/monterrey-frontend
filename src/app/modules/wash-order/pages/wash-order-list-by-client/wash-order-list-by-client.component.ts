@@ -34,8 +34,6 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
   ref: DynamicDialogRef | undefined;
   title: string = '';
   clientId: string = '';
-  // nit: string = '';
-  // fullName: string = '';
 
   public tableConfig: DataTableConfiguration = {
     columns: [
