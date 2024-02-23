@@ -28,10 +28,6 @@
         layoutService.state.profileSidebarVisible
     }"
   >
-    <button class="p-link layout-topbar-button">
-      <i class="pi pi-calendar"></i>
-      <span>Calendar</span>
-    </button>
     <button
       type="button"
       class="p-link layout-topbar-button"
@@ -41,9 +37,5 @@
       <span>Profile</span>
     </button>
     <p-menu #userMenu [model]="userMenuItems" [popup]="true"></p-menu>
-    <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
-      <i class="pi pi-cog"></i>
-      <span>Settings</span>
-    </button>
   </div>
 </div>
