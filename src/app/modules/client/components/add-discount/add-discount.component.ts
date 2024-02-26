@@ -48,7 +48,7 @@ export class AddDiscountComponent {
     this.discountForm.get('amount')?.valueChanges.subscribe(() => this.onAmountChanged());
   }
 
-  onSubmitForm(paymentFormValue: any): void {
+  onSubmitForm(discountFormValue: any): void {
     if (!this.clientId) {
       this._ref.close(false);
       return;
@@ -56,7 +56,11 @@ export class AddDiscountComponent {
 
     this.formProcessEvent.emit(true);
 
-    const discount: AddDiscountRequest = paymentFormValue;
+    const discount: AddDiscountRequest = {
+      ...discountFormValue,
+      date: this._dateService.formatDate(discountFormValue.date)
+    };
+
     const clientId = this.clientId;
 
     this._clientService.addDiscount(clientId, discount)

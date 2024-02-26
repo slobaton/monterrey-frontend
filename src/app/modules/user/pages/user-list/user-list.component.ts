@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { DataTableActionStatus, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
+import { DataTableActionStatus, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { UserService } from 'src/app/@core/services/rest/user.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
@@ -24,10 +24,12 @@ export class UserListComponent {
       { title: 'Correo', propertyRef: 'email', sortable: true },
       { title: 'Nombre', propertyRef: 'name', sortable: true },
       { title: 'Apellido Pat.', propertyRef: 'paternal_surname' },
-      { title: 'Apellido Mat.', propertyRef: 'maternal_surname' }
+      { title: 'Apellido Mat.', propertyRef: 'maternal_surname' },
+      { title: 'Creado', propertyRef: 'created_at', sortable: true, type: DataTableColumnType.DATETIME },
+      { title: 'Actualizado', propertyRef: 'updated_at', sortable: true, type: DataTableColumnType.DATETIME },
     ],
     identifierPropRef: 'id',
-    selectionType: DataTableSelectionType.MULTIPLE,
+    selectionType: DataTableSelectionType.SINGLE,
     actions: [
       {
         title: 'Nuevo',

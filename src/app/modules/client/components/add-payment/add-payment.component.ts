@@ -57,7 +57,10 @@ export class AddPaymentComponent implements OnInit {
 
     this.formProcessEvent.emit(true);
 
-    const payment: AddPaymentRequest = paymentFormValue;
+    const payment: AddPaymentRequest = {
+      ...paymentFormValue,
+      date: this._dateService.formatDate(paymentFormValue.date)
+    };
     const clientId = this.clientId;
 
     this._clientService.addPayment(clientId, payment)

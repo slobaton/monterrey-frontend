@@ -98,7 +98,9 @@
 <ng-template #noRootDashboard>
   <div class="grid">
     <div class="col-12">
-      <h4>Bienvenido al Sistema de Lavanderia "MONTERREY APP" v1.0</h4>
+      <h3>Bienvenido al Sistema de Lavanderia "MONTERREY APP" v1.0</h3>
+      <p>Usuario: {{ authUser?.username ?? "" }}</p>
+      <p>Nombre: {{ getUserFullName() }}</p>
     </div>
   </div>
 </ng-template>
