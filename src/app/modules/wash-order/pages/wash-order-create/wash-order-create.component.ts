@@ -1,6 +1,6 @@
 import { formatDate } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AfterViewInit, Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { MessageService } from 'primeng/api';
@@ -26,7 +26,7 @@ import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { AppAbility } from 'src/app/@core/auth/ability';
 import { DateService } from 'src/app/@core/services/common/date.service';
 import { PrintService } from 'src/app/@core/services/common/print.service';
-
+import { ClientDataService } from 'src/app/@core/services/common/client-data.service';
 
 @Component({
   selector: 'app-wash-order-create',
@@ -56,6 +56,8 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
 
   washOrderDetailsLoading: boolean = false;
   washOrderDetails: Array<WashOrderDetail> = [];
+
+  clientId: string = '';
 
   ref: DynamicDialogRef | undefined;
 
@@ -87,6 +89,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
     private _reportService: ReportService,
     private _messageService: MessageService,
     private _validationService: ValidationService,
+    private _clientDataService: ClientDataService,
     private _dialogService: DialogService,
     private _dateService: DateService,
     private _printService: PrintService) {
@@ -149,6 +152,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
       }
 
       this.initializeForm();
+      this.initializeClient();
     })
   }
 
@@ -157,7 +161,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
     const existingDate = this.washOrder ? this._dateService.getDateFromString(this.washOrder.date) : null;
 
     this.washOrderForm = new FormGroup({
-      client_id: new FormControl<string>(this.washOrder?.client_id ?? '', [Validators.required]),
+      client_id: new FormControl<string>(this.washOrder?.client_id || this.clientId || '', [Validators.required]),
       wash_type_id: new FormControl<number | null>(this.washOrder?.wash_type_id ?? null, [Validators.required]),
       date: new FormControl<Date>(existingDate ?? todayDate, [Validators.required]),
       is_special_price: new FormControl<boolean>(this.washOrder?.is_special_price ?? false, [Validators.required]),
@@ -285,7 +289,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
 
     this.ref = this._dialogService.open(AddWashOrderDetailComponent, dialogProps);
 
-    this.ref.onClose.subscribe((result) => {
+    this.ref.onClose.subscribe(() => {
       this.retrieveWashOrderDetails();
     });
   }
@@ -419,7 +423,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
     }).then((result) => {
       this.washOrderDetails = result.data
       this.updateWashOrderTotal();
-    }).catch(err => {
+    }).catch(() => {
       this._messageService.add({
         severity: 'error',
         summary: 'Error inesperado',
@@ -440,5 +444,29 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
 
     this.totalPrice = totalPrice;
     this.totalQuantity = totalQuantity;
+  }
+
+  initializeClient() {
+    const selectedClient = this._clientDataService.getData();
+
+    this._route.params.subscribe(params => {
+      this.clientId = params['clientId'];
+    });
+
+    if (!selectedClient) {
+      this.clientService.getById(this.clientId)
+        .then((client) => {
+          this._clientDataService.setData(client);
+        })
+        .catch(() => {
+          this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
+        })
+    }
+
+    if (this.clientId) {
+      setTimeout(() => {
+        this.onClientCreated.emit(this._clientDataService.getData());
+      }, 500);
+    }
   }
 }

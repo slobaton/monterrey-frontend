@@ -14,6 +14,7 @@ import { UpsertClientFormComponent } from '../../components/upsert-client-form/u
 import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { AddPaymentComponent } from '../../components/add-payment/add-payment.component';
 import { AddDiscountComponent } from '../../components/add-discount/add-discount.component';
+import { ClientDataService } from '../../../../@core/services/common/client-data.service';
 
 @Component({
   selector: 'app-client-list',
@@ -50,7 +51,7 @@ export class ClientListComponent extends ProtectedComponent {
         selectionConfig: {
           isRequired: false
         },
-        hiddenFn: (selectedRows) => !this.ableTo('create', 'client'),
+        hiddenFn: () => !this.ableTo('create', 'client'),
         callback: () => {
           this.ref = this._dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente' });
           this.ref.onClose.subscribe((result) => {
@@ -68,7 +69,7 @@ export class ClientListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => !this.ableTo('update', 'client'),
+        hiddenFn: () => !this.ableTo('update', 'client'),
         callback: (action, selectedRows) => {
           const client = selectedRows[0];
           this.ref = this._dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente', data: { client } });
@@ -88,7 +89,7 @@ export class ClientListComponent extends ProtectedComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
-        hiddenFn: (selectedRows) => !this.ableTo('delete', 'client'),
+        hiddenFn: () => !this.ableTo('delete', 'client'),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._confirmationService.confirm({
@@ -120,7 +121,7 @@ export class ClientListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => this.hasReceptionistRole(),
+        hiddenFn: () => this.hasReceptionistRole(),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/parameters`]);
@@ -134,7 +135,7 @@ export class ClientListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => this.hasReceptionistRole(),
+        hiddenFn: () => this.hasReceptionistRole(),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/wash-type-prices`]);
@@ -148,7 +149,7 @@ export class ClientListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => this.hasReceptionistRole(),
+        hiddenFn: () => this.hasReceptionistRole(),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/effect-prices`]);
@@ -162,7 +163,7 @@ export class ClientListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => this.hasReceptionistRole(),
+        hiddenFn: () => this.hasReceptionistRole(),
         callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
           this._router.navigate([`clients/${clientId}/movements`]);
@@ -177,7 +178,7 @@ export class ClientListComponent extends ProtectedComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
-        hiddenFn: (selectedRow) => this.hasReceptionistRole(),
+        hiddenFn: () => this.hasReceptionistRole(),
         callback: async (action, selectedRows) => {
           const client = selectedRows[0];
           const currencyRate = await this.clientService.getCurrencyRate(client.id);
@@ -201,7 +202,7 @@ export class ClientListComponent extends ProtectedComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
-        hiddenFn: (selectedRow) => this.hasReceptionistRole(),
+        hiddenFn: () => this.hasReceptionistRole(),
         callback: async (action, selectedRows) => {
           const client = selectedRows[0];
           const currencyRate = await this.clientService.getCurrencyRate(client.id);
@@ -215,7 +216,22 @@ export class ClientListComponent extends ProtectedComponent {
             action.loading = false;
           });
         }
-      }
+      },
+      {
+        title: 'Ordenes de lavado',
+        tooltip: 'Lista las ordenes de lavado del cliente',
+        icon: 'list',
+        status: DataTableActionStatus.INFO,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        hiddenFn: () => this.hasReceptionistRole(),
+        callback: (action, selectedRows) => {
+          const selectedClient = selectedRows[0];
+          this._clientDataService.setData(selectedClient);
+          this._router.navigate([`wash-orders/${selectedClient.id}/client`]);
+        }
+      },
     ]
   };
 
@@ -226,6 +242,7 @@ export class ClientListComponent extends ProtectedComponent {
     private _confirmationService: ConfirmationService,
     private _messageService: MessageService,
     private _dialogService: DialogService,
+    private _clientDataService: ClientDataService,
     private _router: Router) {
     super(abilityService, authService);
   }
