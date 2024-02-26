@@ -194,10 +194,6 @@ export class WashOrderListComponent extends ProtectedComponent {
         },
         hasLoadingEnabled: true,
         hiddenFn: (selectedRow) => {
-          if (this.authService.hasRole(Role.RECEPTIONIST)) {
-            return true;
-          }
-
           if (selectedRow) {
             const washOrder = selectedRow;
             return washOrder.status !== OrderStatus.CREATED;
