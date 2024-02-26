@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { WashOrder } from 'src/app/@core/models/wash-order';
@@ -18,9 +18,10 @@ import { AbilityService } from '@casl/angular';
 import { AppAbility } from 'src/app/@core/auth/ability';
 import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { Role } from 'src/app/@core/enums/role.enum';
-import {WashOrderByClientService} from "../../../../@core/services/rest/wash-order-by-client.service";
-import {ClientDataService} from "../../../../@core/services/common/client-data.service";
-import {ClientService} from "../../../../@core/services/rest/client.service";
+import { WashOrderByClientService } from "../../../../@core/services/rest/wash-order-by-client.service";
+import { ClientDataService } from "../../../../@core/services/common/client-data.service";
+import { ClientService } from "../../../../@core/services/rest/client.service";
+import { PrintService } from 'src/app/@core/services/common/print.service';
 
 @Component({
   selector: 'app-wash-order-list',
@@ -181,9 +182,7 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
 
           const reportUrl = await this._reportService.getWashOrderPrintReportUrl(washOrderId);
 
-          action.loading = false;
-
-          window.open(reportUrl);
+          this._printService.printPdf(reportUrl, () => action.loading = false);
         }
       },
       {
@@ -235,7 +234,8 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
     private _clientDataService: ClientDataService,
     public _clientService: ClientService,
     private _route: ActivatedRoute,
-    private _router: Router) {
+    private _router: Router,
+    private _printService: PrintService) {
     super(abilityService, authService);
   }
 
