@@ -14,6 +14,7 @@ export class WashOrder {
     public date: string,
     public total_quantity: number,
     public total_price: number,
+    public print_count: number,
     public status: OrderStatus,
     public deliver_date: string,
     public deliver_quantity: number,
