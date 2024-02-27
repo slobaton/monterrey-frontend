@@ -68,6 +68,11 @@ export class WashOrderListComponent extends ProtectedComponent {
         customValue: (status) => WashOrder.getStatusFriendlyName(status),
         type: DataTableColumnType.BADGE
       },
+      {
+        title: '# Impresiones',
+        propertyRef: 'print_count',
+        sortable: false
+      },
       { title: 'Creado', propertyRef: 'created_at', sortable: true, type: DataTableColumnType.DATETIME },
       { title: 'Actualizado', propertyRef: 'updated_at', sortable: true, type: DataTableColumnType.DATETIME },
     ],
@@ -165,23 +170,34 @@ export class WashOrderListComponent extends ProtectedComponent {
         },
         hasLoadingEnabled: true,
         hiddenFn: (selectedRow) => {
-          if (!this.ableTo('create', 'wash-order')) {
-            return true;
-          }
-
           if (selectedRow) {
             const washOrder = selectedRow;
-            return washOrder.status === OrderStatus.CREATED;
+
+            if (washOrder.status === OrderStatus.APPROVED && this.authService.hasRole(Role.ADMIN)) {
+              return false;
+            }
+
+            if (!this.ableTo('create', 'wash-order')) {
+              return true;
+            }
+            return !(washOrder.status === OrderStatus.APPROVED && washOrder.print_count < 1);
           }
 
           return false;
         },
         callback: async (action, selectedRows) => {
-          const washOrderId = selectedRows[0].id;
+          const washOrder = selectedRows[0];
 
-          const reportUrl = await this._reportService.getWashOrderPrintReportUrl(washOrderId);
+          const reportUrl = await this._reportService.getWashOrderPrintReportUrl(washOrder.id);
 
           this._printService.printPdf(reportUrl, () => action.loading = false);
+          this.washOrderService.getById(washOrder.id)
+            .then((updatedWashOrder) => {
+              washOrder.print_count = updatedWashOrder.print_count;
+            })
+            .catch((err) => {
+              console.error(err);
+            })
         }
       },
       {
