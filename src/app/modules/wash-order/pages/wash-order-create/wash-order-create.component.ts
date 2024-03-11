@@ -334,8 +334,21 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
     if (this.washOrderId) {
       const washOrderId = this.washOrderId;
       this.reportLoading = true;
+
       const reportUrl = await this._reportService.getWashOrderPrintReportUrl(washOrderId);
-      this._printService.printPdf(reportUrl, () => this.reportLoading = false);
+
+      this._printService.printPdf(reportUrl, () => {
+        this._washOrderService.getById(washOrderId)
+          .then((updatedWashOrder) => {
+            if (this.washOrder) {
+              this.washOrder.print_count = updatedWashOrder.print_count;
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+          })
+          .finally(() => this.reportLoading = false);
+      });
     }
   }
 
@@ -386,10 +399,24 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
     return status === OrderStatus.CREATED;
   }
 
-  isApproved(): boolean {
-    const status = this.washOrder?.status ?? 'unknown';
+  isReadyToPrint(): boolean {
+    const washOrder = this.washOrder;
 
-    return status !== OrderStatus.CREATED && status !== 'unknown';
+    if (!washOrder) {
+      return false;
+    }
+
+    const status = washOrder.status ?? 'unknown';
+
+    if (status === 'unknown') {
+      return false;
+    }
+
+    if (this.hasReceptionistRole() && washOrder.print_count > 0) {
+      return false;
+    }
+
+    return status !== OrderStatus.CREATED;
   }
 
   showClientSelectedLabel(selectedClient: any) {

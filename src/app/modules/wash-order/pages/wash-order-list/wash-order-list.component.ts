@@ -71,7 +71,8 @@ export class WashOrderListComponent extends ProtectedComponent {
       {
         title: '# Impresiones',
         propertyRef: 'print_count',
-        sortable: false
+        sortable: false,
+        visible: this.hasAdminRole()
       },
       { title: 'Creado', propertyRef: 'created_at', sortable: true, type: DataTableColumnType.DATETIME },
       { title: 'Actualizado', propertyRef: 'updated_at', sortable: true, type: DataTableColumnType.DATETIME },
@@ -170,34 +171,40 @@ export class WashOrderListComponent extends ProtectedComponent {
         },
         hasLoadingEnabled: true,
         hiddenFn: (selectedRow) => {
-          if (selectedRow) {
-            const washOrder = selectedRow;
+          if (!selectedRow) {
+            return false;
+          }
 
-            if (washOrder.status === OrderStatus.APPROVED && this.authService.hasRole(Role.ADMIN)) {
-              return false;
-            }
+          const washOrder = selectedRow;
 
-            if (!this.ableTo('create', 'wash-order')) {
-              return true;
-            }
-            return !(washOrder.status === OrderStatus.APPROVED && washOrder.print_count < 1);
+          if (!this.ableTo('create', 'wash-order')) {
+            return true;
+          }
+
+          if (washOrder.status !== OrderStatus.APPROVED) {
+            return true;
+          }
+
+          if (this.hasReceptionistRole() && washOrder.print_count > 0) {
+            return true;
           }
 
           return false;
         },
         callback: async (action, selectedRows) => {
           const washOrder = selectedRows[0];
-
           const reportUrl = await this._reportService.getWashOrderPrintReportUrl(washOrder.id);
 
-          this._printService.printPdf(reportUrl, () => action.loading = false);
-          this.washOrderService.getById(washOrder.id)
-            .then((updatedWashOrder) => {
-              washOrder.print_count = updatedWashOrder.print_count;
-            })
-            .catch((err) => {
-              console.error(err);
-            })
+          this._printService.printPdf(reportUrl, () => {
+            this.washOrderService.getById(washOrder.id)
+              .then((updatedWashOrder) => {
+                washOrder.print_count = updatedWashOrder.print_count;
+              })
+              .catch((err) => {
+                console.error(err);
+              })
+              .finally(() => action.loading = false);
+          });
         }
       },
       {

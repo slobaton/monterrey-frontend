@@ -70,6 +70,12 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
         customValue: (status) => WashOrder.getStatusFriendlyName(status),
         type: DataTableColumnType.BADGE
       },
+      {
+        title: '# Impresiones',
+        propertyRef: 'print_count',
+        sortable: false,
+        visible: this.hasAdminRole()
+      },
       { title: 'Creado', propertyRef: 'created_at', sortable: true, type: DataTableColumnType.DATETIME },
       { title: 'Actualizado', propertyRef: 'updated_at', sortable: true, type: DataTableColumnType.DATETIME },
     ],
@@ -167,22 +173,40 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
         },
         hasLoadingEnabled: true,
         hiddenFn: (selectedWashOrder) => {
+          if (!selectedWashOrder) {
+            return false;
+          }
+
+          const washOrder = selectedWashOrder;
+
           if (!this.ableTo('create', 'wash-order')) {
             return true;
           }
 
-          if (selectedWashOrder) {
-            return selectedWashOrder.status === OrderStatus.CREATED;
+          if (washOrder.status !== OrderStatus.APPROVED) {
+            return true;
+          }
+
+          if (this.hasReceptionistRole() && washOrder.print_count > 0) {
+            return true;
           }
 
           return false;
         },
         callback: async (action, selectedRows) => {
-          const washOrderId = selectedRows[0].id;
+          const washOrder = selectedRows[0];
+          const reportUrl = await this._reportService.getWashOrderPrintReportUrl(washOrder.id);
 
-          const reportUrl = await this._reportService.getWashOrderPrintReportUrl(washOrderId);
-
-          this._printService.printPdf(reportUrl, () => action.loading = false);
+          this._printService.printPdf(reportUrl, () => {
+            this.washOrderService.getById(washOrder.id)
+              .then((updatedWashOrder) => {
+                washOrder.print_count = updatedWashOrder.print_count;
+              })
+              .catch((err) => {
+                console.error(err);
+              })
+              .finally(() => action.loading = false);
+          });
         }
       },
       {
