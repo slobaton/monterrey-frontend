@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { WashOrder } from 'src/app/@core/models/wash-order';
@@ -18,9 +18,10 @@ import { AbilityService } from '@casl/angular';
 import { AppAbility } from 'src/app/@core/auth/ability';
 import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { Role } from 'src/app/@core/enums/role.enum';
-import {WashOrderByClientService} from "../../../../@core/services/rest/wash-order-by-client.service";
-import {ClientDataService} from "../../../../@core/services/common/client-data.service";
-import {ClientService} from "../../../../@core/services/rest/client.service";
+import { WashOrderByClientService } from "../../../../@core/services/rest/wash-order-by-client.service";
+import { ClientDataService } from "../../../../@core/services/common/client-data.service";
+import { ClientService } from "../../../../@core/services/rest/client.service";
+import { PrintService } from 'src/app/@core/services/common/print.service';
 
 @Component({
   selector: 'app-wash-order-list',
@@ -68,6 +69,12 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
         sortable: false,
         customValue: (status) => WashOrder.getStatusFriendlyName(status),
         type: DataTableColumnType.BADGE
+      },
+      {
+        title: '# Impresiones',
+        propertyRef: 'print_count',
+        sortable: false,
+        visible: this.hasAdminRole()
       },
       { title: 'Creado', propertyRef: 'created_at', sortable: true, type: DataTableColumnType.DATETIME },
       { title: 'Actualizado', propertyRef: 'updated_at', sortable: true, type: DataTableColumnType.DATETIME },
@@ -166,24 +173,40 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
         },
         hasLoadingEnabled: true,
         hiddenFn: (selectedWashOrder) => {
+          if (!selectedWashOrder) {
+            return false;
+          }
+
+          const washOrder = selectedWashOrder;
+
           if (!this.ableTo('create', 'wash-order')) {
             return true;
           }
 
-          if (selectedWashOrder) {
-            return selectedWashOrder.status === OrderStatus.CREATED;
+          if (washOrder.status !== OrderStatus.APPROVED) {
+            return true;
+          }
+
+          if (this.hasReceptionistRole() && washOrder.print_count > 0) {
+            return true;
           }
 
           return false;
         },
         callback: async (action, selectedRows) => {
-          const washOrderId = selectedRows[0].id;
+          const washOrder = selectedRows[0];
+          const reportUrl = await this._reportService.getWashOrderPrintReportUrl(washOrder.id);
 
-          const reportUrl = await this._reportService.getWashOrderPrintReportUrl(washOrderId);
-
-          action.loading = false;
-
-          window.open(reportUrl);
+          this._printService.printPdf(reportUrl, () => {
+            this.washOrderService.getById(washOrder.id)
+              .then((updatedWashOrder) => {
+                washOrder.print_count = updatedWashOrder.print_count;
+              })
+              .catch((err) => {
+                console.error(err);
+              })
+              .finally(() => action.loading = false);
+          });
         }
       },
       {
@@ -235,7 +258,8 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
     private _clientDataService: ClientDataService,
     public _clientService: ClientService,
     private _route: ActivatedRoute,
-    private _router: Router) {
+    private _router: Router,
+    private _printService: PrintService) {
     super(abilityService, authService);
   }
 

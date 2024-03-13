@@ -225,7 +225,6 @@ export class ClientListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: () => this.hasReceptionistRole(),
         callback: (action, selectedRows) => {
           const selectedClient = selectedRows[0];
           this._clientDataService.setData(selectedClient);
