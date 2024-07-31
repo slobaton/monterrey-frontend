@@ -23,6 +23,19 @@
         placeholder="Ingrese el concepto por descuento..."
       />
     </div>
+    <div class="col-12">
+      <app-form-label
+        id="receipt_number"
+        text="Num. Recibo"
+        [required]="true"
+      />
+      <app-form-input-number
+        [form]="discountForm"
+        id="receipt_number"
+        controlName="receipt_number"
+        placeholder="Ingrese el número de recibo..."
+      />
+    </div>
     <div class="col-6">
       <app-form-label id="amount" text="Monto ($)" [required]="true" />
       <app-form-input-number

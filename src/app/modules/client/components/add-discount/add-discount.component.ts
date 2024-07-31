@@ -40,6 +40,7 @@ export class AddDiscountComponent {
 
   initializeForm(): void {
     this.discountForm = new FormGroup({
+      receipt_number: new FormControl<number>(0, [Validators.required]),
       concept: new FormControl<string>('', [Validators.required]),
       date: new FormControl<Date>(this._dateService.getCurrentDate(), []),
       amount: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
