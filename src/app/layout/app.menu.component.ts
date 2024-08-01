@@ -18,7 +18,7 @@ export class AppMenuComponent implements OnInit {
       {
         label: 'Configuracion',
         items: [
-          { label: 'Parametros', icon: 'pi pi-fw pi-box', routerLink: ['/parameters'] }
+          { label: 'Parametros', icon: 'pi pi-fw pi-box', routerLink: ['/parameters'] },
         ],
         roles: [Role.ADMIN]
       },
@@ -41,6 +41,14 @@ export class AppMenuComponent implements OnInit {
           { label: 'Nueva Orden', icon: 'pi pi-fw pi-calculator', routerLink: ['/wash-orders/new'] },
         ],
         roles: [Role.ADMIN, Role.SECRETARY, Role.RECEPTIONIST]
+      },
+      {
+        label: 'Ingresos',
+        items: [
+          { label: 'Reporte Mensual', icon: 'pi pi-fw pi-calendar', routerLink: ['/incomes/list'] },
+          { label: 'Recibos', icon: 'pi pi-fw pi-copy', routerLink: ['/incomes/receipts'] },
+        ],
+        roles: [Role.ADMIN, Role.SECRETARY]
       }
     ];
   }
