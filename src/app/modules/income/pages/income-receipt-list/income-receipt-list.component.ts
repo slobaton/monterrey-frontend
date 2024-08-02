@@ -1,10 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+
 import { IncomeReceipt } from 'src/app/@core/models/income-receipt';
 import { IncomeReceiptService } from 'src/app/@core/services/rest/income-receipt.service';
 import { DataTableActionStatus, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
+import { CancelIncomeReceiptComponent } from '../../components/cancel-income-receipt/cancel-income-receipt.component';
 
 @Component({
   selector: 'app-income-receipt-list',
@@ -36,14 +37,12 @@ export class IncomeReceiptListComponent {
           isRequired: false
         },
         callback: () => {
-
-          console.log('anular');
-          // this.ref = this.dialogService.open(UpsertClothTypeComponent, { header: 'Crear nuevo Tipo Ropa' });
-          // this.ref.onClose.subscribe((result) => {
-          //   if (result) {
-          //     this.table.reset();
-          //   }
-          // });
+          this.ref = this.dialogService.open(CancelIncomeReceiptComponent, { header: 'Crear nuevo Tipo Ropa', width: '50%' });
+          this.ref.onClose.subscribe((result) => {
+            if (result) {
+              this.table.reset();
+            }
+          });
         }
       }
     ]
@@ -51,8 +50,6 @@ export class IncomeReceiptListComponent {
 
   constructor(
     public incomeReceiptService: IncomeReceiptService,
-    private confirmationService: ConfirmationService,
-    private messageService: MessageService,
     private dialogService: DialogService
   ) { }
 }
