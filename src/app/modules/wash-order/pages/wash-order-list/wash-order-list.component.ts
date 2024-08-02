@@ -19,8 +19,6 @@ import { AbilityService } from '@casl/angular';
 import { AppAbility } from 'src/app/@core/auth/ability';
 import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { Role } from 'src/app/@core/enums/role.enum';
-import { AddPaymentComponent } from '../../../client/components/add-payment/add-payment.component';
-import { AddDiscountComponent } from '../../../client/components/add-discount/add-discount.component';
 import { PrintService } from 'src/app/@core/services/common/print.service';
 
 @Component({
