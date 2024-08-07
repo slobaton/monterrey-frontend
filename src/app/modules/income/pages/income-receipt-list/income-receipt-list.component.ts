@@ -37,7 +37,7 @@ export class IncomeReceiptListComponent {
           isRequired: false
         },
         callback: () => {
-          this.ref = this.dialogService.open(CancelIncomeReceiptComponent, { header: 'Crear nuevo Tipo Ropa', width: '50%' });
+          this.ref = this.dialogService.open(CancelIncomeReceiptComponent, { header: 'Anular Recibo de Ingreso', width: '50%' });
           this.ref.onClose.subscribe((result) => {
             if (result) {
               this.table.reset();
