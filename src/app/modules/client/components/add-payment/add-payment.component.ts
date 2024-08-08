@@ -93,4 +93,10 @@ export class AddPaymentComponent implements OnInit {
     const convertedValue = currentValue / this.currencyRateValue;
     this.paymentForm.get('amount')?.setValue(convertedValue);
   }
+
+  onReceiptCanceled(event: any) {
+    if (event) {
+      this.paymentForm.get('receipt_number')?.reset();
+    }
+  }
 }

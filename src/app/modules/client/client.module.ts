@@ -28,6 +28,10 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { TooltipModule } from 'primeng/tooltip';
 import { AddPaymentComponent } from './components/add-payment/add-payment.component';
 import { AddDiscountComponent } from './components/add-discount/add-discount.component';
+import { IncomeModule } from '../income/income.module';
+import { ToolbarModule } from 'primeng/toolbar';
+import { PaymentInfoComponent } from './components/payment-info/payment-info.component';
+import { TagModule } from 'primeng/tag';
 
 
 @NgModule({
@@ -47,7 +51,10 @@ import { AddDiscountComponent } from './components/add-discount/add-discount.com
     WashOrderModule,
     TableModule,
     CheckboxModule,
-    TooltipModule
+    TooltipModule,
+    ToolbarModule,
+    TagModule,
+    IncomeModule,
   ],
   declarations: [
     ClientListComponent,
@@ -61,7 +68,8 @@ import { AddDiscountComponent } from './components/add-discount/add-discount.com
     ClientMovementListComponent,
     MovementListTableComponent,
     AddPaymentComponent,
-    AddDiscountComponent
+    AddDiscountComponent,
+    PaymentInfoComponent
   ]
 })
 export class ClientModule { }

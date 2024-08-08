@@ -94,4 +94,10 @@ export class AddDiscountComponent {
     const convertedValue = currentValue / this.currencyRateValue;
     this.discountForm.get('amount')?.setValue(convertedValue);
   }
+
+  onReceiptCanceled(event: any) {
+    if (event) {
+      this.discountForm.get('receipt_number')?.reset();
+    }
+  }
 }

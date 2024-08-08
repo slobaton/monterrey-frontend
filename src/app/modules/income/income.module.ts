@@ -18,6 +18,9 @@ import { CancelIncomeReceiptComponent } from './components/cancel-income-receipt
     CommonModule,
     IncomeRoutingModule,
     SharedModule
+  ],
+  exports: [
+    CancelIncomeReceiptComponent
   ]
 })
 export class IncomeModule { }

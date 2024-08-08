@@ -5,6 +5,12 @@
 >
   <div class="form-container p-fluid p-formgrid grid">
     <div class="col-12">
+      <app-payment-info
+        [currencyRateValue]="currencyRateValue"
+        (incomeReceiptCanceled)="onReceiptCanceled($event)"
+      />
+    </div>
+    <div class="col-12">
       <app-form-label id="date" text="Fecha" [required]="false" />
       <app-form-datetime-picker
         [form]="discountForm"
