@@ -6,6 +6,10 @@ import { IncomeReceiptListComponent } from './pages/income-receipt-list/income-r
 import { IncomeListComponent } from './pages/income-list/income-list.component';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { CancelIncomeReceiptComponent } from './components/cancel-income-receipt/cancel-income-receipt.component';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
 
 
 @NgModule({
@@ -17,7 +21,11 @@ import { CancelIncomeReceiptComponent } from './components/cancel-income-receipt
   imports: [
     CommonModule,
     IncomeRoutingModule,
-    SharedModule
+    SharedModule,
+    FormsModule,
+    InputNumberModule,
+    DropdownModule,
+    ButtonModule
   ],
   exports: [
     CancelIncomeReceiptComponent

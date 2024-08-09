@@ -1,1 +1,70 @@
-<p>income-list works!</p>
+<div class="grid">
+  <div class="col-12">
+    <app-page-card [title]="getTitle()">
+      <div class="action_container flex flex-row justify-content-between mb-3">
+        <div class="actions flex flex-row justify-content-between gap-2">
+          <div class="month_input">
+            <app-form-label id="selectedMonth" text="Mes:" />
+            <p-dropdown
+              id="selectedMonth"
+              [options]="availableMonths"
+              optionLabel="name"
+              optionValue="value"
+              [(ngModel)]="selectedMonth"
+              view="month"
+            ></p-dropdown>
+          </div>
+          <div class="year_input">
+            <app-form-label id="selectedYear" text="Año:" />
+            <p-dropdown
+              id="selectedYear"
+              [options]="availableYears"
+              optionLabel="name"
+              optionValue="value"
+              [(ngModel)]="selectedYear"
+              view="month"
+            ></p-dropdown>
+          </div>
+          <p-button
+            icon="pi pi-refresh"
+            label="Generar"
+            (onClick)="retrieveMonthlyIncomes()"
+            [loading]="isProcessing"
+          ></p-button>
+          <p-button
+            icon="pi pi-print"
+            label="Imprimir"
+            (onClick)="printMonthlyIncomes()"
+            [loading]="isProcessingReport"
+          ></p-button>
+        </div>
+
+        <div
+          class="total_income_info flex flex-row justify-content-between gap-2"
+        >
+          <div class="total_income">
+            <app-form-label id="total_income" text="Total:" />
+            <p-inputNumber
+              id="total_income"
+              [(ngModel)]="total_income"
+              [readonly]="true"
+            ></p-inputNumber>
+          </div>
+          <div class="total_real_income">
+            <app-form-label id="total_real_income" text="Total S/Perdida:" />
+            <p-inputNumber
+              id="total_real_income"
+              [(ngModel)]="total_real_income"
+              [readonly]="true"
+            ></p-inputNumber>
+          </div>
+        </div>
+      </div>
+      <app-simple-table
+        [tableConfig]="tableConfig"
+        [data]="incomes"
+        [loading]="isProcessing"
+      />
+    </app-page-card>
+  </div>
+</div>
