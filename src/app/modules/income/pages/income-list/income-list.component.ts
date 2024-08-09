@@ -76,13 +76,6 @@ export class IncomeListComponent implements OnInit {
     this.retrieveMonthlyIncomes();
   }
 
-  getTitle(): string {
-    const monthLabel = this.availableMonths[this.selectedMonth - 1].name.valueOf();
-    const yearLabel = this.selectedYear.toString().valueOf();
-
-    return `Ingresos Mensuales: Mes ${monthLabel} de ${yearLabel}`;
-  }
-
   async retrieveMonthlyIncomes() {
     this.incomes = [];
     this.total_income = 0;
@@ -97,7 +90,9 @@ export class IncomeListComponent implements OnInit {
     this.total_income = monthlyIncome.total_income;
     this.total_real_income = monthlyIncome.total_real_income;
 
-    this.title = this.getTitle();
+    const monthLabel = this.availableMonths[this.selectedMonth - 1].name;
+    const yearLabel = this.selectedYear.toString();
+    this.title = `Ingresos Mensuales: Mes ${monthLabel} de ${yearLabel}`;
   }
 
   async printMonthlyIncomes() {
