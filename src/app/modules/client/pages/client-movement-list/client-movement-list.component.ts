@@ -48,6 +48,23 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
         type: SimpleTableColumnType.DATE
       },
       {
+        title: 'Tipo',
+        propertyRef: 'type',
+        type: SimpleTableColumnType.BADGE,
+        customValue: (type) => {
+          switch (type) {
+            case AccountMovementType.CHARGE:
+              return 'Deuda'
+            case AccountMovementType.PAYMENT:
+              return 'Pago'
+            case AccountMovementType.DISCOUNT:
+              return 'Descuento'
+            default:
+              return 'Desconocido'
+          }
+        }
+      },
+      {
         title: 'N.R.',
         propertyRef: 'receipt_number',
         type: SimpleTableColumnType.TEXT
@@ -92,25 +109,8 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
         propertyRef: 'balance_debt',
         type: SimpleTableColumnType.TEXT
       },
-      {
-        title: 'Tipo',
-        propertyRef: 'type',
-        type: SimpleTableColumnType.BADGE,
-        customValue: (type) => {
-          switch (type) {
-            case AccountMovementType.CHARGE:
-              return 'Deuda'
-            case AccountMovementType.PAYMENT:
-              return 'Pago'
-            case AccountMovementType.DISCOUNT:
-              return 'Descuento'
-            default:
-              return 'Desconocido'
-          }
-        }
-      }
     ],
-    identifierPropRef: 'id'
+    identifierPropRef: 'id',
   };
 
   constructor(
