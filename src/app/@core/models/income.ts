@@ -18,6 +18,7 @@ export class MonthlyIncome {
   constructor(
     public total_income: number,
     public total_real_income: number,
+    public lost_income: number,
     public incomes: Array<Income>
   ) { }
 }

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Income } from 'src/app/@core/models/income';
 import { ConstantsService } from 'src/app/@core/services/common/constants.service';
+import { PrintService } from 'src/app/@core/services/common/print.service';
 import { IncomeService } from 'src/app/@core/services/rest/income.service';
+import { ReportService } from 'src/app/@core/services/rest/report.service';
 import { SelectionOption } from 'src/app/@core/types/selection';
 import { SimpleTableColumnType, SimpleTableConfiguration } from 'src/app/@core/types/simple-table-definition';
 
@@ -57,6 +59,7 @@ export class IncomeListComponent implements OnInit {
   incomes: Array<Income> = [];
   total_income: number = 0;
   total_real_income: number = 0;
+  lost_income: number = 0;
 
   isProcessing: boolean = false;
   isProcessingReport: boolean = false;
@@ -65,7 +68,9 @@ export class IncomeListComponent implements OnInit {
 
   constructor(
     private _incomeService: IncomeService,
-    private _constantsService: ConstantsService
+    private _constantsService: ConstantsService,
+    private _reportService: ReportService,
+    private _printService: PrintService
   ) {
     this.selectedMonth = this._currentDate.getMonth() + 1;
     this.selectedYear = this._currentDate.getFullYear();
@@ -80,6 +85,7 @@ export class IncomeListComponent implements OnInit {
     this.incomes = [];
     this.total_income = 0;
     this.total_real_income = 0;
+    this.lost_income = 0;
 
     const month = this.selectedMonth;
     const year = this.selectedYear;
@@ -89,6 +95,7 @@ export class IncomeListComponent implements OnInit {
     this.incomes = monthlyIncome.incomes;
     this.total_income = monthlyIncome.total_income;
     this.total_real_income = monthlyIncome.total_real_income;
+    this.lost_income = monthlyIncome.lost_income;
 
     const monthLabel = this.availableMonths[this.selectedMonth - 1].name;
     const yearLabel = this.selectedYear.toString();
@@ -96,7 +103,10 @@ export class IncomeListComponent implements OnInit {
   }
 
   async printMonthlyIncomes() {
+    this.isProcessingReport = true;
+    const reportUrl = await this._reportService.getMonthlyIncomesPrintReportUrl(this.selectedMonth, this.selectedYear);
 
+    this._printService.printPdf(reportUrl, () => this.isProcessingReport = false);
   }
 
   private populateMonthsAndYears() {
