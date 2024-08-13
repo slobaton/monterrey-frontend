@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Income, MonthlyIncome } from '../../models/income';
-import { PaginatedRequest } from '../../models/request/paginated-request';
-import { PaginatedResponse } from '../../models/response/paginated-response';
+import { IncomeReport } from '../../models/income';
 import { IIncomeService } from '../interfaces/income-service';
 import { AddIncomeRequest } from '../../models/request/add-income-request';
 import { BaseService } from './base.service';
@@ -17,9 +15,19 @@ export class IncomeService extends BaseService implements IIncomeService {
     super(_http);
   }
 
-  async getMonthlyIncomes(month: number, year: number): Promise<MonthlyIncome> {
+  async getMonthlyIncomes(month: number, year: number): Promise<IncomeReport> {
     try {
-      const response = await firstValueFrom(this.get<MonthlyIncome>(`incomes?month=${month}&year=${year}`));
+      const response = await firstValueFrom(this.get<IncomeReport>(`incomes?month=${month}&year=${year}`));
+
+      return response;
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  async getYearlyIncomes(year: number): Promise<IncomeReport> {
+    try {
+      const response = await firstValueFrom(this.get<IncomeReport>(`incomes?year=${year}`));
 
       return response;
     } catch (error) {

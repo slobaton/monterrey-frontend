@@ -10,13 +10,16 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { TabViewModule } from 'primeng/tabview';
+import { AddIncomeComponent } from './components/add-income/add-income.component';
 
 
 @NgModule({
   declarations: [
     IncomeReceiptListComponent,
     IncomeListComponent,
-    CancelIncomeReceiptComponent
+    CancelIncomeReceiptComponent,
+    AddIncomeComponent
   ],
   imports: [
     CommonModule,
@@ -25,7 +28,8 @@ import { ButtonModule } from 'primeng/button';
     FormsModule,
     InputNumberModule,
     DropdownModule,
-    ButtonModule
+    ButtonModule,
+    TabViewModule,
   ],
   exports: [
     CancelIncomeReceiptComponent

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Income } from 'src/app/@core/models/income';
 import { ConstantsService } from 'src/app/@core/services/common/constants.service';
 import { PrintService } from 'src/app/@core/services/common/print.service';
@@ -6,6 +7,7 @@ import { IncomeService } from 'src/app/@core/services/rest/income.service';
 import { ReportService } from 'src/app/@core/services/rest/report.service';
 import { SelectionOption } from 'src/app/@core/types/selection';
 import { SimpleTableColumnType, SimpleTableConfiguration } from 'src/app/@core/types/simple-table-definition';
+import { AddIncomeComponent } from '../../components/add-income/add-income.component';
 
 @Component({
   selector: 'app-income-list',
@@ -14,7 +16,7 @@ import { SimpleTableColumnType, SimpleTableConfiguration } from 'src/app/@core/t
 })
 export class IncomeListComponent implements OnInit {
 
-  title: string = 'Ingresos Mensuales';
+  title: string = 'Ingresos';
 
   tableConfig: SimpleTableConfiguration = {
     identifierPropRef: 'id',
@@ -64,13 +66,22 @@ export class IncomeListComponent implements OnInit {
   isProcessing: boolean = false;
   isProcessingReport: boolean = false;
 
+  activeReportIndex: number = 0;
+
+  ref: DynamicDialogRef | undefined;
+
   private _currentDate: Date = new Date();
+  private _availableReportFuncs = [
+    this.retrieveMonthlyIncomes,
+    this.retrieveYearlyIncomes
+  ];
 
   constructor(
     private _incomeService: IncomeService,
     private _constantsService: ConstantsService,
     private _reportService: ReportService,
-    private _printService: PrintService
+    private _printService: PrintService,
+    private _dialogService: DialogService
   ) {
     this.selectedMonth = this._currentDate.getMonth() + 1;
     this.selectedYear = this._currentDate.getFullYear();
@@ -78,7 +89,7 @@ export class IncomeListComponent implements OnInit {
 
   ngOnInit(): void {
     this.populateMonthsAndYears();
-    this.retrieveMonthlyIncomes();
+    this._availableReportFuncs[this.activeReportIndex].call(this);
   }
 
   async retrieveMonthlyIncomes() {
@@ -107,6 +118,49 @@ export class IncomeListComponent implements OnInit {
     const reportUrl = await this._reportService.getMonthlyIncomesPrintReportUrl(this.selectedMonth, this.selectedYear);
 
     this._printService.printPdf(reportUrl, () => this.isProcessingReport = false);
+  }
+
+  async retrieveYearlyIncomes() {
+    this.incomes = [];
+    this.total_income = 0;
+    this.total_real_income = 0;
+    this.lost_income = 0;
+
+    const year = this.selectedYear;
+
+    const yearlyIncome = await this._incomeService.getYearlyIncomes(year);
+
+    this.incomes = yearlyIncome.incomes;
+    this.total_income = yearlyIncome.total_income;
+    this.total_real_income = yearlyIncome.total_real_income;
+    this.lost_income = yearlyIncome.lost_income;
+
+    const yearLabel = this.selectedYear.toString();
+    this.title = `Ingresos Anuales: ${yearLabel}`;
+  }
+
+  async printYearlyIncomes() {
+    this.isProcessingReport = true;
+    const reportUrl = await this._reportService.getYearlyIncomesPrintReportUrl(this.selectedYear);
+
+    this._printService.printPdf(reportUrl, () => this.isProcessingReport = false);
+  }
+
+  onChangeReportType(activeIndex: any) {
+    this._availableReportFuncs[activeIndex].call(this);
+  }
+
+  onChangeReporParams() {
+    this._availableReportFuncs[this.activeReportIndex].call(this);
+  }
+
+  openAddDiscountModal() {
+    this.ref = this._dialogService.open(AddIncomeComponent, { header: 'Registrar Nuevo Ingreso (Otros)', width: '50%' });
+    this.ref.onClose.subscribe((result) => {
+      if (result) {
+
+      }
+    });
   }
 
   private populateMonthsAndYears() {

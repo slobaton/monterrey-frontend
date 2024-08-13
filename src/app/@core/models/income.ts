@@ -14,7 +14,7 @@ export class Income {
   ) { }
 }
 
-export class MonthlyIncome {
+export class IncomeReport {
   constructor(
     public total_income: number,
     public total_real_income: number,

@@ -45,7 +45,7 @@ export class AppMenuComponent implements OnInit {
       {
         label: 'Ingresos',
         items: [
-          { label: 'Reporte Mensual', icon: 'pi pi-fw pi-calendar', routerLink: ['/incomes/list'] },
+          { label: 'Reportes', icon: 'pi pi-fw pi-calendar', routerLink: ['/incomes/list'] },
           { label: 'Recibos', icon: 'pi pi-fw pi-copy', routerLink: ['/incomes/receipts'] },
         ],
         roles: [Role.ADMIN, Role.SECRETARY]
