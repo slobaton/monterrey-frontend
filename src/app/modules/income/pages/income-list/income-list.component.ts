@@ -93,6 +93,8 @@ export class IncomeListComponent implements OnInit {
   }
 
   async retrieveMonthlyIncomes() {
+    this.isProcessing = true;
+
     this.incomes = [];
     this.total_income = 0;
     this.total_real_income = 0;
@@ -111,6 +113,8 @@ export class IncomeListComponent implements OnInit {
     const monthLabel = this.availableMonths[this.selectedMonth - 1].name;
     const yearLabel = this.selectedYear.toString();
     this.title = `Ingresos Mensuales: Mes ${monthLabel} de ${yearLabel}`;
+
+    this.isProcessing = false;
   }
 
   async printMonthlyIncomes() {
@@ -121,6 +125,8 @@ export class IncomeListComponent implements OnInit {
   }
 
   async retrieveYearlyIncomes() {
+    this.isProcessing = true;
+
     this.incomes = [];
     this.total_income = 0;
     this.total_real_income = 0;
@@ -137,6 +143,8 @@ export class IncomeListComponent implements OnInit {
 
     const yearLabel = this.selectedYear.toString();
     this.title = `Ingresos Anuales: ${yearLabel}`;
+
+    this.isProcessing = false;
   }
 
   async printYearlyIncomes() {
