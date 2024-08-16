@@ -1,6 +1,9 @@
-<div class="grid">
+<div *ngIf="ability$ | async as ab" class="grid">
   <div class="col-12">
-    <app-page-card title="Recibos de Ingreso">
+    <app-page-card
+      *ngIf="ab.can('read', 'income-receipt')"
+      title="Recibos de Ingreso"
+    >
       <app-data-table
         #incomeReceiptsTable
         [tableConfig]="tableConfig"

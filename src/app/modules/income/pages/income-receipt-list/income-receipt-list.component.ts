@@ -1,7 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
+import { AbilityService } from '@casl/angular';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { AppAbility } from 'src/app/@core/auth/ability';
+import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
 
 import { IncomeReceipt } from 'src/app/@core/models/income-receipt';
+import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { IncomeReceiptService } from 'src/app/@core/services/rest/income-receipt.service';
 import { DataTableActionStatus, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
@@ -12,7 +16,7 @@ import { CancelIncomeReceiptComponent } from 'src/app/shared/components/isolated
   templateUrl: './income-receipt-list.component.html',
   styleUrls: ['./income-receipt-list.component.scss']
 })
-export class IncomeReceiptListComponent {
+export class IncomeReceiptListComponent extends ProtectedComponent {
   @ViewChild('incomeReceiptsTable') table!: DataTableComponent<IncomeReceipt>;
 
   ref: DynamicDialogRef | undefined;
@@ -49,7 +53,11 @@ export class IncomeReceiptListComponent {
   };
 
   constructor(
+    abilityService: AbilityService<AppAbility>,
+    authService: AuthService,
     public incomeReceiptService: IncomeReceiptService,
     private dialogService: DialogService
-  ) { }
+  ) {
+    super(abilityService, authService);
+  }
 }

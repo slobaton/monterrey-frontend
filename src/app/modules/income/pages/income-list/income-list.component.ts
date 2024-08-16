@@ -9,13 +9,17 @@ import { SelectionOption } from 'src/app/@core/types/selection';
 import { SimpleTableColumnType, SimpleTableConfiguration } from 'src/app/@core/types/simple-table-definition';
 import { AddIncomeComponent } from '../../components/add-income/add-income.component';
 import { SystemParameterService } from 'src/app/@core/services/rest/system-parameter.service';
+import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
+import { AuthService } from 'src/app/@core/services/rest/auth.service';
+import { AbilityService } from '@casl/angular';
+import { AppAbility } from 'src/app/@core/auth/ability';
 
 @Component({
   selector: 'app-income-list',
   templateUrl: './income-list.component.html',
   styleUrls: ['./income-list.component.scss']
 })
-export class IncomeListComponent implements OnInit {
+export class IncomeListComponent extends ProtectedComponent implements OnInit {
 
   title: string = 'Ingresos';
 
@@ -80,6 +84,8 @@ export class IncomeListComponent implements OnInit {
   ];
 
   constructor(
+    abilityService: AbilityService<AppAbility>,
+    authService: AuthService,
     private _incomeService: IncomeService,
     private _constantsService: ConstantsService,
     private _reportService: ReportService,
@@ -87,6 +93,8 @@ export class IncomeListComponent implements OnInit {
     private _dialogService: DialogService,
     private _systemParameterService: SystemParameterService
   ) {
+    super(abilityService, authService);
+
     this.selectedMonth = this._currentDate.getMonth() + 1;
     this.selectedYear = this._currentDate.getFullYear();
   }

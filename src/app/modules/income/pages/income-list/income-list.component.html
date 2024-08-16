@@ -1,6 +1,6 @@
-<div class="grid">
+<div *ngIf="ability$ | async as ab" class="grid">
   <div class="col-12">
-    <app-page-card [title]="title">
+    <app-page-card *ngIf="ab.can('read', 'income')" [title]="title">
       <div
         class="action_container flex flex-row justify-content-center mb-1 w-full"
       >

@@ -2,7 +2,7 @@ import { Ability, AbilityBuilder, AbilityClass } from "@casl/ability";
 import { Role } from "../enums/role.enum";
 
 export type Actions = 'manage' | 'create' | 'read' | 'update' | 'delete';
-export type Subjects = 'client' | 'cloth-size' | 'cloth-type' | 'effect' | 'parameter' | 'user' | 'wash-order' | 'wash-type' | 'all';
+export type Subjects = 'client' | 'cloth-size' | 'cloth-type' | 'effect' | 'parameter' | 'user' | 'wash-order' | 'wash-type' | 'income' | 'income-receipt' | 'all';
 
 export type AppAbility = Ability<[Actions, Subjects]>;
 export const AppAbility = Ability as AbilityClass<AppAbility>;
