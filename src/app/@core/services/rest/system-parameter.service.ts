@@ -8,6 +8,7 @@ import { PaginatedResponse } from '../../models/response/paginated-response';
 import { ISystemParameterService } from '../interfaces/system-parameter-service';
 import { IFetchPaginatedData } from '../interfaces/fetch-paginated-data';
 import { PaginatedRequest } from '../../models/request/paginated-request';
+import { CurrencyChangeRate } from '../../models/currency-change-rate';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,14 @@ export class SystemParameterService extends BaseService implements ISystemParame
 
   constructor(_http: HttpClient) {
     super(_http);
+  }
+
+  async getCurrencyChangeRate(): Promise<CurrencyChangeRate> {
+    try {
+      return await firstValueFrom(this.get('parameters/currency/changeRate'));
+    } catch (error) {
+      return this.handleError(error);
+    }
   }
 
   async fetchPaginatedResource(request: PaginatedRequest): Promise<PaginatedResponse<SystemParameter>> {

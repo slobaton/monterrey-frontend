@@ -49,7 +49,9 @@ export class CancelIncomeReceiptComponent {
 
     const cancelRequest: CancelIncomeReceiptRequest = {
       ...cancelReceiptFormValue,
-      date: this._dateService.formatDate(cancelReceiptFormValue.date)
+      date: cancelReceiptFormValue.date
+        ? this._dateService.formatDate(cancelReceiptFormValue.date)
+        : null
     };
 
     this._incomeReceiptService.cancelReceipt(cancelRequest)

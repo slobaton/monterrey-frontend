@@ -35,7 +35,11 @@ export class IncomeService extends BaseService implements IIncomeService {
     }
   }
 
-  addIncome(request: AddIncomeRequest): Promise<void> {
-    throw new Error('Method not implemented.');
+  async addIncome(request: AddIncomeRequest): Promise<void> {
+    try {
+      await firstValueFrom(this.post(`incomes`, request));
+    } catch (error) {
+      return this.handleError(error);
+    }
   }
 }

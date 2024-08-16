@@ -59,7 +59,9 @@ export class AddDiscountComponent {
 
     const discount: AddDiscountRequest = {
       ...discountFormValue,
-      date: this._dateService.formatDate(discountFormValue.date)
+      date: discountFormValue.date
+        ? this._dateService.formatDate(discountFormValue.date)
+        : null
     };
 
     const clientId = this.clientId;

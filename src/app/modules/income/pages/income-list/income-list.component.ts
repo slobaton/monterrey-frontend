@@ -8,6 +8,7 @@ import { ReportService } from 'src/app/@core/services/rest/report.service';
 import { SelectionOption } from 'src/app/@core/types/selection';
 import { SimpleTableColumnType, SimpleTableConfiguration } from 'src/app/@core/types/simple-table-definition';
 import { AddIncomeComponent } from '../../components/add-income/add-income.component';
+import { SystemParameterService } from 'src/app/@core/services/rest/system-parameter.service';
 
 @Component({
   selector: 'app-income-list',
@@ -68,6 +69,8 @@ export class IncomeListComponent implements OnInit {
 
   activeReportIndex: number = 0;
 
+  currencyRate: number = 0;
+
   ref: DynamicDialogRef | undefined;
 
   private _currentDate: Date = new Date();
@@ -81,7 +84,8 @@ export class IncomeListComponent implements OnInit {
     private _constantsService: ConstantsService,
     private _reportService: ReportService,
     private _printService: PrintService,
-    private _dialogService: DialogService
+    private _dialogService: DialogService,
+    private _systemParameterService: SystemParameterService
   ) {
     this.selectedMonth = this._currentDate.getMonth() + 1;
     this.selectedYear = this._currentDate.getFullYear();
@@ -89,7 +93,13 @@ export class IncomeListComponent implements OnInit {
 
   ngOnInit(): void {
     this.populateMonthsAndYears();
+    this.retrieveCurrencyRate();
     this._availableReportFuncs[this.activeReportIndex].call(this);
+  }
+
+  async retrieveCurrencyRate() {
+    const currencyRate = await this._systemParameterService.getCurrencyChangeRate();
+    this.currencyRate = currencyRate.currency_rate ?? 0;
   }
 
   async retrieveMonthlyIncomes() {
@@ -162,11 +172,20 @@ export class IncomeListComponent implements OnInit {
     this._availableReportFuncs[this.activeReportIndex].call(this);
   }
 
-  openAddDiscountModal() {
-    this.ref = this._dialogService.open(AddIncomeComponent, { header: 'Registrar Nuevo Ingreso (Otros)', width: '50%' });
+  async openAddDiscountModal() {
+
+
+    this.ref = this._dialogService.open(
+      AddIncomeComponent,
+      {
+        header: 'Registrar Nuevo Ingreso (Otros)',
+        width: '50%',
+        data: { currencyRate: { value: this.currencyRate } }
+      });
+
     this.ref.onClose.subscribe((result) => {
       if (result) {
-
+        this._availableReportFuncs[this.activeReportIndex].call(this);
       }
     });
   }

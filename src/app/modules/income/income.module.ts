@@ -12,6 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
 import { AddIncomeComponent } from './components/add-income/add-income.component';
 import { CancelIncomeReceiptComponent } from 'src/app/shared/components/isolated/cancel-income-receipt/cancel-income-receipt.component';
+import { PaymentInfoComponent } from 'src/app/shared/components/isolated/payment-info/payment-info.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { CancelIncomeReceiptComponent } from 'src/app/shared/components/isolated
     DropdownModule,
     ButtonModule,
     TabViewModule,
-    CancelIncomeReceiptComponent
+    CancelIncomeReceiptComponent,
+    PaymentInfoComponent
   ]
 })
 export class IncomeModule { }

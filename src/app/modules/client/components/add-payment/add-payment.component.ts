@@ -59,7 +59,9 @@ export class AddPaymentComponent implements OnInit {
 
     const payment: AddPaymentRequest = {
       ...paymentFormValue,
-      date: this._dateService.formatDate(paymentFormValue.date)
+      date: paymentFormValue.date
+        ? this._dateService.formatDate(paymentFormValue.date)
+        : null
     };
     const clientId = this.clientId;
 
