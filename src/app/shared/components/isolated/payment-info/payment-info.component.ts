@@ -1,11 +1,21 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ButtonModule } from 'primeng/button';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { CancelIncomeReceiptComponent } from 'src/app/modules/income/components/cancel-income-receipt/cancel-income-receipt.component';
+import { TagModule } from 'primeng/tag';
+import { ToolbarModule } from 'primeng/toolbar';
+import { CancelIncomeReceiptComponent } from '../cancel-income-receipt/cancel-income-receipt.component';
 
 @Component({
   selector: 'app-payment-info',
   templateUrl: './payment-info.component.html',
-  styleUrls: ['./payment-info.component.scss']
+  styleUrls: ['./payment-info.component.scss'],
+  standalone: true,
+  imports: [
+    ToolbarModule,
+    TagModule,
+    ButtonModule,
+    CancelIncomeReceiptComponent,
+  ]
 })
 export class PaymentInfoComponent {
   @Input() currencyRateValue: number = 0;

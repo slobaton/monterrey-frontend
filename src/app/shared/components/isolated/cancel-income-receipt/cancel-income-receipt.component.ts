@@ -1,6 +1,7 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { MessageService } from 'primeng/api';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
@@ -8,11 +9,16 @@ import { CancelIncomeReceiptRequest } from 'src/app/@core/models/request/cancel-
 import { DateService } from 'src/app/@core/services/common/date.service';
 import { ValidationService } from 'src/app/@core/services/common/validation.service';
 import { IncomeReceiptService } from 'src/app/@core/services/rest/income-receipt.service';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @Component({
   selector: 'app-cancel-income-receipt',
   templateUrl: './cancel-income-receipt.component.html',
-  styleUrls: ['./cancel-income-receipt.component.scss']
+  styleUrls: ['./cancel-income-receipt.component.scss'],
+  standalone: true,
+  imports: [
+    SharedModule
+  ]
 })
 export class CancelIncomeReceiptComponent {
   cancelReceiptForm!: FormGroup;

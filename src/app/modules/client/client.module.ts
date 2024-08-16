@@ -30,8 +30,8 @@ import { AddPaymentComponent } from './components/add-payment/add-payment.compon
 import { AddDiscountComponent } from './components/add-discount/add-discount.component';
 import { IncomeModule } from '../income/income.module';
 import { ToolbarModule } from 'primeng/toolbar';
-import { PaymentInfoComponent } from './components/payment-info/payment-info.component';
 import { TagModule } from 'primeng/tag';
+import { PaymentInfoComponent } from 'src/app/shared/components/isolated/payment-info/payment-info.component';
 
 
 @NgModule({
@@ -55,6 +55,9 @@ import { TagModule } from 'primeng/tag';
     ToolbarModule,
     TagModule,
     IncomeModule,
+
+    //Components
+    PaymentInfoComponent
   ],
   declarations: [
     ClientListComponent,
@@ -69,7 +72,6 @@ import { TagModule } from 'primeng/tag';
     MovementListTableComponent,
     AddPaymentComponent,
     AddDiscountComponent,
-    PaymentInfoComponent
-  ]
+  ],
 })
 export class ClientModule { }

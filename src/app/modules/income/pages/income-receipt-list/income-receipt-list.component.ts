@@ -5,7 +5,7 @@ import { IncomeReceipt } from 'src/app/@core/models/income-receipt';
 import { IncomeReceiptService } from 'src/app/@core/services/rest/income-receipt.service';
 import { DataTableActionStatus, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
-import { CancelIncomeReceiptComponent } from '../../components/cancel-income-receipt/cancel-income-receipt.component';
+import { CancelIncomeReceiptComponent } from 'src/app/shared/components/isolated/cancel-income-receipt/cancel-income-receipt.component';
 
 @Component({
   selector: 'app-income-receipt-list',
