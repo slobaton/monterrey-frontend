@@ -1,0 +1,37 @@
+<app-form
+  [form]="parameterValueForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-12" *ngIf="!doesParameterValueExists">
+      <app-form-label
+        id="system_parameter_id"
+        text="Parametro"
+        [required]="true"
+      />
+      <app-form-select
+        [form]="parameterValueForm"
+        id="system_parameter_id"
+        controlName="system_parameter_id"
+        placeholder="Seleccione un parametro..."
+        optionLabel="name"
+        optionValue="id"
+        [filterEnabled]="true"
+        [isLazy]="true"
+        [sourceDataService]="parameterService"
+      >
+      </app-form-select>
+    </div>
+    <div class="col-12">
+      <app-form-label id="value" text="Valor" [required]="true" />
+      <app-form-input-number
+        [form]="parameterValueForm"
+        id="value"
+        controlName="value"
+        mode="decimal"
+        placeholder="Ingrese el valor para el cliente.."
+      />
+    </div>
+  </div>
+</app-form>

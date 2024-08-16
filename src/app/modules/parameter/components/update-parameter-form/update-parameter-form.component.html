@@ -1,0 +1,36 @@
+<app-form
+  [form]="parameterForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-12">
+      <app-form-label id="name" text="Nombre" [required]="true" />
+      <app-form-textarea
+        [form]="parameterForm"
+        id="name"
+        controlName="name"
+        placeholder="Ingrese el nombre del parametro.."
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label id="description" text="Descripción" [required]="true" />
+      <app-form-textarea
+        [form]="parameterForm"
+        id="description"
+        controlName="description"
+        placeholder="Ingrese la descripcion del parametro.."
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label id="value" text="Valor" [required]="true" />
+      <app-form-input-number
+        [form]="parameterForm"
+        id="value"
+        controlName="value"
+        placeholder="Ingrese el valor.."
+        mode="decimal"
+      />
+    </div>
+  </div>
+</app-form>

@@ -1,0 +1,33 @@
+<app-form
+  [form]="effectPriceForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-12" *ngIf="!doesEffectPriceExists">
+      <app-form-label id="effect_id" text="Efecto" [required]="true" />
+      <app-form-select
+        [form]="effectPriceForm"
+        id="effect_id"
+        controlName="effect_id"
+        placeholder="Seleccione un efecto..."
+        optionLabel="name"
+        optionValue="id"
+        [filterEnabled]="true"
+        [isLazy]="true"
+        [sourceDataService]="effectService"
+      >
+      </app-form-select>
+    </div>
+    <div class="col-12">
+      <app-form-label id="price" text="Precio ($)" [required]="true" />
+      <app-form-input-number
+        [form]="effectPriceForm"
+        id="price"
+        controlName="price"
+        mode="decimal"
+        placeholder="Ingrese el precio del cliente.."
+      />
+    </div>
+  </div>
+</app-form>

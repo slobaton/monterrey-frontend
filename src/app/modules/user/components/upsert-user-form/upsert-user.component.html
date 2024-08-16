@@ -1,0 +1,79 @@
+<app-form
+  [form]="userForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-12">
+      <app-form-label id="name" text="Nombre" [required]="true" />
+      <app-form-input-text
+        [form]="userForm"
+        id="name"
+        controlName="name"
+        placeholder="Ingrese el nombre del usuario..."
+      />
+    </div>
+    <div class="col-6">
+      <app-form-label id="paternal-surname" text="Apellido Paterno" [required]="true" />
+      <app-form-input-text
+        [form]="userForm"
+        id="paternal-surname"
+        controlName="paternal_surname"
+        placeholder="Ingrese el apellido paterno del usuario..."
+      />
+    </div>
+    <div class="col-6">
+      <app-form-label id="maternal-surname" text="Apellido Materno" [required]="false" />
+      <app-form-input-text
+        [form]="userForm"
+        id="maternal-surname"
+        controlName="maternal_surname"
+        placeholder="Ingrese el apellido materno del usuario..."
+      />
+    </div>
+    <div class="col-6">
+      <app-form-label id="username" text="Nombre de usuario" [required]="true" />
+      <app-form-input-text
+        [form]="userForm"
+        id="username"
+        controlName="username"
+        placeholder="Ingrese nombre de usuario..."
+      />
+    </div>
+    <div class="col-6">
+      <app-form-label id="email" text="Correo electrónico" [required]="true" />
+      <app-form-input-text
+        [form]="userForm"
+        id="email"
+        controlName="email"
+        placeholder="Ingrese correo electrónico del usuario..."
+      />
+      <div *ngIf="userForm.controls['email'].errors">
+        <div *ngIf="userForm.controls['email'].errors['email']" class="text-red-300">
+          <small>* Correo electrónico inválido</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <app-form-label id="password" text="Contraseña" [required]="!isThereAUser" />
+      <app-form-input-password
+        [form]="userForm"
+        controlName="password"
+        id="password"
+      ></app-form-input-password>
+    </div>
+    <div class="col-6">
+      <app-form-label id="passwordConfirmation" text="Confirmación contraseña" [required]="!isThereAUser" />
+      <app-form-input-password
+        [form]="userForm"
+        controlName="password_confirmation"
+        id="passwordConfirmation"
+      ></app-form-input-password>
+      <div *ngIf="userForm.hasError('passwordMismatch')">
+        <div class="text-red-300">
+          <small>* Las contraseñas no coinciden</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-form>

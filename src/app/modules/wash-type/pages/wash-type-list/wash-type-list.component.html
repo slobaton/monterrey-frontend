@@ -1,7 +1,6 @@
-<div class="grid">
-  <div class="col-12">
-    <div class="card mb-0">
-      <h5>Lista Tipos de Lavado</h5>
+<div *ngIf="ability$ | async as ab" class="grid">
+  <div *ngIf="ab.can('read', 'wash-type')" class="col-12">
+    <app-page-card title="Tipos de Lavado">
       <app-confirm-dialog
         id="confirmDelete"
         title="Eliminar Tipo de Lavado"
@@ -11,7 +10,16 @@
         #washTypeTable
         [tableConfig]="tableConfig"
         [sourceDataService]="washTypeService"
+        [rowDetails]="rowDetails"
       ></app-data-table>
-    </div>
+      <ng-template #rowDetails let-washType>
+        <div class="grid mt-1">
+          <div class="col-12">
+            <h6>Descripción:</h6>
+            <p>{{ washType["description"] }}</p>
+          </div>
+        </div>
+      </ng-template>
+    </app-page-card>
   </div>
 </div>

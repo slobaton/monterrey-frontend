@@ -1,8 +1,8 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { LazyLoadEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { DataTableActionProps, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
+import { DataTableActionProps, DataTableColumnProps, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { IFetchPaginatedData } from 'src/app/@core/services/interfaces/fetch-paginated-data';
 
 @Component({
@@ -14,6 +14,10 @@ export class DataTableComponent<TEntity> implements OnInit {
 
   @Input() tableConfig!: DataTableConfiguration;
   @Input() sourceDataService!: IFetchPaginatedData<TEntity>;
+  @Input() extraParams?: any;
+  @Input() searchEnabled: boolean = true;
+
+  @Input() rowDetails: TemplateRef<any> | null = null;
 
   @ViewChild('dataTableRef') dataTable!: Table;
 
@@ -59,7 +63,7 @@ export class DataTableComponent<TEntity> implements OnInit {
     const sort = event.sortField ?? '';
     const sortOrder = event.sortOrder?.toString() === '1' ? 'asc' : 'desc';
 
-    this.sourceDataService.fetchPaginatedResource({ filter: searchFilter, page, pageSize, sort, sortOrder })
+    this.sourceDataService.fetchPaginatedResource({ filter: searchFilter, page, pageSize, sort, sortOrder, extraParams: this.extraParams })
       .then((res) => {
         this.data = res.data;
         this.totalRecords = res.meta.total;
@@ -74,29 +78,44 @@ export class DataTableComponent<TEntity> implements OnInit {
   }
 
   executeActionCallback(action: DataTableActionProps, selectedRow?: string): void {
+
+    if (action.hasLoadingEnabled) {
+      action.loading = true;
+    }
+
     if (!this.requireSelectedRows(action)) {
-      action.callback([]);
+      action.callback(action, []);
       return;
     }
 
     if (!this.isSelectionEnabled() && selectedRow) {
-      action.callback([selectedRow]);
+      action.callback(action, [selectedRow]);
       return;
     }
 
     if (this.isMultipleSelection()) {
       const selectedRows = this.selectedRows ?? [];
-      action.callback(selectedRows);
+      action.callback(action, selectedRows);
       return;
     }
 
-    action.callback([this.selectedRows]);
+    action.callback(action, [this.selectedRows]);
   }
 
   hasActions(): boolean {
     const actions = this.tableConfig.actions ?? [];
 
     return actions && actions.length > 0;
+  }
+
+  isActionVisible(action: DataTableActionProps): boolean {
+    const actionHidden = action.hiddenFn && action.hiddenFn(this.selectedRows);
+
+    if (actionHidden) {
+      return false;
+    }
+
+    return this.isSelectionEnabled() || !this.requireSelectedRows(action);
   }
 
   requireSelectedRows(action: DataTableActionProps): boolean {
@@ -106,6 +125,12 @@ export class DataTableComponent<TEntity> implements OnInit {
   }
 
   isActionEnabled(action: DataTableActionProps): boolean {
+    const actionDisabled = action.disabledFn && action.disabledFn(this.selectedRows);
+
+    if (actionDisabled) {
+      return false;
+    }
+
     const selectionConfig = action.selectionConfig;
     const requiredMinSelectionCount = selectionConfig?.minSelectedRows ?? 1;
     const requiredMaxSelectionCount = selectionConfig?.maxSelectedRows ?? Number.MAX_VALUE;
@@ -170,5 +195,19 @@ export class DataTableComponent<TEntity> implements OnInit {
     }
 
     return classStyles;
+  }
+
+  getColumnCustomValue(col: DataTableColumnProps, row: any) {
+    if (col.type === DataTableColumnType.CUSTOM && col.customValue) {
+      const value = col.customValue(row);
+      return value;
+    }
+
+    if (col.type === DataTableColumnType.BADGE && col.customValue) {
+      const value = col.customValue(row[col.propertyRef]);
+      return value;
+    }
+
+    return '';
   }
 }

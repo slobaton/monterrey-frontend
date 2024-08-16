@@ -12,13 +12,17 @@ import { DataTableComponent } from 'src/app/shared/components/data-table/data-ta
 import { UpsertEffectFormComponent } from '../../components/upsert-effect-form/upsert-effect-form.component';
 import { EffectService } from 'src/app/@core/services/rest/effect.service';
 import { Role } from 'src/app/@core/enums/role.enum';
+import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
+import { AbilityService } from '@casl/angular';
+import { AppAbility } from 'src/app/@core/auth/ability';
+import { AuthService } from 'src/app/@core/services/rest/auth.service';
 
 @Component({
   selector: 'app-effect-list',
   templateUrl: './effect-list.component.html',
   styleUrls: ['./effect-list.component.scss']
 })
-export class EffectListComponent {
+export class EffectListComponent extends ProtectedComponent {
   @ViewChild('effectTable') table!: DataTableComponent<Effect>;
   ref: DynamicDialogRef | undefined;
   role = Role;
@@ -27,8 +31,7 @@ export class EffectListComponent {
     columns: [
       { title: 'Id', propertyRef: 'id', sortable: false, visible: false },
       { title: 'Nombre', propertyRef: 'name', sortable: true },
-      { title: 'Descripción', propertyRef: 'description', sortable: false },
-      { title: 'Precio', propertyRef: 'price', sortable: true },
+      { title: 'Precio ($)', propertyRef: 'price', sortable: true },
       { title: 'Activo', propertyRef: 'is_active', type: DataTableColumnType.BOOLEAN },
       { title: 'Creado', propertyRef: 'created_at', sortable: true, type: DataTableColumnType.DATETIME },
       { title: 'Actualizado', propertyRef: 'updated_at', sortable: true, type: DataTableColumnType.DATETIME },
@@ -44,6 +47,7 @@ export class EffectListComponent {
         selectionConfig: {
           isRequired: false
         },
+        hiddenFn: (selectedRows) => !this.ableTo('create', 'effect'),
         callback: () => {
           this.ref = this.dialogService.open(UpsertEffectFormComponent, { header: 'Crear nuevo efecto' });
           this.ref.onClose.subscribe((result) => {
@@ -61,7 +65,8 @@ export class EffectListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        hiddenFn: (selectedRows) => !this.ableTo('update', 'effect'),
+        callback: (action, selectedRows) => {
           const effect = selectedRows[0];
           this.ref = this.dialogService.open(UpsertEffectFormComponent, { header: 'Crear nuevo efecto', data: { effect } });
           this.ref.onClose.subscribe((result) => {
@@ -79,7 +84,9 @@ export class EffectListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        hasLoadingEnabled: true,
+        hiddenFn: (selectedRows) => !this.ableTo('delete', 'effect'),
+        callback: (action, selectedRows) => {
           const effectId = selectedRows[0].id;
           this.confirmationService.confirm({
             key: 'confirmDelete',
@@ -91,11 +98,13 @@ export class EffectListComponent {
                 })
                 .catch((err) => {
                   console.error(err);
-                  this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' })
-                });
+                  this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
+                })
+                .finally(() => action.loading = false);
             },
             reject: () => {
-              this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' })
+              this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' });
+              action.loading = false;
             }
           });
         }
@@ -104,9 +113,13 @@ export class EffectListComponent {
   };
 
   constructor(
+    abilityService: AbilityService<AppAbility>,
+    authService: AuthService,
     public effectService: EffectService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private dialogService: DialogService
-  ) { }
+  ) {
+    super(abilityService, authService);
+  }
 }

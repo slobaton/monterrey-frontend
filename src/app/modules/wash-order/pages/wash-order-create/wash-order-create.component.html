@@ -1,0 +1,303 @@
+<div *ngIf="ability$ | async as ab" class="grid">
+  <div *ngIf="ab.can('create', 'wash-order')" class="col-12">
+    <app-page-card
+      *ngIf="existingWashOrder && !washOrderLoaded; else washOrderSection"
+    >
+      <div class="flex justify-content-center align-items-center">
+        <p-progressSpinner></p-progressSpinner>
+      </div>
+    </app-page-card>
+    <ng-template #washOrderSection>
+      <div class="card mb-0">
+        <div class="p-card-title">
+          <div class="flex justify-content-between align-items-center">
+            <h6 class="mb-0">
+              {{
+                existingWashOrder
+                  ? "Modificar Orden de Lavado"
+                  : "Nueva Orden de Lavado"
+              }}
+            </h6>
+            <div>
+              <div class="p-tag"><b>Estado:</b> {{ getWashOrderStatus() }}</div>
+            </div>
+          </div>
+        </div>
+        <hr />
+
+        <app-form
+          [form]="washOrderForm"
+          [onProcessCompleted]="formProcessEvent"
+          (onSubmit)="onSubmitForm($event)"
+          [customSubmit]="true"
+        >
+          <div class="form-container p-fluid p-formgrid grid">
+            <div class="col-3">
+              <app-form-label id="client_id" text="Código" />
+              <input
+                pInputText
+                type="text"
+                [(ngModel)]="code"
+                [readOnly]="true"
+              />
+            </div>
+
+            <div class="col-3">
+              <app-form-label id="client_id" text="Cliente" [required]="true" />
+              <app-form-input-search
+                [form]="washOrderForm"
+                id="client_id"
+                controlName="client_id"
+                placeholder="Seleccione un cliente..."
+                title="Seleccionar Cliente..."
+                [tableConfig]="tableConfig"
+                [service]="clientService"
+                selectionProp="id"
+                [selectedLabelFn]="showClientSelectedLabel"
+                [hasCustomAction]="ab.can('create', 'client')"
+                (onClickCustomAction)="openNewClientModal()"
+                [onSelect]="onClientCreated"
+              >
+              </app-form-input-search>
+            </div>
+            <div class="col-3">
+              <app-form-label
+                id="wash_type_id"
+                text="Tipo de Lavado"
+                [required]="true"
+              />
+              <app-form-select
+                [form]="washOrderForm"
+                id="wash_type_id"
+                controlName="wash_type_id"
+                placeholder="Seleccione un tipo de Lavado..."
+                optionLabel="name"
+                optionValue="id"
+                [filterEnabled]="true"
+                [isLazy]="true"
+                [sourceDataService]="washTypeService"
+              >
+              </app-form-select>
+            </div>
+            <div class="col-3">
+              <app-form-label id="date" text="Fecha" [required]="true" />
+              <app-form-datetime-picker
+                [form]="washOrderForm"
+                id="date"
+                controlName="date"
+                placeholder="Seleccione una fecha válida..."
+                [showIcon]="true"
+              />
+            </div>
+
+            <div class="col-4 text-center">
+              <h6>Precio Especial?</h6>
+              <app-form-switch
+                [form]="washOrderForm"
+                id="is_special_price"
+                controlName="is_special_price"
+              ></app-form-switch>
+            </div>
+            <div class="col-8">
+              <app-form-label id="observations" text="Observaciones" />
+              <app-form-textarea
+                [form]="washOrderForm"
+                id="observations"
+                controlName="observations"
+                placeholder="Ingrese las observaciones de la orden de lavado..."
+              ></app-form-textarea>
+            </div>
+
+            <div class="col-12 my-0 py-0">
+              <div class="flex align-items-center justify-content-end gap-2">
+                <p-button
+                  styleClass="p-button-sm p-button-secondary"
+                  routerLink="/wash-orders"
+                  icon="pi pi-arrow-circle-left"
+                  [label]="!washOrderCreated ? 'Cancelar' : 'Volver'"
+                >
+                </p-button>
+                <p-button
+                  *ngIf="washOrderCreated"
+                  type="button"
+                  styleClass="p-button-sm"
+                  icon="pi pi-plus"
+                  label="Agregar Detalle"
+                  (onClick)="addWashOrderDetail()"
+                ></p-button>
+                <p-button
+                  type="submit"
+                  styleClass="p-button-sm p-button-success"
+                  icon="pi pi-save"
+                  [disabled]="!washOrderForm.valid || isProcessing"
+                  [label]="!washOrderCreated ? 'Generar' : 'Actualizar'"
+                  [loading]="isProcessing"
+                >
+                </p-button>
+                <p-button
+                  *ngIf="isReadyToApprove()"
+                  type="button"
+                  styleClass="p-button-sm p-button-success"
+                  icon="pi pi-check"
+                  label="Aprobar"
+                  (onClick)="approveOrder()"
+                  [loading]="reportLoading"
+                >
+                </p-button>
+                <p-button
+                  *ngIf="isReadyToPrint()"
+                  type="button"
+                  styleClass="p-button-sm p-button-info"
+                  icon="pi pi-print"
+                  label="Imprimir"
+                  (onClick)="printOrder()"
+                  [loading]="reportLoading"
+                >
+                </p-button>
+              </div>
+            </div>
+
+            <div class="col-12 py-0 my-0">
+              <h6>Detalles de orden de lavado</h6>
+            </div>
+
+            <div class="col-12 h-22rem py-0 my-0">
+              <p-scrollPanel [style]="{ width: '100%', height: '22rem' }">
+                <p-table
+                  [value]="washOrderDetails"
+                  [tableStyle]="{ 'max-height': '22rem' }"
+                  styleClass="p-datatable-sm"
+                  dataKey="id"
+                  [loading]="washOrderDetailsLoading"
+                >
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th style="width: 5rem"></th>
+                      <th>Tipo</th>
+                      <th>Tamaño</th>
+                      <th *ngIf="!hasReceptionistRole()">Precio c/u ($)</th>
+                      <th>Cantidad</th>
+                      <th *ngIf="!hasReceptionistRole()">Subtotal ($)</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template
+                    pTemplate="body"
+                    let-item
+                    let-expanded="expanded"
+                  >
+                    <tr>
+                      <td>
+                        <button
+                          type="button"
+                          pButton
+                          pRipple
+                          [pRowToggler]="item"
+                          class="p-button-sm p-button-text p-button-rounded p-button-plain"
+                          [icon]="
+                            expanded
+                              ? 'pi pi-chevron-down'
+                              : 'pi pi-chevron-right'
+                          "
+                        ></button>
+                      </td>
+                      <td>{{ item.cloth_type.name }}</td>
+                      <td>{{ item.cloth_size.name }}</td>
+                      <td *ngIf="!hasReceptionistRole()">
+                        {{ item.unit_price }}
+                      </td>
+                      <td>{{ item.quantity }}</td>
+                      <td *ngIf="!hasReceptionistRole()">
+                        {{ item.subtotal_price }}
+                      </td>
+                      <td>
+                        <p-button
+                          icon="pi pi-times"
+                          styleClass="p-button-sm p-button-rounded p-button-danger p-button-text"
+                          (onClick)="deleteWashOrderDetail(item.id)"
+                          [loading]="isDetailProcessing"
+                        ></p-button>
+                        <p-button
+                          icon="pi pi-pencil"
+                          styleClass="p-button-sm p-button-rounded p-button-warning p-button-text"
+                          (onClick)="updateWashOrderDetail(item.id, item)"
+                        ></p-button>
+                      </td>
+                    </tr>
+                  </ng-template>
+
+                  <ng-template pTemplate="rowexpansion" let-rowItem>
+                    <tr>
+                      <td colspan="12">
+                        <div class="grid m-0 p-0">
+                          <div class="col-6">
+                            <h6>Observaciones:</h6>
+                            <p>{{ rowItem["observations"] }}</p>
+
+                            <ng-container *ngIf="!hasReceptionistRole()">
+                              <p>
+                                <b>Precio Lavado:</b>
+                                {{ rowItem["wash_price"] }} $
+                              </p>
+
+                              <p>
+                                <b>Precio Ojales:</b>
+                                {{
+                                  rowItem["buttonholes_price"] *
+                                    rowItem["num_buttonholes"]
+                                }}
+                                $
+                              </p>
+
+                              <ng-container
+                                *ngIf="rowItem['is_focalizado_active']"
+                              >
+                                <p>
+                                  <b>Precio Focalizado:</b>
+                                  {{ rowItem["focalizado_price"] }} $
+                                </p>
+                              </ng-container>
+
+                              <ng-container *ngIf="rowItem['is_nevado_active']">
+                                <p>
+                                  <b>Precio Nevado:</b>
+                                  {{ rowItem["nevado_price"] }} $
+                                </p>
+                              </ng-container>
+
+                              <p>
+                                <b>Precio Total Efectos:</b>
+                                {{ rowItem["effect_price"] }} $
+                              </p>
+                            </ng-container>
+                          </div>
+                          <div class="col-6">
+                            <h6>Efectos seleccionados:</h6>
+                            <ul>
+                              <li *ngFor="let effect of rowItem['effects']">
+                                <span>{{ effect.name }}</span>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </p-scrollPanel>
+            </div>
+
+            <div class="col-4 col-offset-4 py-0 my-0">
+              <app-form-label id="total_quantity" text="Cantidad Total" />
+              <input pInputText [(ngModel)]="totalQuantity" [readonly]="true" />
+            </div>
+            <div *ngIf="!hasReceptionistRole()" class="col-4 py-0 my-0">
+              <app-form-label id="total_price" text="Precio Total" />
+              <input pInputText [(ngModel)]="totalPrice" [readonly]="true" />
+            </div>
+          </div>
+        </app-form>
+      </div>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,113 @@
+<p-table
+  #simpleTableRef
+  [columns]="tableConfig.columns"
+  [value]="processedData"
+  styleClass="p-datatable-sm"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [paginator]="false"
+  [scrollable]="true"
+  scrollHeight="60vh"
+>
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <ng-container *ngFor="let col of columns">
+        <ng-container *ngIf="col.visible ?? true">
+          <th
+            *ngIf="col.sortable; else nonSortableColumn"
+            [pSortableColumn]="col.propertyRef"
+          >
+            <div
+              class="flex justify-content-between align-content-center align-items-center"
+            >
+              {{ col.title }}
+              <p-sortIcon [field]="col.propertyRef"></p-sortIcon>
+            </div>
+          </th>
+          <ng-template #nonSortableColumn>
+            <th>
+              {{ col.title }}
+            </th>
+          </ng-template>
+        </ng-container>
+      </ng-container>
+
+      <th *ngIf="hasActions()">Acciones</th>
+    </tr>
+  </ng-template>
+
+  <ng-template
+    pTemplate="body"
+    let-rowData
+    let-rowIndex="rowIndex"
+    let-columns="columns"
+    let-expanded="expanded"
+  >
+    <tr
+      [pSelectableRowDisabled]="true"
+      [pSelectableRow]="rowData"
+      [pSelectableRowIndex]="rowIndex"
+      *ngIf="!rowData['monthHeader']; else monthHeader"
+    >
+      <ng-container *ngFor="let col of columns">
+        <td
+          *ngIf="col.visible ?? true"
+          [class]="getColumnStyleByType(col.type)"
+        >
+          <container-element [ngSwitch]="col.type ?? columnType.TEXT">
+            <ng-container *ngSwitchCase="columnType.TEXT">
+              {{ rowData[col.propertyRef] }}
+            </ng-container>
+            <ng-container *ngSwitchCase="columnType.BOOLEAN">
+              <p-checkbox
+                [readonly]="true"
+                [ngModel]="rowData[col.propertyRef]"
+                [binary]="true"
+              ></p-checkbox>
+            </ng-container>
+            <ng-container *ngSwitchCase="columnType.DATE">
+              {{ rowData[col.propertyRef] | date : "dd/MM/YYYY" }}
+            </ng-container>
+            <ng-container *ngSwitchCase="columnType.DATETIME">
+              {{ rowData[col.propertyRef] | date : "dd/MM/YYYY HH:mm:ss" }}
+            </ng-container>
+            <ng-container *ngSwitchCase="columnType.CUSTOM">
+              {{ getColumnCustomValue(col, rowData) }}
+            </ng-container>
+            <ng-container *ngSwitchCase="columnType.BADGE">
+              <div class="p-badge p-badge-secondary">
+                {{ getColumnCustomValue(col, rowData) }}
+              </div>
+            </ng-container>
+          </container-element>
+        </td>
+      </ng-container>
+
+      <td *ngIf="hasActions()">
+        <button
+          *ngFor="let action of tableConfig.actions"
+          pButton
+          pRipple
+          [icon]="generateActionIcon(action)"
+          [ngClass]="
+            'p-button-sm p-button-rounded mx-1 ' + generateActionColor(action)
+          "
+          (click)="executeActionCallback(action, rowData)"
+          [pTooltip]="action.tooltip ?? ''"
+        ></button>
+      </td>
+    </tr>
+
+    <ng-template #monthHeader>
+      <tr>
+        <td
+          [colSpan]="hasActions() ? columns.length + 1 : columns.length"
+          class="text-center bg-blue-500"
+        >
+          <span class="font-bold">{{ rowData["monthHeader"] }} </span>
+          - Balance Mes Anterior:
+          <span class="font-bold">{{ rowData["monthBalanceDebt"] ?? 0 }}</span>
+        </td>
+      </tr>
+    </ng-template>
+  </ng-template>
+</p-table>

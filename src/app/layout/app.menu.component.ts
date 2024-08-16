@@ -16,172 +16,39 @@ export class AppMenuComponent implements OnInit {
   ngOnInit() {
     this.model = [
       {
-        label: 'Home',
+        label: 'Configuracion',
         items: [
-          { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
-          { label: 'Users', icon: 'pi pi-fw pi-user', routerLink: ['/users'], roles: [Role.ADMIN] },
-          { label: 'Clients', icon: 'pi pi-fw pi-database', routerLink: ['/clients'], roles: [Role.ADMIN, Role.SECRETARY] },
-          { label: 'Tipos Lavado', icon: 'pi pi-fw pi-sync', routerLink: ['/wash-types'], roles: [Role.ADMIN, Role.SECRETARY] },
-          { label: 'Effects', icon: 'pi pi-fw pi-filter-fill', routerLink: ['/effects'] },
-          { label: 'Tipos de Ropa', icon: 'pi pi-fw pi-shopping-bag', routerLink: ['/cloth-types'] },
-          { label: 'Tamaños de Ropa', icon: 'pi pi-fw pi-sort-alpha-up-alt', routerLink: ['/cloth-sizes'] },
-        ]
-      },
-      {
-        label: 'Custom Components',
-        items: [
-          { label: 'DataTable', icon: 'pi pi-fw pi-table', routerLink: ['/'] },
+          { label: 'Parametros', icon: 'pi pi-fw pi-box', routerLink: ['/parameters'] },
         ],
+        roles: [Role.ADMIN]
       },
       {
-        label: 'UI Components',
+        label: 'Principal',
         items: [
-          { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
-          { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/uikit/input'] },
-          { label: 'Float Label', icon: 'pi pi-fw pi-bookmark', routerLink: ['/uikit/floatlabel'] },
-          { label: 'Invalid State', icon: 'pi pi-fw pi-exclamation-circle', routerLink: ['/uikit/invalidstate'] },
-          { label: 'Button', icon: 'pi pi-fw pi-box', routerLink: ['/uikit/button'] },
-          { label: 'Table', icon: 'pi pi-fw pi-table', routerLink: ['/uikit/table'] },
-          { label: 'List', icon: 'pi pi-fw pi-list', routerLink: ['/uikit/list'] },
-          { label: 'Tree', icon: 'pi pi-fw pi-share-alt', routerLink: ['/uikit/tree'] },
-          { label: 'Panel', icon: 'pi pi-fw pi-tablet', routerLink: ['/uikit/panel'] },
-          { label: 'Overlay', icon: 'pi pi-fw pi-clone', routerLink: ['/uikit/overlay'] },
-          { label: 'Media', icon: 'pi pi-fw pi-image', routerLink: ['/uikit/media'] },
-          {
-            label: 'Menu',
-            icon: 'pi pi-fw pi-bars',
-            routerLink: ['/uikit/menu'],
-            routerLinkActiveOptions: {
-              paths: 'subset',
-              queryParams: 'ignored',
-              matrixParams: 'ignored',
-              fragment: 'ignored'
-            }
-          },
-          { label: 'Message', icon: 'pi pi-fw pi-comment', routerLink: ['/uikit/message'] },
-          { label: 'File', icon: 'pi pi-fw pi-file', routerLink: ['/uikit/file'] },
-          { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/uikit/charts'] },
-          { label: 'Misc', icon: 'pi pi-fw pi-circle', routerLink: ['/uikit/misc'] }
+          { label: 'Inicio', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
+          { label: 'Usuarios', icon: 'pi pi-fw pi-user', routerLink: ['/users'], roles: [Role.ADMIN] },
+          { label: 'Clientes', icon: 'pi pi-fw pi-database', routerLink: ['/clients'], roles: [Role.ADMIN, Role.SECRETARY, Role.RECEPTIONIST] },
+          { label: 'Tipos Lavado', icon: 'pi pi-fw pi-sync', routerLink: ['/wash-types'], roles: [Role.ADMIN, Role.SECRETARY] },
+          { label: 'Efectos', icon: 'pi pi-fw pi-filter-fill', routerLink: ['/effects'], roles: [Role.ADMIN, Role.SECRETARY] },
+          { label: 'Tipos de Ropa', icon: 'pi pi-fw pi-shopping-bag', routerLink: ['/cloth-types'], roles: [Role.ADMIN, Role.SECRETARY] },
+          { label: 'Tamaños de Ropa', icon: 'pi pi-fw pi-sort-alpha-up-alt', routerLink: ['/cloth-sizes'], roles: [Role.ADMIN, Role.SECRETARY] },
         ]
       },
       {
-        label: 'Prime Blocks',
+        label: 'Orden de Lavado',
         items: [
-          { label: 'Free Blocks', icon: 'pi pi-fw pi-eye', routerLink: ['/blocks'], badge: 'NEW' },
-          { label: 'All Blocks', icon: 'pi pi-fw pi-globe', url: ['https://www.primefaces.org/primeblocks-ng'], target: '_blank' },
-        ]
+          { label: 'Lista de Ordenes', icon: 'pi pi-fw pi-book', routerLink: ['/wash-orders'] },
+          { label: 'Nueva Orden', icon: 'pi pi-fw pi-calculator', routerLink: ['/wash-orders/new'] },
+        ],
+        roles: [Role.ADMIN, Role.SECRETARY, Role.RECEPTIONIST]
       },
       {
-        label: 'Utilities',
+        label: 'Ingresos',
         items: [
-          { label: 'PrimeIcons', icon: 'pi pi-fw pi-prime', routerLink: ['/utilities/icons'] },
-          { label: 'PrimeFlex', icon: 'pi pi-fw pi-desktop', url: ['https://www.primefaces.org/primeflex/'], target: '_blank' },
-        ]
-      },
-      {
-        label: 'Pages',
-        icon: 'pi pi-fw pi-briefcase',
-        items: [
-          {
-            label: 'Landing',
-            icon: 'pi pi-fw pi-globe',
-            routerLink: ['/landing']
-          },
-          {
-            label: 'Auth',
-            icon: 'pi pi-fw pi-user',
-            items: [
-              {
-                label: 'Login',
-                icon: 'pi pi-fw pi-sign-in',
-                routerLink: ['/auth/login']
-              },
-              {
-                label: 'Error',
-                icon: 'pi pi-fw pi-times-circle',
-                routerLink: ['/auth/error']
-              },
-              {
-                label: 'Access Denied',
-                icon: 'pi pi-fw pi-lock',
-                routerLink: ['/auth/access']
-              }
-            ]
-          },
-          {
-            label: 'Crud',
-            icon: 'pi pi-fw pi-pencil',
-            routerLink: ['/pages/crud']
-          },
-          {
-            label: 'Timeline',
-            icon: 'pi pi-fw pi-calendar',
-            routerLink: ['/pages/timeline']
-          },
-          {
-            label: 'Not Found',
-            icon: 'pi pi-fw pi-exclamation-circle',
-            routerLink: ['/notfound']
-          },
-          {
-            label: 'Empty',
-            icon: 'pi pi-fw pi-circle-off',
-            routerLink: ['/pages/empty']
-          },
-        ]
-      },
-      {
-        label: 'Hierarchy',
-        items: [
-          {
-            label: 'Submenu 1', icon: 'pi pi-fw pi-bookmark',
-            items: [
-              {
-                label: 'Submenu 1.1', icon: 'pi pi-fw pi-bookmark',
-                items: [
-                  { label: 'Submenu 1.1.1', icon: 'pi pi-fw pi-bookmark' },
-                  { label: 'Submenu 1.1.2', icon: 'pi pi-fw pi-bookmark' },
-                  { label: 'Submenu 1.1.3', icon: 'pi pi-fw pi-bookmark' },
-                ]
-              },
-              {
-                label: 'Submenu 1.2', icon: 'pi pi-fw pi-bookmark',
-                items: [
-                  { label: 'Submenu 1.2.1', icon: 'pi pi-fw pi-bookmark' }
-                ]
-              },
-            ]
-          },
-          {
-            label: 'Submenu 2', icon: 'pi pi-fw pi-bookmark',
-            items: [
-              {
-                label: 'Submenu 2.1', icon: 'pi pi-fw pi-bookmark',
-                items: [
-                  { label: 'Submenu 2.1.1', icon: 'pi pi-fw pi-bookmark' },
-                  { label: 'Submenu 2.1.2', icon: 'pi pi-fw pi-bookmark' },
-                ]
-              },
-              {
-                label: 'Submenu 2.2', icon: 'pi pi-fw pi-bookmark',
-                items: [
-                  { label: 'Submenu 2.2.1', icon: 'pi pi-fw pi-bookmark' },
-                ]
-              },
-            ]
-          }
-        ]
-      },
-      {
-        label: 'Get Started',
-        items: [
-          {
-            label: 'Documentation', icon: 'pi pi-fw pi-question', routerLink: ['/documentation']
-          },
-          {
-            label: 'View Source', icon: 'pi pi-fw pi-search', url: ['https://github.com/primefaces/sakai-ng'], target: '_blank'
-          }
-        ]
+          { label: 'Reportes', icon: 'pi pi-fw pi-calendar', routerLink: ['/incomes/list'] },
+          { label: 'Recibos', icon: 'pi pi-fw pi-copy', routerLink: ['/incomes/receipts'] },
+        ],
+        roles: [Role.ADMIN, Role.SECRETARY]
       }
     ];
   }

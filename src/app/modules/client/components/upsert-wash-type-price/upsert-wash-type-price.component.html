@@ -1,0 +1,33 @@
+<app-form
+  [form]="washTypePriceForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-12" *ngIf="!doesWashTypePriceExists">
+      <app-form-label id="wash_type_id" text="Tipo Lavado" [required]="true" />
+      <app-form-select
+        [form]="washTypePriceForm"
+        id="wash_type_id"
+        controlName="wash_type_id"
+        placeholder="Seleccione un tipo lavado..."
+        optionLabel="name"
+        optionValue="id"
+        [filterEnabled]="true"
+        [isLazy]="true"
+        [sourceDataService]="washTypeService"
+      >
+      </app-form-select>
+    </div>
+    <div class="col-12">
+      <app-form-label id="price" text="Precio ($)" [required]="true" />
+      <app-form-input-number
+        [form]="washTypePriceForm"
+        id="price"
+        mode="decimal"
+        controlName="price"
+        placeholder="Ingrese el precio del cliente.."
+      />
+    </div>
+  </div>
+</app-form>

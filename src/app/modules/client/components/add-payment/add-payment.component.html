@@ -1,0 +1,59 @@
+<app-form
+  [form]="paymentForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-12">
+      <app-payment-info
+        [currencyRateValue]="currencyRateValue"
+        (incomeReceiptCanceled)="onReceiptCanceled($event)"
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label id="date" text="Fecha" [required]="false" />
+      <app-form-datetime-picker
+        [form]="paymentForm"
+        id="date"
+        controlName="date"
+        placeholder="Fecha de Pago (opcional)"
+        [showIcon]="true"
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label
+        id="receipt_number"
+        text="Num. Recibo"
+        [required]="true"
+      />
+      <app-form-input-number
+        [form]="paymentForm"
+        id="receipt_number"
+        controlName="receipt_number"
+        placeholder="Ingrese el número de recibo..."
+      />
+    </div>
+    <div class="col-6">
+      <app-form-label id="amount" text="Monto ($)" [required]="true" />
+      <app-form-input-number
+        [form]="paymentForm"
+        id="amount"
+        mode="decimal"
+        controlName="amount"
+        placeholder="Ingrese el monto de pago en $us.."
+      />
+    </div>
+    <div class="col-6">
+      <app-form-label id="amount-currency" text="Monto (Bs.)" />
+      <p-inputNumber
+        id="amount-currency"
+        [(ngModel)]="amountCurrency"
+        (ngModelChange)="onAmountCurrencyChanged($event)"
+        mode="decimal"
+        [minFractionDigits]="2"
+        [maxFractionDigits]="2"
+        placeholder="Ingrese el monto de pago en Bs..."
+      />
+    </div>
+  </div>
+</app-form>

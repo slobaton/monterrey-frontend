@@ -11,23 +11,67 @@ import { ClientListComponent } from './pages/client-list/client-list.component';
 import { UpsertClientFormComponent } from './components/upsert-client-form/upsert-client-form.component';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ClientWashTypePriceListComponent } from './pages/client-wash-type-price-list/client-wash-type-price-list.component';
+import { UpsertWashTypePriceComponent } from './components/upsert-wash-type-price/upsert-wash-type-price.component';
+import { ClientEffectPriceListComponent } from './pages/client-effect-price-list/client-effect-price-list.component';
+import { UpsertEffectPriceComponent } from './components/upsert-effect-price/upsert-effect-price.component';
+import { ClientParameterValueListComponent } from './pages/client-parameter-value-list/client-parameter-value-list.component';
+import { UpsertParameterValueComponent } from './components/upsert-parameter-value/upsert-parameter-value.component';
+import { AbilityModule } from '@casl/angular';
+import { ClientMovementListComponent } from './pages/client-movement-list/client-movement-list.component';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { CalendarModule } from 'primeng/calendar';
+import { WashOrderModule } from '../wash-order/wash-order.module';
+import { MovementListTableComponent } from './components/movement-list-table/movement-list-table.component';
+import { TableModule } from 'primeng/table';
+import { CheckboxModule } from 'primeng/checkbox';
+import { TooltipModule } from 'primeng/tooltip';
+import { AddPaymentComponent } from './components/add-payment/add-payment.component';
+import { AddDiscountComponent } from './components/add-discount/add-discount.component';
+import { IncomeModule } from '../income/income.module';
+import { ToolbarModule } from 'primeng/toolbar';
+import { TagModule } from 'primeng/tag';
+import { PaymentInfoComponent } from 'src/app/shared/components/isolated/payment-info/payment-info.component';
 
 
 @NgModule({
   imports: [
     CommonModule,
     ClientRoutingModule,
+    AbilityModule,
     SharedModule,
     FormsModule,
     ReactiveFormsModule,
     InputTextModule,
+    InputNumberModule,
     InputTextareaModule,
     InputSwitchModule,
-    DynamicDialogModule
+    DynamicDialogModule,
+    CalendarModule,
+    WashOrderModule,
+    TableModule,
+    CheckboxModule,
+    TooltipModule,
+    ToolbarModule,
+    TagModule,
+    IncomeModule,
+
+    //Components
+    PaymentInfoComponent
   ],
   declarations: [
     ClientListComponent,
-    UpsertClientFormComponent
-  ]
+    UpsertClientFormComponent,
+    ClientWashTypePriceListComponent,
+    UpsertWashTypePriceComponent,
+    ClientEffectPriceListComponent,
+    UpsertEffectPriceComponent,
+    ClientParameterValueListComponent,
+    UpsertParameterValueComponent,
+    ClientMovementListComponent,
+    MovementListTableComponent,
+    AddPaymentComponent,
+    AddDiscountComponent,
+  ],
 })
 export class ClientModule { }

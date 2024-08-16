@@ -1,14 +1,7 @@
 <div class="layout-topbar">
-  <a class="layout-topbar-logo" routerLink="">
-    <img
-      src="assets/layout/images/{{
-        layoutService.config.colorScheme === 'light'
-          ? 'logo-dark'
-          : 'logo-white'
-      }}.svg"
-      alt="logo"
-    />
-    <span>SAKAI</span>
+  <a class="layout-topbar-logo" routerLink="/dashboard">
+    <img src="assets/layout/images/logo.png" alt="Monterrey Logo" />
+    <span>MONTERREY APP</span>
   </a>
 
   <button
@@ -35,10 +28,6 @@
         layoutService.state.profileSidebarVisible
     }"
   >
-    <button class="p-link layout-topbar-button">
-      <i class="pi pi-calendar"></i>
-      <span>Calendar</span>
-    </button>
     <button
       type="button"
       class="p-link layout-topbar-button"
@@ -48,9 +37,5 @@
       <span>Profile</span>
     </button>
     <p-menu #userMenu [model]="userMenuItems" [popup]="true"></p-menu>
-    <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
-      <i class="pi pi-cog"></i>
-      <span>Settings</span>
-    </button>
   </div>
 </div>

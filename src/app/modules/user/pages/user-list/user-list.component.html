@@ -1,11 +1,16 @@
 <div class="grid">
   <div class="col-12">
-    <div class="card mb-0">
-      <h5>User list</h5>
+    <app-page-card title="Usuarios">
+      <app-confirm-dialog
+        id="confirmDelete"
+        title="Eliminar Usuario"
+        message="¿Estas seguro que deseas eliminar al usuario?"
+      ></app-confirm-dialog>
       <app-data-table
+        #userTable
         [tableConfig]="tableConfig"
         [sourceDataService]="userService"
       ></app-data-table>
-    </div>
+    </app-page-card>
   </div>
 </div>

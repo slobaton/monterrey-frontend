@@ -8,13 +8,9 @@
 >
   <div class="flex flex-column align-items-center justify-content-center">
     <img
-      src="assets/layout/images/{{
-        layoutService.config.colorScheme === 'light'
-          ? 'logo-dark'
-          : 'logo-white'
-      }}.svg"
-      alt="Sakai logo"
-      class="mb-5 w-6rem flex-shrink-0"
+      src="assets/layout/images/logo.png"
+      alt="Monterrey Logo"
+      class="mb-5 w-19rem flex-shrink-0"
     />
     <div
       style="
@@ -67,6 +63,7 @@
               formControlName="password"
               placeholder="Password"
               [toggleMask]="true"
+              [feedback]="false"
               styleClass="mb-5"
               inputStyleClass="w-full p-3 md:w-30rem"
             ></p-password>

@@ -1,0 +1,18 @@
+<div *ngIf="ability$ | async as ab" class="grid">
+  <div *ngIf="!hasReceptionistRole()" class="col-12">
+    <app-page-card title="Precios de Efectos">
+      <app-confirm-dialog
+        id="confirmEffectPriceDelete"
+        title="Eliminar Precio Efecto"
+        message="¿Estas seguro de eliminar el precio para cliente?"
+      ></app-confirm-dialog>
+      <app-data-table
+        #effectPricesTable
+        [searchEnabled]="false"
+        [tableConfig]="tableConfig"
+        [sourceDataService]="effectPriceService"
+        [extraParams]="clientId"
+      ></app-data-table>
+    </app-page-card>
+  </div>
+</div>

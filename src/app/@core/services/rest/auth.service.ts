@@ -9,19 +9,21 @@ import { LoginRequest } from '../../models/request/login-request';
 import { AuthUser } from '../../models/auth-user';
 import { AuthRole } from '../../models/auth-role';
 import { Role } from '../../enums/role.enum';
+import { AuthPublicKey } from '../../models/auth-public-key';
+import { AppAbility, defineAbilitiesFor } from '../../auth/ability';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService extends BaseService implements IAuthService {
 
-  redirectUrl: string = 'inicio';
+  redirectUrl: string = 'dashboard';
 
   private userSubject: BehaviorSubject<AuthUser | null>;
   public user: Observable<AuthUser | null>;
 
 
-  constructor(_http: HttpClient) {
+  constructor(_http: HttpClient, private _ability: AppAbility) {
     super(_http);
     this.userSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('authUser')!));
     this.user = this.userSubject.asObservable();
@@ -36,6 +38,7 @@ export class AuthService extends BaseService implements IAuthService {
       const authUser = await firstValueFrom(this.post<AuthUser>('login', request));
       localStorage.setItem('authUser', JSON.stringify(authUser));
       this.userSubject.next(authUser);
+      this.updateAbilities(authUser);
 
       return authUser;
     } catch (error) {
@@ -47,6 +50,15 @@ export class AuthService extends BaseService implements IAuthService {
     try {
       await firstValueFrom(this.post('logout'));
       this.cleanSession();
+      this._ability.update([]);
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  async getPublicKey(): Promise<AuthPublicKey> {
+    try {
+      return await firstValueFrom(this.get<AuthPublicKey>('auth/key'));
     } catch (error) {
       return this.handleError(error);
     }
@@ -70,4 +82,33 @@ export class AuthService extends BaseService implements IAuthService {
     localStorage.removeItem('authUser');
     this.userSubject.next(null);
   }
+
+  hasAbilities(): boolean {
+    if (!this.authenticatedUser) {
+      return false;
+    }
+
+    return this._ability.rules.length > 0;
+  }
+
+  refreshUserAbilities(): void {
+    const authUser = this.authenticatedUser;
+
+    if (authUser) {
+      this.updateAbilities(authUser);
+    }
+  }
+
+  private updateAbilities(authUser: AuthUser): void {
+    const roles = authUser.roles;
+
+    roles.forEach(role => {
+      const indexOfRole = Object.values(Role).indexOf(role.name as unknown as Role);
+      const keyOfRole = Object.keys(Role)[indexOfRole];
+      const selectedRole = Role[keyOfRole as keyof typeof Role];
+      this._ability.update(defineAbilitiesFor(selectedRole));
+    });
+  }
+
+
 }

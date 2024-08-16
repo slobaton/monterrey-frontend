@@ -1,16 +1,17 @@
 export type DataTableConfiguration = {
-  columns: Array<DataTableColumnProps>;
+  columns: Array<DataTableColumnProps>,
   identifierPropRef: string,
-  selectionType?: DataTableSelectionType;
-  actions?: Array<DataTableActionProps>;
+  selectionType?: DataTableSelectionType,
+  actions?: Array<DataTableActionProps>
 }
 
 export type DataTableColumnProps = {
-  title: string;
-  propertyRef: string;
-  visible?: boolean;
-  sortable?: boolean;
-  type?: DataTableColumnType;
+  title: string,
+  propertyRef: string,
+  customValue?: (row: any) => string,
+  visible?: boolean,
+  sortable?: boolean,
+  type?: DataTableColumnType
 }
 
 export type DataTableActionProps = {
@@ -19,12 +20,16 @@ export type DataTableActionProps = {
   icon?: string,
   status?: DataTableActionStatus,
   selectionConfig?: DataTableActionSelectionConfig,
-  callback: (selectedRows: Array<any>) => void
+  hasLoadingEnabled?: boolean,
+  loading?: boolean,
+  hiddenFn?: (selectedRows: any) => boolean,
+  disabledFn?: (selectedRows: any) => boolean,
+  callback: (action: DataTableActionProps, selectedRows: Array<any>) => void
 }
 
 export type DataTableActionSelectionConfig = {
   isRequired?: boolean,
-  minSelectedRows?: number
+  minSelectedRows?: number,
   maxSelectedRows?: number
 }
 
@@ -46,5 +51,7 @@ export enum DataTableColumnType {
   TEXT,
   BOOLEAN,
   DATE,
-  DATETIME
+  DATETIME,
+  BADGE,
+  CUSTOM
 }

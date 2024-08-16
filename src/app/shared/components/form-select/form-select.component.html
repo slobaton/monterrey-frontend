@@ -1,0 +1,34 @@
+<ng-container [formGroup]="form">
+  <p-dropdown
+    [id]="id"
+    [formControlName]="controlName"
+    [options]="options"
+    [optionLabel]="optionLabel"
+    [optionValue]="optionValue"
+    [placeholder]="placeholder"
+    [showClear]="true"
+    [filter]="filterEnabled"
+    filterPlaceholder="Buscar..."
+    [resetFilterOnHide]="true"
+    emptyFilterMessage="No se encontraron resultados."
+    emptyMessage="No existen opciones disponibles."
+    [virtualScroll]="true"
+    [virtualScrollItemSize]="30"
+    appendTo="body"
+  ></p-dropdown>
+  <div
+    *ngIf="formControl?.errors && (formControl?.dirty || formControl?.touched)"
+    class="text-red-300"
+  >
+    <small *ngIf="formControl?.hasError('required')">
+      * El campo es requerido.
+    </small>
+    <small *ngIf="formControl?.hasError('serverError')">
+      El campo contiene los siguientes errores:
+      <span *ngFor="let error of formControl?.errors?.['serverError']">
+        <br />
+        * {{ error }}
+      </span>
+    </small>
+  </div>
+</ng-container>

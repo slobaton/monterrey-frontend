@@ -4,6 +4,7 @@ export class PaginatedRequest {
     public page: number,
     public pageSize: number,
     public sort: string,
-    public sortOrder: string
+    public sortOrder: string,
+    public extraParams?: any
   ) { }
 }

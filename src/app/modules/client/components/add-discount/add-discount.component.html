@@ -1,0 +1,68 @@
+<app-form
+  [form]="discountForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-12">
+      <app-payment-info
+        [currencyRateValue]="currencyRateValue"
+        (incomeReceiptCanceled)="onReceiptCanceled($event)"
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label id="date" text="Fecha" [required]="false" />
+      <app-form-datetime-picker
+        [form]="discountForm"
+        id="date"
+        controlName="date"
+        placeholder="Fecha de Pago (opcional)"
+        [showIcon]="true"
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label id="concept" text="Concepto" [required]="true" />
+      <app-form-input-text
+        [form]="discountForm"
+        id="concept"
+        controlName="concept"
+        placeholder="Ingrese el concepto por descuento..."
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label
+        id="receipt_number"
+        text="Num. Recibo"
+        [required]="true"
+      />
+      <app-form-input-number
+        [form]="discountForm"
+        id="receipt_number"
+        controlName="receipt_number"
+        placeholder="Ingrese el número de recibo..."
+      />
+    </div>
+    <div class="col-6">
+      <app-form-label id="amount" text="Monto ($)" [required]="true" />
+      <app-form-input-number
+        [form]="discountForm"
+        id="amount"
+        mode="decimal"
+        controlName="amount"
+        placeholder="Ingrese el monto de pago en $..."
+      />
+    </div>
+    <div class="col-6">
+      <app-form-label id="amount-currency" text="Monto (Bs.)" />
+      <p-inputNumber
+        id="amount-currency"
+        [(ngModel)]="amountCurrency"
+        (ngModelChange)="onAmountCurrencyChanged($event)"
+        mode="decimal"
+        [minFractionDigits]="2"
+        [maxFractionDigits]="2"
+        placeholder="Ingrese el monto de pago en Bs..."
+      />
+    </div>
+  </div>
+</app-form>

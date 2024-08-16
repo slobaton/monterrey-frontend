@@ -1,0 +1,30 @@
+<div *ngIf="ability$ | async as ab" class="grid">
+  <div class="col-12">
+    <app-page-card
+      *ngIf="ab.can('read', 'wash-order')"
+      [title]="title"
+    >
+      <app-confirm-dialog
+        id="confirmDelete"
+        title="Eliminar Orden de Lavado"
+        message="¿Estas seguro de eliminar el orden de lavado?"
+      ></app-confirm-dialog>
+      <app-data-table
+        #washOrderTable
+        [tableConfig]="tableConfig"
+        [sourceDataService]="washOrderService"
+        [rowDetails]="rowDetails"
+        [extraParams]="clientId"
+      ></app-data-table>
+
+      <ng-template #rowDetails let-rowData>
+        <div class="grid mt-1">
+          <div class="col-12">
+            <h6>Observaciones:</h6>
+            <p>{{ rowData["observations"] }}</p>
+          </div>
+        </div>
+      </ng-template>
+    </app-page-card>
+  </div>
+</div>

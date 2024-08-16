@@ -1,0 +1,51 @@
+<div *ngIf="ability$ | async as ab" class="grid">
+  <div class="col-12">
+    <app-page-card *ngIf="!hasReceptionistRole()" [title]="getTitle()">
+      <div class="action_container flex flex-row justify-content-between">
+        <div class="balance">
+          <app-form-label id="balance" text="Saldo Actual:" />
+          <p-inputNumber
+            id="balance"
+            [(ngModel)]="balance"
+            [readonly]="true"
+          ></p-inputNumber>
+        </div>
+        <div class="actions flex flex-row justify-content-between gap-2">
+          <div class="start_date_input">
+            <app-form-label id="startDate" text="Desde:" />
+            <p-calendar
+              id="startDate"
+              [(ngModel)]="startDate"
+              view="month"
+              [showIcon]="true"
+              dateFormat="dd/mm/yy"
+              [readonlyInput]="true"
+            ></p-calendar>
+          </div>
+          <div class="end_date_input">
+            <app-form-label id="endDate" text="Hasta:" />
+            <p-calendar
+              id="endDate"
+              [(ngModel)]="endDate"
+              view="month"
+              [showIcon]="true"
+              dateFormat="dd/mm/yy"
+              [readonlyInput]="true"
+            ></p-calendar>
+          </div>
+          <p-button
+            icon="pi pi-print"
+            label="Imprimir Reporte"
+            (onClick)="printMonthlyReport()"
+            [loading]="isProcessingReport"
+          ></p-button>
+        </div>
+      </div>
+      <app-movement-list-table
+        [tableConfig]="tableConfig"
+        [data]="processedMovements"
+      >
+      </app-movement-list-table>
+    </app-page-card>
+  </div>
+</div>

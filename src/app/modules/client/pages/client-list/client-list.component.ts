@@ -1,18 +1,27 @@
 import { Component, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { AbilityService } from '@casl/angular';
+
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Client } from 'src/app/@core/models/client';
 import { ClientService } from 'src/app/@core/services/rest/client.service';
 import { DataTableActionStatus, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { DataTableComponent } from 'src/app/shared/components/data-table/data-table.component';
+import { AppAbility } from 'src/app/@core/auth/ability';
+import { ProtectedComponent } from 'src/app/@core/models/common/protected-component';
 import { UpsertClientFormComponent } from '../../components/upsert-client-form/upsert-client-form.component';
+import { AuthService } from 'src/app/@core/services/rest/auth.service';
+import { AddPaymentComponent } from '../../components/add-payment/add-payment.component';
+import { AddDiscountComponent } from '../../components/add-discount/add-discount.component';
+import { ClientDataService } from '../../../../@core/services/common/client-data.service';
 
 @Component({
   selector: 'app-client-list',
   templateUrl: './client-list.component.html',
   styleUrls: ['./client-list.component.scss'],
 })
-export class ClientListComponent {
+export class ClientListComponent extends ProtectedComponent {
 
   @ViewChild('clientTable') table!: DataTableComponent<Client>;
 
@@ -42,8 +51,9 @@ export class ClientListComponent {
         selectionConfig: {
           isRequired: false
         },
+        hiddenFn: () => !this.ableTo('create', 'client'),
         callback: () => {
-          this.ref = this.dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente' });
+          this.ref = this._dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente' });
           this.ref.onClose.subscribe((result) => {
             if (result) {
               this.table.reset();
@@ -59,9 +69,10 @@ export class ClientListComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        hiddenFn: () => !this.ableTo('update', 'client'),
+        callback: (action, selectedRows) => {
           const client = selectedRows[0];
-          this.ref = this.dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente', data: { client } });
+          this.ref = this._dialogService.open(UpsertClientFormComponent, { header: 'Crear nuevo Cliente', data: { client } });
           this.ref.onClose.subscribe((result) => {
             if (result) {
               this.table.reset();
@@ -71,30 +82,158 @@ export class ClientListComponent {
       },
       {
         title: 'Eliminar',
-        tooltip: 'Eliminar Usuario',
+        tooltip: 'Eliminar Cliente',
         icon: 'trash',
         status: DataTableActionStatus.DANGER,
         selectionConfig: {
           maxSelectedRows: 1
         },
-        callback: (selectedRows) => {
+        hasLoadingEnabled: true,
+        hiddenFn: () => !this.ableTo('delete', 'client'),
+        callback: (action, selectedRows) => {
           const clientId = selectedRows[0].id;
-          this.confirmationService.confirm({
+          this._confirmationService.confirm({
             key: 'confirmDelete',
             accept: () => {
               this.clientService.deleteClient(clientId)
                 .then(() => {
-                  this.messageService.add({ key: 'confirmDelete', severity: 'success', summary: 'Eliminado!', detail: 'El cliente ha sido eliminado!.' });
+                  this._messageService.add({ key: 'confirmDelete', severity: 'success', summary: 'Eliminado!', detail: 'El cliente ha sido eliminado!.' });
                   this.table.reset();
                 })
                 .catch((err) => {
                   console.error(err);
-                  this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' })
-                });
+                  this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
+                })
+                .finally(() => action.loading = false);
             },
             reject: () => {
-              this.messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' })
+              this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' });
+              action.loading = false
             }
+          });
+        }
+      },
+      {
+        title: 'Parametros',
+        tooltip: 'Ver Parametros',
+        icon: 'box',
+        status: DataTableActionStatus.INFO,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        hiddenFn: () => this.hasReceptionistRole(),
+        callback: (action, selectedRows) => {
+          const clientId = selectedRows[0].id;
+          this._router.navigate([`clients/${clientId}/parameters`]);
+        }
+      },
+      {
+        title: 'Precios Lavado',
+        tooltip: 'Ver Precios Lavado',
+        icon: 'dollar',
+        status: DataTableActionStatus.INFO,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        hiddenFn: () => this.hasReceptionistRole(),
+        callback: (action, selectedRows) => {
+          const clientId = selectedRows[0].id;
+          this._router.navigate([`clients/${clientId}/wash-type-prices`]);
+        }
+      },
+      {
+        title: 'Precios Efecto',
+        tooltip: 'Ver Precios Efectos',
+        icon: 'dollar',
+        status: DataTableActionStatus.INFO,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        hiddenFn: () => this.hasReceptionistRole(),
+        callback: (action, selectedRows) => {
+          const clientId = selectedRows[0].id;
+          this._router.navigate([`clients/${clientId}/effect-prices`]);
+        }
+      },
+      {
+        title: 'Ordenes de lavado',
+        tooltip: 'Lista las ordenes de lavado del cliente',
+        icon: 'list',
+        status: DataTableActionStatus.INFO,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        callback: (action, selectedRows) => {
+          const selectedClient = selectedRows[0];
+          this._clientDataService.setData(selectedClient);
+          this._router.navigate([`wash-orders/${selectedClient.id}/client`]);
+        }
+      },
+      {
+        title: 'Estado Cuenta',
+        tooltip: 'Estado cuenta',
+        icon: 'money-bill',
+        status: DataTableActionStatus.PRIMARY,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        hiddenFn: () => this.hasReceptionistRole(),
+        callback: (action, selectedRows) => {
+          const clientId = selectedRows[0].id;
+          this._router.navigate([`clients/${clientId}/movements`]);
+        }
+      },
+      {
+        title: 'Registrar Pago',
+        tooltip: 'Registrar nuevo pago',
+        icon: 'dollar',
+        status: DataTableActionStatus.SUCCESS,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        hasLoadingEnabled: true,
+        hiddenFn: () => this.hasReceptionistRole(),
+        callback: async (action, selectedRows) => {
+          const client = selectedRows[0];
+          const currencyRate = await this.clientService.getCurrencyRate(client.id);
+
+          this.ref = this._dialogService.open(
+            AddPaymentComponent,
+            { header: 'Registrar pago', data: { clientId: client.id, currencyRate }, width: '80%', closeOnEscape: false }
+          );
+          this.ref.onClose.subscribe(result => {
+            if (result) {
+
+            }
+
+            action.loading = false;
+          });
+        }
+      },
+      {
+        title: 'Registrar Descuento',
+        tooltip: 'Registrar descuento',
+        icon: 'dollar',
+        status: DataTableActionStatus.WARNING,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        hasLoadingEnabled: true,
+        hiddenFn: () => this.hasReceptionistRole(),
+        callback: async (action, selectedRows) => {
+          const client = selectedRows[0];
+          const currencyRate = await this.clientService.getCurrencyRate(client.id);
+
+          this.ref = this._dialogService.open(
+            AddDiscountComponent,
+            { header: 'Registrar descuento', data: { clientId: client.id, currencyRate }, width: '80%', closeOnEscape: false }
+          );
+          this.ref.onClose.subscribe(result => {
+            if (result) {
+
+            }
+
+            action.loading = false;
           });
         }
       }
@@ -102,9 +241,14 @@ export class ClientListComponent {
   };
 
   constructor(
+    abilityService: AbilityService<AppAbility>,
+    authService: AuthService,
     public clientService: ClientService,
-    private confirmationService: ConfirmationService,
-    private messageService: MessageService,
-    private dialogService: DialogService) { }
-
+    private _confirmationService: ConfirmationService,
+    private _messageService: MessageService,
+    private _dialogService: DialogService,
+    private _clientDataService: ClientDataService,
+    private _router: Router) {
+    super(abilityService, authService);
+  }
 }

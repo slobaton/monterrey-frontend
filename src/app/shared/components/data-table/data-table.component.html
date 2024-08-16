@@ -25,17 +25,20 @@
         <ng-container *ngIf="hasActions()">
           <ng-container *ngFor="let action of tableConfig.actions">
             <p-button
-              *ngIf="isSelectionEnabled() || !requireSelectedRows(action)"
+              *ngIf="isActionVisible(action)"
               [styleClass]="'p-button-sm mx-1 ' + generateActionColor(action)"
               [icon]="generateActionIcon(action)"
               [label]="action.title ?? ''"
               [disabled]="!isActionEnabled(action)"
+              [loading]="
+                action.hasLoadingEnabled ? action.loading ?? false : false
+              "
               (onClick)="executeActionCallback(action)"
             ></p-button>
           </ng-container>
         </ng-container>
       </div>
-      <span class="p-input-icon-left">
+      <span *ngIf="searchEnabled" class="p-input-icon-left">
         <i class="pi pi-search"></i>
         <input
           pInputText
@@ -50,6 +53,8 @@
 
   <ng-template pTemplate="header" let-columns>
     <tr>
+      <th *ngIf="rowDetails" style="width: 5rem"></th>
+
       <ng-container *ngFor="let col of columns">
         <ng-container *ngIf="col.visible ?? true">
           <th
@@ -80,12 +85,24 @@
     let-rowData
     let-rowIndex="rowIndex"
     let-columns="columns"
+    let-expanded="expanded"
   >
     <tr
       [pSelectableRowDisabled]="!isSelectionEnabled()"
       [pSelectableRow]="rowData"
       [pSelectableRowIndex]="rowIndex"
     >
+      <td *ngIf="rowDetails">
+        <button
+          type="button"
+          pButton
+          pRipple
+          [pRowToggler]="rowData"
+          class="p-button-sm p-button-text p-button-rounded p-button-plain"
+          [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+        ></button>
+      </td>
+
       <ng-container *ngFor="let col of columns">
         <td
           *ngIf="col.visible ?? true"
@@ -108,6 +125,14 @@
             <ng-container *ngSwitchCase="columnType.DATETIME">
               {{ rowData[col.propertyRef] | date : "dd/MM/YYYY HH:mm:ss" }}
             </ng-container>
+            <ng-container *ngSwitchCase="columnType.CUSTOM">
+              {{ getColumnCustomValue(col, rowData) }}
+            </ng-container>
+            <ng-container *ngSwitchCase="columnType.BADGE">
+              <div class="p-badge p-badge-secondary">
+                {{ getColumnCustomValue(col, rowData) }}
+              </div>
+            </ng-container>
           </container-element>
         </td>
       </ng-container>
@@ -124,6 +149,17 @@
           (click)="executeActionCallback(action, rowData)"
           [pTooltip]="action.tooltip ?? ''"
         ></button>
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template *ngIf="rowDetails" pTemplate="rowexpansion" let-rowItem>
+    <tr>
+      <td colspan="12">
+        <ng-container
+          [ngTemplateOutlet]="rowDetails"
+          [ngTemplateOutletContext]="{ $implicit: rowItem }"
+        ></ng-container>
       </td>
     </tr>
   </ng-template>

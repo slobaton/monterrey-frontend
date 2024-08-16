@@ -1,0 +1,227 @@
+<app-form
+  *ngIf="ability$ | async as ab"
+  [form]="washOrderDetailForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+  [customSubmit]="true"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-3">
+      <app-form-label
+        id="cloth_type_id"
+        text="Tipo de Ropa"
+        [required]="true"
+      />
+      <app-form-select
+        [form]="washOrderDetailForm"
+        id="cloth_type_id"
+        controlName="cloth_type_id"
+        placeholder="Seleccione un tipo de ropa..."
+        optionLabel="name"
+        optionValue="id"
+        [filterEnabled]="true"
+        [isLazy]="true"
+        [sourceDataService]="clothTypeService"
+      >
+      </app-form-select>
+    </div>
+    <div class="col-3">
+      <app-form-label
+        id="cloth_size_id"
+        text="Tamaño de Ropa"
+        [required]="true"
+      />
+      <app-form-select
+        [form]="washOrderDetailForm"
+        id="cloth_size_id"
+        controlName="cloth_size_id"
+        placeholder="Seleccione un tamaño de ropa..."
+        optionLabel="name"
+        optionValue="id"
+        [filterEnabled]="true"
+        [isLazy]="true"
+        [sourceDataService]="clothSizeService"
+      >
+      </app-form-select>
+    </div>
+    <div class="col-2">
+      <app-form-label
+        id="num_buttonholes"
+        text="Num. Ojales"
+        [required]="true"
+      />
+      <app-form-input-number
+        [form]="washOrderDetailForm"
+        id="num_buttonholes"
+        controlName="num_buttonholes"
+        placeholder="Num. Ojales..."
+      />
+    </div>
+    <div class="col-2">
+      <app-form-label id="min_buttonholes" text="Ojales Disp. Regalo" />
+      <p-inputNumber
+        id="min_buttonholes"
+        [(ngModel)]="washOrderDetailCalcResult.min_buttonholes"
+        [disabled]="true"
+      />
+    </div>
+    <div class="col-2">
+      <app-form-label id="price_per_buttonhole" text="Precio Ojal (Bs.)" />
+      <p-inputNumber
+        id="price_per_buttonhole"
+        [(ngModel)]="washOrderDetailCalcResult.price_per_buttonhole"
+        [disabled]="true"
+      />
+    </div>
+
+    <div class="col-4">
+      <app-form-label id="quantity" text="Cantidad" [required]="true" />
+      <app-form-input-number
+        [form]="washOrderDetailForm"
+        id="quantity"
+        controlName="quantity"
+        placeholder="Cantidad..."
+      />
+    </div>
+    <div class="col-1 text-center">
+      <h6>Focalizado</h6>
+      <app-form-switch
+        [form]="washOrderDetailForm"
+        id="is_focalizado_active"
+        controlName="is_focalizado_active"
+      ></app-form-switch>
+    </div>
+    <div class="col-1 text-center">
+      <h6>Nevado</h6>
+      <app-form-switch
+        [form]="washOrderDetailForm"
+        id="is_nevado_active"
+        controlName="is_nevado_active"
+      ></app-form-switch>
+    </div>
+
+    <div class="col-3">
+      <ng-container *ngIf="!hasReceptionistRole()">
+        <app-form-label id="unit_price" text="Precio Unitario" />
+        <p-inputNumber
+          id="unit_price"
+          [(ngModel)]="washOrderDetailCalcResult.unit_price"
+          [disabled]="true"
+        />
+      </ng-container>
+    </div>
+    <div class="col-3">
+      <ng-container *ngIf="!hasReceptionistRole()">
+        <app-form-label id="subtotal_price" text="Subtotal" />
+        <p-inputNumber
+          id="subtotal_price"
+          [(ngModel)]="washOrderDetailCalcResult.subtotal_price"
+          [disabled]="true"
+        />
+      </ng-container>
+    </div>
+
+    <div class="col-9 py-0 my-0">
+      <app-form-label id="observations" text="Descripción" />
+      <app-form-textarea
+        [form]="washOrderDetailForm"
+        id="observations"
+        controlName="observations"
+        placeholder="Ingrese las observaciones del detalle..."
+      ></app-form-textarea>
+    </div>
+    <div class="col-3">
+      <div
+        *ngIf="!hasReceptionistRole()"
+        class="flex justify-content-center align-items-center h-full"
+      >
+        <p-overlayPanel #priceInfo>
+          <h5>Detalle Precio Unitario</h5>
+          <ul>
+            <li>Precio Lavado: {{ washOrderDetailCalcResult.wash_price }} $</li>
+            <li>
+              Precio Ojales:
+              {{ washOrderDetailCalcResult.buttonholes_total_price }} $
+            </li>
+            <li>
+              Precio Focalizado:
+              {{ washOrderDetailCalcResult.focalizado_price }} $
+            </li>
+            <li>
+              Precio Nevado: {{ washOrderDetailCalcResult.nevado_price }} $
+            </li>
+            <li>
+              Precio Efectos:
+              {{ washOrderDetailCalcResult.effect_total_price }} $
+            </li>
+          </ul>
+          <h6>Precio Unitario: {{ washOrderDetailCalcResult.unit_price }} $</h6>
+        </p-overlayPanel>
+        <p-button
+          styleClass="p-button-info"
+          icon="pi pi-dollar"
+          label="Detalle de Precios"
+          [loading]="isCalcPrices"
+          (click)="priceInfo.toggle($event)"
+        ></p-button>
+      </div>
+    </div>
+
+    <div class="col-12 py-0 my-0">
+      <app-list-picker
+        [sourceDataService]="effectService"
+        [selectedOptions]="alreadySelectedItems"
+        [isLazy]="true"
+        filterBy="name"
+        [filterEnabled]="true"
+        filterPlaceholder="Buscar Efecto..."
+        sourceHeader="Efectos Disponibles"
+        targetHeader="Efectos Seleccionados"
+        (onChangeSelection)="onEffectSelection($event)"
+        [onReset]="resetListPickerEvent"
+        [item]="itemTemplate"
+      ></app-list-picker>
+      <ng-template #itemTemplate let-item>
+        {{ item.name }}
+        <span *ngIf="!hasReceptionistRole()">- {{ item.price }} $</span>
+      </ng-template>
+    </div>
+
+    <div class="col-12 mt-2">
+      <div class="flex flex-row justify-content-end gap-2">
+        <p-button
+          *ngIf="doesWashOrderDetailExists; else addNewDetailSection"
+          type="submit"
+          styleClass="p-button-sm p-button-success"
+          icon="pi pi-send"
+          [disabled]="!washOrderDetailForm.valid || isProcessing"
+          label="Actualizar"
+          [loading]="isProcessing"
+        ></p-button>
+
+        <ng-template #addNewDetailSection>
+          <p-button
+            type="submit"
+            styleClass="p-button-sm p-button-success"
+            icon="pi pi-plus"
+            [disabled]="!washOrderDetailForm.valid || isProcessing"
+            label="Agregar"
+            [loading]="isProcessing"
+            (onClick)="setOnlyTimeSave(false)"
+          >
+          </p-button>
+          <p-button
+            type="submit"
+            styleClass="p-button-sm p-button-primary"
+            icon="pi pi-send"
+            [disabled]="!washOrderDetailForm.valid || isProcessing"
+            label="Agregar y Cerrar"
+            [loading]="isProcessing"
+            (onClick)="setOnlyTimeSave()"
+          >
+          </p-button>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</app-form>

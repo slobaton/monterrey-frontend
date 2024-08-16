@@ -8,7 +8,7 @@ import { environment } from './../../../../environments/environment';
 export class BaseService {
 
   private headers!: HttpHeaders;
-  private baseUrl: string = environment.apiUrl;
+  protected baseUrl: string = environment.apiUrl;
 
   constructor(private _http: HttpClient) { }
 
@@ -34,6 +34,13 @@ export class BaseService {
     });
   }
 
+  protected patch<TResponse>(uri: string, params: any = null): Observable<TResponse> {
+    this.setHeaders();
+    return this._http.patch<TResponse>(`${this.baseUrl}/${uri}`, params, {
+      headers: this.headers,
+    });
+  }
+
   protected delete<TResponse>(uri: string): Observable<TResponse> {
     this.setHeaders();
     return this._http.delete<TResponse>(`${this.baseUrl}/${uri}`, {
@@ -45,13 +52,20 @@ export class BaseService {
     return Promise.reject(error);
   }
 
-  protected getPaginationParams(request: PaginatedRequest) {
+  protected getPaginationParams(request: PaginatedRequest, filterCol: string = '', includes: Array<string> = []): HttpParams {
     const sortOrder = request.sortOrder === 'desc' ? '-' : '';
-    return new HttpParams()
-      .append(`filter[all]`, request.filter)
+    const filter = filterCol && filterCol.length ? filterCol : 'all';
+    let params = new HttpParams()
+      .append(`filter[${filter}]`, request.filter)
       .append('page[size]', request.pageSize)
       .append('page[number]', request.page)
       .append('sort', `${sortOrder}${request.sort}`);
+
+    if (includes && includes.length) {
+      params = params.append('include', includes.join(','));
+    }
+
+    return params;
   }
 
   private setHeaders() {

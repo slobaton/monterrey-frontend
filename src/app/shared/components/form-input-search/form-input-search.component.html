@@ -1,0 +1,60 @@
+<ng-container [formGroup]="form">
+  <div class="flex align-items-stretch">
+    <span class="p-input-icon-right">
+      <i
+        *ngIf="!hasValue; else withValueIcon"
+        class="pi pi-search"
+        (click)="openSearchOverlay()"
+      ></i>
+      <ng-template #withValueIcon>
+        <i class="pi pi-times-circle" (click)="resetValue()"></i>
+      </ng-template>
+      <input
+        pInputText
+        type="text"
+        [placeholder]="placeholder"
+        [ngClass]="
+          formControl?.errors && (formControl?.dirty || formControl?.touched)
+            ? 'ng-invalid ng-dirty'
+            : ''
+        "
+        [readonly]="true"
+        (click)="openSearchOverlay()"
+        [value]="selectedLabel"
+        (keydown)="openSearchOverlay()"
+      />
+    </span>
+    <button
+      *ngIf="hasCustomAction"
+      type="button"
+      pButton
+      [icon]="getCustomActionIcon"
+      styleClass="p-button-primary"
+      (click)="executeCustomAction()"
+    ></button>
+  </div>
+  <input [id]="id" [formControlName]="controlName" type="hidden" />
+  <div
+    *ngIf="formControl?.errors && (formControl?.dirty || formControl?.touched)"
+    class="text-red-300"
+  >
+    <small *ngIf="formControl?.hasError('required')">
+      * El campo es requerido.
+    </small>
+    <small *ngIf="formControl?.hasError('minlength')">
+      * El campo debe tener al menos
+      {{ formControl?.getError("minlength").requiredLength }} carácteres.
+    </small>
+    <small *ngIf="formControl?.hasError('maxlength')">
+      * El campo debe tener como máximo
+      {{ formControl?.getError("maxlength").requiredLength }} carácteres.
+    </small>
+    <small *ngIf="formControl?.hasError('serverError')">
+      El campo contiene los siguientes errores:
+      <span *ngFor="let error of formControl?.errors?.['serverError']">
+        <br />
+        * {{ error }}
+      </span>
+    </small>
+  </div>
+</ng-container>

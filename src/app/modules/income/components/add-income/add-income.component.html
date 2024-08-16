@@ -1,0 +1,89 @@
+<app-form
+  [form]="incomeForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-12">
+      <app-payment-info
+        [currencyRateValue]="currencyRateValue"
+        (incomeReceiptCanceled)="onReceiptCanceled($event)"
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label id="date" text="Fecha" [required]="false" />
+      <app-form-datetime-picker
+        [form]="incomeForm"
+        id="date"
+        controlName="date"
+        placeholder="Fecha de Pago (opcional)"
+        [showIcon]="true"
+      />
+    </div>
+    <div class="col-6">
+      <app-form-label
+        id="receipt_number"
+        text="Num. Recibo"
+        [required]="true"
+      />
+      <app-form-input-number
+        [form]="incomeForm"
+        id="receipt_number"
+        controlName="receipt_number"
+        placeholder="Ingrese el número de recibo..."
+      />
+    </div>
+    <div class="col-6">
+      <app-form-label id="client_name" text="Cliente" [required]="false" />
+      <app-form-input-text
+        [form]="incomeForm"
+        id="client_name"
+        controlName="client_name"
+        placeholder="Ingrese el concepto de ingreso..."
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label id="concept" text="Concepto" [required]="true" />
+      <app-form-select
+        *ngIf="!isFallbackConcept; else otherConcept"
+        [form]="incomeForm"
+        id="concept"
+        controlName="concept"
+        placeholder="Seleccione un concepto..."
+        [options]="conceptOptions"
+        optionLabel="value"
+        optionValue="value"
+      />
+      <ng-template #otherConcept>
+        <app-form-input-text
+          [form]="incomeForm"
+          id="concept"
+          controlName="concept"
+          placeholder="Ingrese el concepto de ingreso..."
+        />
+      </ng-template>
+    </div>
+    <div class="col-6">
+      <app-form-label id="amount" text="Monto ($)" [required]="true" />
+      <app-form-input-number
+        [form]="incomeForm"
+        id="amount"
+        mode="decimal"
+        controlName="amount"
+        placeholder="Ingrese el monto de pago en $us.."
+      />
+    </div>
+    <div class="col-6">
+      <app-form-label id="amount-currency" text="Monto (Bs.)" />
+      <p-inputNumber
+        id="amount-currency"
+        [(ngModel)]="amountCurrency"
+        (ngModelChange)="onAmountCurrencyChanged($event)"
+        mode="decimal"
+        [minFractionDigits]="2"
+        [maxFractionDigits]="2"
+        placeholder="Ingrese el monto de pago en Bs..."
+      />
+    </div>
+  </div>
+</app-form>
