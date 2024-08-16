@@ -3,28 +3,37 @@ import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { AddPaymentRequest } from 'src/app/@core/models/request/add-payment-request';
+import { AddIncomeRequest } from 'src/app/@core/models/request/add-income-request';
 import { DateService } from 'src/app/@core/services/common/date.service';
 import { ValidationService } from 'src/app/@core/services/common/validation.service';
-import { ClientService } from 'src/app/@core/services/rest/client.service';
+import { IncomeService } from 'src/app/@core/services/rest/income.service';
 
 @Component({
-  selector: 'app-add-payment',
-  templateUrl: './add-payment.component.html',
-  styleUrls: ['./add-payment.component.scss']
+  selector: 'app-add-income',
+  templateUrl: './add-income.component.html',
+  styleUrls: ['./add-income.component.scss']
 })
-export class AddPaymentComponent implements OnInit {
+export class AddIncomeComponent implements OnInit {
 
-  paymentForm!: FormGroup;
+  incomeForm!: FormGroup;
   formProcessEvent: EventEmitter<boolean> = new EventEmitter();
-
-  clientId: string | null = null;
 
   currencyRateValue: number = 0;
 
   amountCurrency: number = 0;
 
-  constructor(private _clientService: ClientService,
+  isFallbackConcept: boolean = false;
+  fallbackConceptValue: string = 'Otro';
+  conceptOptions = [
+    {
+      value: 'Pago a Cuenta',
+    },
+    {
+      value: this.fallbackConceptValue
+    }
+  ];
+
+  constructor(private _incomeService: IncomeService,
     private _messageService: MessageService,
     private _ref: DynamicDialogRef,
     private _config: DynamicDialogConfig,
@@ -34,46 +43,42 @@ export class AddPaymentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.clientId = this._config.data?.clientId;
     this.currencyRateValue = this._config.data?.currencyRate?.value;
     this.initializeForm();
   }
 
   initializeForm(): void {
-    this.paymentForm = new FormGroup({
+    this.incomeForm = new FormGroup({
       receipt_number: new FormControl<number>(0, [Validators.required]),
       date: new FormControl<Date>(this._dateService.getCurrentDate(), []),
       amount: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
+      concept: new FormControl<string>('', [Validators.required]),
+      client_name: new FormControl<string>('', [])
     });
 
-    this.paymentForm.get('amount')?.valueChanges.subscribe(() => this.onAmountChanged());
+    this.incomeForm.get('amount')?.valueChanges.subscribe(() => this.onAmountChanged());
+    this.incomeForm.get('concept')?.valueChanges.subscribe(() => this.onConceptChanged());
   }
 
-  onSubmitForm(paymentFormValue: any): void {
-    if (!this.clientId) {
-      this._ref.close(false);
-      return;
-    }
-
+  onSubmitForm(incomeFormValue: any): void {
     this.formProcessEvent.emit(true);
 
-    const payment: AddPaymentRequest = {
-      ...paymentFormValue,
-      date: paymentFormValue.date
-        ? this._dateService.formatDate(paymentFormValue.date)
+    const income: AddIncomeRequest = {
+      ...incomeFormValue,
+      date: incomeFormValue.date
+        ? this._dateService.formatDate(incomeFormValue.date)
         : null
     };
-    const clientId = this.clientId;
 
-    this._clientService.addPayment(clientId, payment)
+    this._incomeService.addIncome(income)
       .then(() => {
-        this._messageService.add({ severity: 'success', summary: 'Pago registrado!', detail: 'Pago registrado con éxito' });
+        this._messageService.add({ severity: 'success', summary: 'Ingreso registrado!', detail: 'Ingreso registrado con éxito' });
         this._ref.close(true);
       })
       .catch((err) => {
         if (err instanceof HttpErrorResponse) {
           if (err.status === 422) {
-            this._validationService.handleValidationErrors(this.paymentForm, err.error.errors);
+            this._validationService.handleValidationErrors(this.incomeForm, err.error.errors);
           } else {
             this._messageService.add({ severity: 'error', summary: 'Error!', detail: 'La acción no se pudo realizar, intente nuevamente...' });
           }
@@ -85,7 +90,7 @@ export class AddPaymentComponent implements OnInit {
   }
 
   onAmountChanged() {
-    const currentValue = this.paymentForm.get('amount')?.value;
+    const currentValue = this.incomeForm.get('amount')?.value;
     const convertedValue = currentValue * this.currencyRateValue;
     this.amountCurrency = convertedValue;
   }
@@ -93,12 +98,25 @@ export class AddPaymentComponent implements OnInit {
   onAmountCurrencyChanged(amount?: number) {
     const currentValue = this.amountCurrency;
     const convertedValue = currentValue / this.currencyRateValue;
-    this.paymentForm.get('amount')?.setValue(convertedValue);
+    this.incomeForm.get('amount')?.setValue(convertedValue);
+  }
+
+  onConceptChanged() {
+    const currentValue = this.incomeForm.get('concept')?.value;
+
+    if (this.isFallbackConcept) {
+      return;
+    }
+
+    if (currentValue === this.fallbackConceptValue) {
+      this.isFallbackConcept = true;
+      this.incomeForm.get('concept')?.reset();
+    }
   }
 
   onReceiptCanceled(event: any) {
     if (event) {
-      this.paymentForm.get('receipt_number')?.reset();
+      this.incomeForm.get('receipt_number')?.reset();
     }
   }
 }

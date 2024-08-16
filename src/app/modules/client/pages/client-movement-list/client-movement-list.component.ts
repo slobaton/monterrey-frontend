@@ -28,9 +28,9 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
   client: Client | null = null;
   balance: number = 0;
 
-  currentDate: Date = this._dateService.getCurrentDate();
-  startDate: Date = this.currentDate;
-  endDate: Date = this.currentDate;
+  currentDate: Date;
+  startDate: Date;
+  endDate: Date;
   processedMovements: ProcessedAccountMovement[] = [];
 
   isProcessingReport: boolean = false;
@@ -46,6 +46,23 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
         title: 'Fecha',
         propertyRef: 'date',
         type: SimpleTableColumnType.DATE
+      },
+      {
+        title: 'Tipo',
+        propertyRef: 'type',
+        type: SimpleTableColumnType.BADGE,
+        customValue: (type) => {
+          switch (type) {
+            case AccountMovementType.CHARGE:
+              return 'Deuda'
+            case AccountMovementType.PAYMENT:
+              return 'Pago'
+            case AccountMovementType.DISCOUNT:
+              return 'Descuento'
+            default:
+              return 'Desconocido'
+          }
+        }
       },
       {
         title: 'N.R.',
@@ -92,25 +109,8 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
         propertyRef: 'balance_debt',
         type: SimpleTableColumnType.TEXT
       },
-      {
-        title: 'Tipo',
-        propertyRef: 'type',
-        type: SimpleTableColumnType.BADGE,
-        customValue: (type) => {
-          switch (type) {
-            case AccountMovementType.CHARGE:
-              return 'Deuda'
-            case AccountMovementType.PAYMENT:
-              return 'Pago'
-            case AccountMovementType.DISCOUNT:
-              return 'Descuento'
-            default:
-              return 'Desconocido'
-          }
-        }
-      }
     ],
-    identifierPropRef: 'id'
+    identifierPropRef: 'id',
   };
 
   constructor(
@@ -119,13 +119,14 @@ export class ClientMovementListComponent extends ProtectedComponent implements O
     private _route: ActivatedRoute,
     private _router: Router,
     private _messageService: MessageService,
-    private _dialogService: DialogService,
-    private _movementService: AccountMovementService,
     private _clientService: ClientService,
     private _reportService: ReportService,
     private _dateService: DateService,
     private _printService: PrintService) {
     super(abilityService, authService);
+    this.currentDate = this._dateService.getCurrentDate();
+    this.startDate = this.currentDate;
+    this.endDate = this.currentDate;
   }
 
   ngOnInit(): void {

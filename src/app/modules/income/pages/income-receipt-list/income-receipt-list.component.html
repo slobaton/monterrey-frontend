@@ -1,0 +1,25 @@
+<div *ngIf="ability$ | async as ab" class="grid">
+  <div class="col-12">
+    <app-page-card
+      *ngIf="ab.can('read', 'income-receipt')"
+      title="Recibos de Ingreso"
+    >
+      <app-data-table
+        #incomeReceiptsTable
+        [tableConfig]="tableConfig"
+        [sourceDataService]="incomeReceiptService"
+        [rowDetails]="rowDetails"
+      ></app-data-table>
+      <ng-template #rowDetails let-rowData>
+        <div class="grid mt-1">
+          <div class="col-12">
+            <ng-container *ngIf="rowData['canceled_reason']">
+              <h6>Razón de Cancelación:</h6>
+              <p>{{ rowData["canceled_reason"] }}</p>
+            </ng-container>
+          </div>
+        </div>
+      </ng-template>
+    </app-page-card>
+  </div>
+</div>

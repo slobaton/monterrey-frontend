@@ -59,7 +59,7 @@ import { MenuModule } from 'primeng/menu';
     SimpleTableComponent,
     SearchOverlayComponent,
     FormInputSearchComponent,
-    PageCardComponent
+    PageCardComponent,
   ],
   imports: [
     CommonModule,

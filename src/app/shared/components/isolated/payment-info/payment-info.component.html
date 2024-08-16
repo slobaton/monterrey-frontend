@@ -1,0 +1,16 @@
+<p-toolbar>
+  <div class="p-toolbar-group-start">
+    Tipo de Cambio:
+    <p-tag severity="primary" styleClass="text-sm ml-2"
+      >{{ currencyRateValue }} .Bs</p-tag
+    >
+  </div>
+  <div class="p-toolbar-group-end">
+    <p-button
+      label="Anular Recibo"
+      icon="pi pi-times"
+      styleClass="p-button-danger"
+      (onClick)="cancelReceipt()"
+    ></p-button>
+  </div>
+</p-toolbar>

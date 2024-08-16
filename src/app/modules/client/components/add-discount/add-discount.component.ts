@@ -40,6 +40,7 @@ export class AddDiscountComponent {
 
   initializeForm(): void {
     this.discountForm = new FormGroup({
+      receipt_number: new FormControl<number>(0, [Validators.required]),
       concept: new FormControl<string>('', [Validators.required]),
       date: new FormControl<Date>(this._dateService.getCurrentDate(), []),
       amount: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
@@ -58,7 +59,9 @@ export class AddDiscountComponent {
 
     const discount: AddDiscountRequest = {
       ...discountFormValue,
-      date: this._dateService.formatDate(discountFormValue.date)
+      date: discountFormValue.date
+        ? this._dateService.formatDate(discountFormValue.date)
+        : null
     };
 
     const clientId = this.clientId;
@@ -92,5 +95,11 @@ export class AddDiscountComponent {
     const currentValue = this.amountCurrency;
     const convertedValue = currentValue / this.currencyRateValue;
     this.discountForm.get('amount')?.setValue(convertedValue);
+  }
+
+  onReceiptCanceled(event: any) {
+    if (event) {
+      this.discountForm.get('receipt_number')?.reset();
+    }
   }
 }

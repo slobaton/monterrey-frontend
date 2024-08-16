@@ -1,0 +1,135 @@
+<div *ngIf="ability$ | async as ab" class="grid">
+  <div class="col-12">
+    <app-page-card *ngIf="ab.can('read', 'income')" [title]="title">
+      <div
+        class="action_container flex flex-row justify-content-center mb-1 w-full"
+      >
+        <p-tabView
+          class="w-full"
+          [(activeIndex)]="activeReportIndex"
+          (activeIndexChange)="onChangeReportType($event)"
+        >
+          <p-tabPanel header="Mesual">
+            <div class="actions flex flex-row justify-content-between">
+              <div
+                class="input_selection flex flex-row justify-content-start gap-3"
+              >
+                <div class="month_input">
+                  <app-form-label id="selectedMonth" text="Mes:" />
+                  <p-dropdown
+                    id="selectedMonth"
+                    [options]="availableMonths"
+                    optionLabel="name"
+                    optionValue="value"
+                    [(ngModel)]="selectedMonth"
+                    (ngModelChange)="onChangeReporParams()"
+                    view="month"
+                  ></p-dropdown>
+                </div>
+                <div class="year_input">
+                  <app-form-label id="selectedYear" text="Año:" />
+                  <p-dropdown
+                    id="selectedYear"
+                    [options]="availableYears"
+                    optionLabel="name"
+                    optionValue="value"
+                    [(ngModel)]="selectedYear"
+                    (ngModelChange)="onChangeReporParams()"
+                    view="month"
+                  ></p-dropdown>
+                </div>
+              </div>
+
+              <div
+                class="income_actions flex flex-row justify-content-end gap-3"
+              >
+                <p-button
+                  icon="pi pi-print"
+                  label="Imprimir Reporte"
+                  (onClick)="printMonthlyIncomes()"
+                  [loading]="isProcessingReport"
+                ></p-button>
+                <p-button
+                  icon="pi pi-sign-in"
+                  styleClass="p-button-success"
+                  label="Otro Ingreso"
+                  (onClick)="openAddDiscountModal()"
+                ></p-button>
+              </div>
+            </div>
+          </p-tabPanel>
+          <p-tabPanel header="Anual">
+            <div class="actions flex flex-row justify-content-between">
+              <div
+                class="input_selection flex flex-row justify-content-start gap-3"
+              >
+                <div class="year_input">
+                  <app-form-label id="selectedYear" text="Año:" />
+                  <p-dropdown
+                    id="selectedYear"
+                    [options]="availableYears"
+                    optionLabel="name"
+                    optionValue="value"
+                    [(ngModel)]="selectedYear"
+                    (ngModelChange)="onChangeReporParams()"
+                    view="month"
+                  ></p-dropdown>
+                </div>
+              </div>
+
+              <div
+                class="income_actions flex flex-row justify-content-end gap-3"
+              >
+                <p-button
+                  icon="pi pi-print"
+                  label="Imprimir Reporte"
+                  (onClick)="printYearlyIncomes()"
+                  [loading]="isProcessingReport"
+                ></p-button>
+                <p-button
+                  icon="pi pi-sign-in"
+                  styleClass="p-button-success"
+                  label="Otro Ingreso"
+                  (onClick)="openAddDiscountModal()"
+                ></p-button>
+              </div>
+            </div>
+          </p-tabPanel>
+        </p-tabView>
+      </div>
+      <div
+        class="total_income_info flex flex-row justify-content-end gap-4 mb-3"
+      >
+        <div class="total_income">
+          <app-form-label id="total_income" text="Total:" />
+          <p-inputNumber
+            id="total_income"
+            [(ngModel)]="total_income"
+            [readonly]="true"
+          ></p-inputNumber>
+        </div>
+        <div class="total_real_income">
+          <app-form-label id="total_real_income" text="Total S/Perdida:" />
+          <p-inputNumber
+            id="total_real_income"
+            [(ngModel)]="total_real_income"
+            [readonly]="true"
+          ></p-inputNumber>
+        </div>
+        <div class="lost_income">
+          <app-form-label id="lost_income" text="Perdida:" />
+          <p-inputNumber
+            id="lost_income"
+            [(ngModel)]="lost_income"
+            [readonly]="true"
+          ></p-inputNumber>
+        </div>
+      </div>
+      <app-simple-table
+        [tableConfig]="tableConfig"
+        [data]="incomes"
+        [loading]="isProcessing"
+      />
+    </app-page-card>
+  </div>
+</div>

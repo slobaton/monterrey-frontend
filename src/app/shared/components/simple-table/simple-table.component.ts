@@ -14,6 +14,8 @@ export class SimpleTableComponent<TEntity> implements OnInit {
 
   @Input() data: Array<TEntity> = [];
 
+  @Input() loading: boolean = false;
+
   @ViewChild('simpleTableRef') simpleTable!: Table;
 
   public columnType = SimpleTableColumnType;

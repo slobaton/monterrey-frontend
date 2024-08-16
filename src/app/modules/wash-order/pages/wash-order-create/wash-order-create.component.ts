@@ -186,7 +186,9 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   private saveWashOrder(washOrderFormValue: any) {
     const washOrder: WashOrderCreateRequest = {
       ...washOrderFormValue,
-      date: this._dateService.formatDate(washOrderFormValue.date)
+      date: washOrderFormValue.date
+        ? this._dateService.formatDate(washOrderFormValue.date)
+        : null
     }
 
     this._washOrderService.create(washOrder)
@@ -234,7 +236,9 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   private updateWashOrder(washOrderFormValue: any) {
     const washOrder: WashOrderUpdateRequest = {
       ...washOrderFormValue,
-      date: this._dateService.formatDate(washOrderFormValue.date)
+      date: washOrderFormValue.date
+        ? this._dateService.formatDate(washOrderFormValue.date)
+        : null
     }
 
     this._washOrderService.update(washOrder, this.washOrderId)

@@ -156,6 +156,20 @@ export class ClientListComponent extends ProtectedComponent {
         }
       },
       {
+        title: 'Ordenes de lavado',
+        tooltip: 'Lista las ordenes de lavado del cliente',
+        icon: 'list',
+        status: DataTableActionStatus.INFO,
+        selectionConfig: {
+          maxSelectedRows: 1
+        },
+        callback: (action, selectedRows) => {
+          const selectedClient = selectedRows[0];
+          this._clientDataService.setData(selectedClient);
+          this._router.navigate([`wash-orders/${selectedClient.id}/client`]);
+        }
+      },
+      {
         title: 'Estado Cuenta',
         tooltip: 'Estado cuenta',
         icon: 'money-bill',
@@ -183,7 +197,10 @@ export class ClientListComponent extends ProtectedComponent {
           const client = selectedRows[0];
           const currencyRate = await this.clientService.getCurrencyRate(client.id);
 
-          this.ref = this._dialogService.open(AddPaymentComponent, { header: 'Registrar pago', data: { clientId: client.id, currencyRate } });
+          this.ref = this._dialogService.open(
+            AddPaymentComponent,
+            { header: 'Registrar pago', data: { clientId: client.id, currencyRate }, width: '80%', closeOnEscape: false }
+          );
           this.ref.onClose.subscribe(result => {
             if (result) {
 
@@ -207,7 +224,10 @@ export class ClientListComponent extends ProtectedComponent {
           const client = selectedRows[0];
           const currencyRate = await this.clientService.getCurrencyRate(client.id);
 
-          this.ref = this._dialogService.open(AddDiscountComponent, { header: 'Registrar descuento', data: { clientId: client.id, currencyRate } });
+          this.ref = this._dialogService.open(
+            AddDiscountComponent,
+            { header: 'Registrar descuento', data: { clientId: client.id, currencyRate }, width: '80%', closeOnEscape: false }
+          );
           this.ref.onClose.subscribe(result => {
             if (result) {
 
@@ -216,21 +236,7 @@ export class ClientListComponent extends ProtectedComponent {
             action.loading = false;
           });
         }
-      },
-      {
-        title: 'Ordenes de lavado',
-        tooltip: 'Lista las ordenes de lavado del cliente',
-        icon: 'list',
-        status: DataTableActionStatus.INFO,
-        selectionConfig: {
-          maxSelectedRows: 1
-        },
-        callback: (action, selectedRows) => {
-          const selectedClient = selectedRows[0];
-          this._clientDataService.setData(selectedClient);
-          this._router.navigate([`wash-orders/${selectedClient.id}/client`]);
-        }
-      },
+      }
     ]
   };
 

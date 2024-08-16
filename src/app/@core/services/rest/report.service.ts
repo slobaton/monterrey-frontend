@@ -27,6 +27,21 @@ export class ReportService extends BaseService implements IReportService {
     return await this.getValidReportUrl(`clients/${clientId}/accountMovements`, params);
   }
 
+  async getMonthlyIncomesPrintReportUrl(month: number, year: number): Promise<string> {
+    const params = new HttpParams()
+      .append('month', month)
+      .append('year', year);
+
+    return await this.getValidReportUrl(`incomes/monthly`, params);
+  }
+
+  async getYearlyIncomesPrintReportUrl(year: number): Promise<string> {
+    const params = new HttpParams()
+      .append('year', year);
+
+    return await this.getValidReportUrl(`incomes/yearly`, params);
+  }
+
   async getGeneralReportCount(): Promise<GeneralCountReport> {
     try {
       const data = await firstValueFrom(this.get<GeneralCountReport>('reports/general-count'));

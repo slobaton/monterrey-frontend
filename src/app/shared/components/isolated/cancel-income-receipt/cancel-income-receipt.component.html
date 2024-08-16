@@ -1,0 +1,44 @@
+<app-form
+  [form]="cancelReceiptForm"
+  [onProcessCompleted]="formProcessEvent"
+  (onSubmit)="onSubmitForm($event)"
+>
+  <div class="form-container p-fluid p-formgrid grid">
+    <div class="col-12">
+      <app-form-label id="date" text="Fecha" [required]="false" />
+      <app-form-datetime-picker
+        [form]="cancelReceiptForm"
+        id="date"
+        controlName="date"
+        placeholder="Fecha de Cancelación (opcional)"
+        [showIcon]="true"
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label
+        id="receipt_number"
+        text="Num. Recibo"
+        [required]="true"
+      />
+      <app-form-input-number
+        [form]="cancelReceiptForm"
+        id="receipt_number"
+        controlName="receipt_number"
+        placeholder="Ingrese el número de recibo..."
+      />
+    </div>
+    <div class="col-12">
+      <app-form-label
+        id="canceled_reason"
+        text="Razón de Cancelación"
+        [required]="true"
+      />
+      <app-form-input-text
+        [form]="cancelReceiptForm"
+        id="canceled_reason"
+        controlName="canceled_reason"
+        placeholder="Ingrese la razón de cancelación..."
+      />
+    </div>
+  </div>
+</app-form>
