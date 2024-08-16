@@ -184,9 +184,7 @@ export class IncomeListComponent implements OnInit {
       });
 
     this.ref.onClose.subscribe((result) => {
-      if (result) {
-        this._availableReportFuncs[this.activeReportIndex].call(this);
-      }
+      this._availableReportFuncs[this.activeReportIndex].call(this);
     });
   }
 
