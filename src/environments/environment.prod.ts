@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://laundry-app.test/api'
+  apiUrl: 'https://laundrymr-api.vercel.app/api/api'
 };
