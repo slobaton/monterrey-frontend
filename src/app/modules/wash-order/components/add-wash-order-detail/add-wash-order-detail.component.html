@@ -169,9 +169,8 @@
 
     <div class="col-12 py-0 my-0">
       <app-list-picker
-        [sourceDataService]="effectService"
+        [sourceOptions]="availableEffectItems"
         [selectedOptions]="alreadySelectedItems"
-        [isLazy]="true"
         filterBy="name"
         [filterEnabled]="true"
         filterPlaceholder="Buscar Efecto..."

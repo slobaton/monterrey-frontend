@@ -285,9 +285,11 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   }
 
   addWashOrderDetail(): void {
+    const clientId = this.washOrder?.client_id || this.clientId;
+
     const dialogProps = {
       header: 'Agregar Detalle de lavado',
-      data: { washOrderId: this.washOrderId }
+      data: { washOrderId: this.washOrderId, clientId }
     };
 
     this.ref = this._dialogService.open(AddWashOrderDetailComponent, dialogProps);
@@ -313,9 +315,11 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   }
 
   updateWashOrderDetail(washOrderDetailId: string, washOrderDetail: WashOrderDetail): void {
+    const clientId = this.washOrder?.client_id || this.clientId;
+
     const dialogProps = {
       header: 'Actualizar Detalle de Lavado',
-      data: { washOrderId: this.washOrderId, washOrderDetailId, washOrderDetail }
+      data: { washOrderId: this.washOrderId, clientId, washOrderDetailId, washOrderDetail }
     }
 
     this.ref = this._dialogService.open(AddWashOrderDetailComponent, dialogProps);

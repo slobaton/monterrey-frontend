@@ -1,3 +1,4 @@
+import { BaseResponse } from './../../models/response/base-response';
 import { firstValueFrom } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -8,6 +9,7 @@ import { EffectPrice } from '../../models/effect-price';
 import { PaginatedRequest } from '../../models/request/paginated-request';
 import { PaginatedResponse } from '../../models/response/paginated-response';
 import { EffectPriceUpsertRequest } from '../../models/request/effect-price-upsert-request';
+import { Effect } from '../../models/effect';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +18,16 @@ export class EffectPriceService extends BaseService implements IEffectPriceServi
 
   constructor(_http: HttpClient) {
     super(_http);
+  }
+
+  async getWithClientPrices(clientId: string): Promise<Array<Effect>> {
+    try {
+      const response = await firstValueFrom(this.get<BaseResponse<Array<Effect>>>(`clients/${clientId}/effects/prices`));
+
+      return response.data;
+    } catch (error) {
+      return this.handleError(error);
+    }
   }
 
   async assignEffectPrice(clientId: string, effectId: string, request: EffectPriceUpsertRequest): Promise<void> {

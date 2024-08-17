@@ -20,6 +20,7 @@ import { ProtectedComponent } from 'src/app/@core/models/common/protected-compon
 import { AbilityService } from '@casl/angular';
 import { AppAbility } from 'src/app/@core/auth/ability';
 import { AuthService } from 'src/app/@core/services/rest/auth.service';
+import { EffectPriceService } from 'src/app/@core/services/rest/effect-price.service';
 
 @Component({
   selector: 'app-add-wash-order-detail',
@@ -34,6 +35,7 @@ export class AddWashOrderDetailComponent extends ProtectedComponent implements O
   isOnlyTimeSave: boolean = true;
   resetListPickerEvent: EventEmitter<void> = new EventEmitter();
 
+  availableEffectItems: Array<Effect> = [];
   alreadySelectedItems: Array<Effect> = [];
 
   isCalcPrices: boolean = false;
@@ -54,6 +56,7 @@ export class AddWashOrderDetailComponent extends ProtectedComponent implements O
     public clothTypeService: ClothTypeService,
     public clothSizeService: ClothSizeService,
     public effectService: EffectService,
+    private _clientEffectService: EffectPriceService,
     private _messageService: MessageService,
     private _ref: DynamicDialogRef,
     private _config: DynamicDialogConfig,
@@ -64,6 +67,7 @@ export class AddWashOrderDetailComponent extends ProtectedComponent implements O
 
   ngOnInit(): void {
     this.initializeForm();
+    this.retrieveEffectsWithClientPrices();
 
     this.washOrderDetailForm.valueChanges
       .subscribe((formValues) => this.updateCalcRequest(formValues));
@@ -73,6 +77,12 @@ export class AddWashOrderDetailComponent extends ProtectedComponent implements O
       .subscribe((request) => this.getWashOrderDetailPreCalc(request));
 
     this.updateCalcRequest(this.washOrderDetailForm.value);
+  }
+
+  async retrieveEffectsWithClientPrices(): Promise<void> {
+    const clientId = this._config.data?.clientId;
+
+    this.availableEffectItems = await this._clientEffectService.getWithClientPrices(clientId);
   }
 
   initializeForm(): void {

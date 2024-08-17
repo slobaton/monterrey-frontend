@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, TemplateRef } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, TemplateRef, AfterViewInit, AfterContentInit, OnChanges, SimpleChanges } from '@angular/core';
 import { PaginatedRequest } from 'src/app/@core/models/request/paginated-request';
 import { IFetchPaginatedData } from 'src/app/@core/services/interfaces/fetch-paginated-data';
 
@@ -7,7 +7,7 @@ import { IFetchPaginatedData } from 'src/app/@core/services/interfaces/fetch-pag
   templateUrl: './list-picker.component.html',
   styleUrls: ['./list-picker.component.scss']
 })
-export class ListPickerComponent<TEntity> implements OnInit {
+export class ListPickerComponent<TEntity> implements OnInit, OnChanges {
 
   @Input() key: string = 'id';
 
@@ -32,7 +32,23 @@ export class ListPickerComponent<TEntity> implements OnInit {
 
   @Output() onChangeSelection: EventEmitter<Array<TEntity>> = new EventEmitter<Array<TEntity>>();
 
+  private _originalOptions: Array<TEntity> = [];
+  private _optionsAlreadyInitialized: boolean = false;
+
   constructor() { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this._optionsAlreadyInitialized) {
+      return;
+    }
+
+    const sourceOptions = changes['sourceOptions'];
+
+    if (sourceOptions.currentValue && sourceOptions.currentValue.length > 0) {
+      this._originalOptions = [...sourceOptions.currentValue];
+      this._optionsAlreadyInitialized = true;
+    }
+  }
 
   ngOnInit(): void {
     if (this.isLazy && this.sourceDataService) {
@@ -66,10 +82,11 @@ export class ListPickerComponent<TEntity> implements OnInit {
   }
 
   private resetSelection(): void {
+    console.log('original options:', this._originalOptions);
     if (this.isLazy && this.sourceDataService) {
       this.fetchData();
     } else {
-      this.sourceOptions = [...this.sourceOptions, ...this.selectedOptions];
+      this.sourceOptions = [...this._originalOptions];
     }
 
     this.selectedOptions = [];
