@@ -4,11 +4,13 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SearchOverlayComponent } from '../search-overlay/search-overlay.component';
 import { DataTableConfiguration } from 'src/app/@core/types/data-table-definition';
 import { IFetchPaginatedData } from 'src/app/@core/services/interfaces/fetch-paginated-data';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-form-input-search',
   templateUrl: './form-input-search.component.html',
   styleUrls: ['./form-input-search.component.scss'],
+  providers: [ConfirmationService, MessageService]
 })
 export class FormInputSearchComponent<TEntity> implements OnInit {
   @Input() form!: FormGroup;
@@ -29,13 +31,21 @@ export class FormInputSearchComponent<TEntity> implements OnInit {
 
   @Input() onSelect: EventEmitter<any> = new EventEmitter<any>();
 
+  @Input() confirmExistingReplace: boolean = false;
+  @Input() confirmMessage: string = '';
+  @Input() replacedMessage: string = '';
+
   selectedLabel: string = '';
 
   overlayOpened: boolean = false;
 
   ref: DynamicDialogRef | undefined;
 
-  constructor(private _dialogService: DialogService) { }
+  constructor(
+    private _dialogService: DialogService,
+    private _confirmationService: ConfirmationService,
+    private _messageService: MessageService
+  ) { }
 
   public get formControl() {
     return this.form.get(this.controlName);
@@ -97,6 +107,41 @@ export class FormInputSearchComponent<TEntity> implements OnInit {
     const defaultProp = 'id';
     const selectionProp = this.selectionProp ?? defaultProp;
 
+    const shouldReplaceValue = !this.formControl?.value || this.formControl?.value === selectedValue[selectionProp];
+
+    if (!this.confirmExistingReplace || shouldReplaceValue) {
+      this.setFormInputValue(selectedValue, selectionProp);
+
+      return;
+    }
+
+    this._confirmationService.confirm({
+      key: 'confirm-replace',
+      message: this.confirmMessage ?? 'Se esta cambiando el valor de un registro previamente seleccionado, ¿desea proceder?',
+      header: 'Importante',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this._messageService.add({
+          key: 'confirm-replace',
+          severity: 'success',
+          summary: 'Valor remplazado con éxito.',
+          detail: this.replacedMessage ?? 'El valor ha sido actualizado.'
+        });
+
+        this.setFormInputValue(selectedValue, selectionProp);
+      },
+      reject: () => {
+        this._messageService.add({
+          key: 'confirm-replace',
+          severity: 'warn',
+          summary: 'Operación cancelada.',
+          detail: 'La acción fue revertida con éxito.'
+        });
+      }
+    })
+  }
+
+  private setFormInputValue(selectedValue: any, selectionProp: string): void {
     this.formControl?.setValue(selectedValue[selectionProp]);
     this.selectedLabel = this.selectedLabelFn?.call(this, selectedValue) ?? selectedValue[selectionProp];
   }

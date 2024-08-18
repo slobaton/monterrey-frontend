@@ -428,7 +428,6 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   }
 
   showClientSelectedLabel(selectedClient: any) {
-    console.log(selectedClient);
     return `${selectedClient.nit ?? ''} - ${selectedClient.name ?? ''} ${selectedClient.paternal_surname ?? ''} ${selectedClient.maternal_surname ?? ''}`;
   }
 

@@ -57,6 +57,9 @@
                 [hasCustomAction]="ab.can('create', 'client')"
                 (onClickCustomAction)="openNewClientModal()"
                 [onSelect]="onClientCreated"
+                [confirmExistingReplace]="true"
+                confirmMessage="Se esta cambiando el cliente de uno previamente seleccionado, ¿desea proceder?"
+                replacedMessage="Cliente remplazado con éxito."
               >
               </app-form-input-search>
             </div>
