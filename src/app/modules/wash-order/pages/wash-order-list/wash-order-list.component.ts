@@ -99,7 +99,7 @@ export class WashOrderListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => !this.ableTo('update', 'wash-order'),
+        hiddenFn: (selectedRows) => !this.ableTo('update', 'wash-order') || (selectedRows && selectedRows[0]?.status !== OrderStatus.CREATED),
         callback: (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
           this._router.navigate([`/wash-orders/edit/${washOrderId}`]);
@@ -114,7 +114,7 @@ export class WashOrderListComponent extends ProtectedComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
-        hiddenFn: (selectedRows) => !this.ableTo('delete', 'wash-order'),
+        hiddenFn: (selectedRows) => !this.ableTo('delete', 'wash-order') || (selectedRows && selectedRows[0]?.status !== OrderStatus.CREATED),
         callback: (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
 
@@ -225,16 +225,27 @@ export class WashOrderListComponent extends ProtectedComponent {
         callback: async (action, selectedRows) => {
           const washOrder = selectedRows[0];
 
-          this.washOrderService.approveById(washOrder.id)
-            .then((updatedWashOrder) => {
-              washOrder.status = updatedWashOrder.status;
-              this._messageService.add({ key: 'confirmDelete', severity: 'success', summary: 'Orden Actualizada', detail: `Orden COD: ${washOrder.code} aprobada!` });
-            })
-            .catch((err) => {
-              console.error(err);
-              this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
-            })
-            .finally(() => action.loading = false);
+          this._confirmationService.confirm({
+            key: 'confirmDelete',
+            header: 'Aprobar Orden',
+            message: 'Una vez aprobado ya no se podrá actualizar, ¿Desea continuar?',
+            accept: () => {
+              this.washOrderService.approveById(washOrder.id)
+                .then((updatedWashOrder) => {
+                  washOrder.status = updatedWashOrder.status;
+                  this._messageService.add({ key: 'confirmDelete', severity: 'success', summary: 'Orden Actualizada', detail: `Orden COD: ${washOrder.code} aprobada!` });
+                })
+                .catch((err) => {
+                  console.error(err);
+                  this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
+                })
+                .finally(() => action.loading = false);
+            },
+            reject: () => {
+              this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' });
+              action.loading = false;
+            }
+          });
         }
       }
     ]

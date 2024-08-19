@@ -106,7 +106,7 @@ export class AddWashOrderDetailComponent extends ProtectedComponent implements O
       cloth_size_id: new FormControl<number | null>(washOrderDetail?.cloth_size_id ?? null, [Validators.required]),
       is_focalizado_active: new FormControl<boolean>(washOrderDetail?.is_focalizado_active ?? false, [Validators.required]),
       is_nevado_active: new FormControl<boolean>(washOrderDetail?.is_nevado_active ?? false, [Validators.required]),
-      quantity: new FormControl<number>(washOrderDetail?.quantity ?? 0, [Validators.required, Validators.min(0)]),
+      quantity: new FormControl<number>(washOrderDetail?.quantity ?? 0, [Validators.required, Validators.min(1)]),
       num_buttonholes: new FormControl<number>(washOrderDetail?.num_buttonholes ?? 0, [Validators.required, Validators.min(0)]),
       observations: new FormControl<string>(washOrderDetail?.observations ?? '', []),
       effects: new FormControl<Array<string>>(selectedEffects, [])

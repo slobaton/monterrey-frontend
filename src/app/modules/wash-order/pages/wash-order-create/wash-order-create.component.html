@@ -1,3 +1,5 @@
+<app-confirm-dialog id="confirm-action"></app-confirm-dialog>
+
 <div *ngIf="ability$ | async as ab" class="grid">
   <div *ngIf="ab.can('create', 'wash-order')" class="col-12">
     <app-page-card
@@ -94,7 +96,7 @@
             </div>
 
             <div class="col-4 text-center">
-              <h6>Precio Especial?</h6>
+              <h6>¿Precio Especial?</h6>
               <app-form-switch
                 [form]="washOrderForm"
                 id="is_special_price"

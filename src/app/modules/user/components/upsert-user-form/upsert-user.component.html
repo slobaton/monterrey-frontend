@@ -14,7 +14,11 @@
       />
     </div>
     <div class="col-6">
-      <app-form-label id="paternal-surname" text="Apellido Paterno" [required]="true" />
+      <app-form-label
+        id="paternal-surname"
+        text="Apellido Paterno"
+        [required]="true"
+      />
       <app-form-input-text
         [form]="userForm"
         id="paternal-surname"
@@ -23,7 +27,11 @@
       />
     </div>
     <div class="col-6">
-      <app-form-label id="maternal-surname" text="Apellido Materno" [required]="false" />
+      <app-form-label
+        id="maternal-surname"
+        text="Apellido Materno"
+        [required]="false"
+      />
       <app-form-input-text
         [form]="userForm"
         id="maternal-surname"
@@ -32,7 +40,11 @@
       />
     </div>
     <div class="col-6">
-      <app-form-label id="username" text="Nombre de usuario" [required]="true" />
+      <app-form-label
+        id="username"
+        text="Nombre de usuario"
+        [required]="true"
+      />
       <app-form-input-text
         [form]="userForm"
         id="username"
@@ -41,7 +53,7 @@
       />
     </div>
     <div class="col-6">
-      <app-form-label id="email" text="Correo electrónico" [required]="true" />
+      <app-form-label id="email" text="Correo electrónico" [required]="false" />
       <app-form-input-text
         [form]="userForm"
         id="email"
@@ -49,13 +61,20 @@
         placeholder="Ingrese correo electrónico del usuario..."
       />
       <div *ngIf="userForm.controls['email'].errors">
-        <div *ngIf="userForm.controls['email'].errors['email']" class="text-red-300">
+        <div
+          *ngIf="userForm.controls['email'].errors['email']"
+          class="text-red-300"
+        >
           <small>* Correo electrónico inválido</small>
         </div>
       </div>
     </div>
     <div class="col-6">
-      <app-form-label id="password" text="Contraseña" [required]="!isThereAUser" />
+      <app-form-label
+        id="password"
+        text="Contraseña"
+        [required]="!isThereAUser"
+      />
       <app-form-input-password
         [form]="userForm"
         controlName="password"
@@ -63,7 +82,11 @@
       ></app-form-input-password>
     </div>
     <div class="col-6">
-      <app-form-label id="passwordConfirmation" text="Confirmación contraseña" [required]="!isThereAUser" />
+      <app-form-label
+        id="passwordConfirmation"
+        text="Confirmación contraseña"
+        [required]="!isThereAUser"
+      />
       <app-form-input-password
         [form]="userForm"
         controlName="password_confirmation"

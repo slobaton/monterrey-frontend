@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { WashOrderCreateRequest } from 'src/app/@core/models/request/wash-order-create-request';
@@ -86,6 +86,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
     private _washOrderService: WashOrderService,
     private _washOrderDetailService: WashOrderDetailService,
     private _reportService: ReportService,
+    private _confirmationService: ConfirmationService,
     private _messageService: MessageService,
     private _validationService: ValidationService,
     private _clientDataService: ClientDataService,
@@ -365,35 +366,48 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
       const washOrderId = this.washOrderId;
       this.reportLoading = true;
 
-      this._washOrderService.approveById(washOrderId)
-        .then((updatedWashOrder) => {
-          this.washOrder = updatedWashOrder;
+      this._confirmationService.confirm({
+        key: 'confirm-action',
+        header: 'Aprobar Orden',
+        message: 'Una vez aprobado ya no se podrá actualizar, ¿Desea continuar?',
+        accept: () => {
+          this._washOrderService.approveById(washOrderId)
+            .then((updatedWashOrder) => {
+              this.washOrder = updatedWashOrder;
 
-          this._messageService.add({
-            severity: 'success',
-            summary: `Orden COD: ${updatedWashOrder.code}`,
-            detail: 'Orden de Lavado actualizada con éxito',
-            life: 3500
-          });
-        })
-        .catch(err => {
-          if (err instanceof HttpErrorResponse) {
-            this._messageService.add({
-              severity: 'error',
-              summary: 'Error!',
-              detail: 'La acción no se pudo realizar, intente nuevamente...'
+              this._messageService.add({
+                severity: 'success',
+                summary: `Orden COD: ${updatedWashOrder.code}`,
+                detail: 'Orden de Lavado actualizada con éxito',
+                life: 3500
+              });
+            })
+            .catch(err => {
+              if (err instanceof HttpErrorResponse) {
+                this._messageService.add({
+                  severity: 'error',
+                  summary: 'Error!',
+                  detail: 'La acción no se pudo realizar, intente nuevamente...'
+                });
+              } else {
+                this._messageService.add({
+                  severity: 'error',
+                  summary: 'Error!',
+                  detail: 'Error inesperado, intente nuevamente...'
+                });
+              }
+            })
+            .finally(() => {
+              this.reportLoading = false;
             });
-          } else {
-            this._messageService.add({
-              severity: 'error',
-              summary: 'Error!',
-              detail: 'Error inesperado, intente nuevamente...'
-            });
-          }
-        })
-        .finally(() => {
+        },
+        reject: () => {
+          this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' });
           this.reportLoading = false;
-        });
+        }
+      });
+
+
     }
   }
 
