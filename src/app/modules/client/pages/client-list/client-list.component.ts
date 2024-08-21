@@ -36,6 +36,7 @@ export class ClientListComponent extends ProtectedComponent {
       { title: 'Ap. Materno', propertyRef: 'maternal_surname', sortable: true },
       { title: 'Telefono', propertyRef: 'phone' },
       { title: 'Celular', propertyRef: 'cellphone' },
+      { title: 'Saldo', propertyRef: 'debt_balance', sortable: true, visible: !this.hasReceptionistRole() },
       { title: 'Activo', propertyRef: 'is_active', type: DataTableColumnType.BOOLEAN },
       { title: 'Creado', propertyRef: 'created_at', sortable: true, type: DataTableColumnType.DATETIME },
       { title: 'Actualizado', propertyRef: 'updated_at', sortable: true, type: DataTableColumnType.DATETIME },

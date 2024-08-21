@@ -20,6 +20,7 @@ import { ProtectedComponent } from 'src/app/@core/models/common/protected-compon
 import { AbilityService } from '@casl/angular';
 import { AppAbility } from 'src/app/@core/auth/ability';
 import { AuthService } from 'src/app/@core/services/rest/auth.service';
+import { EffectPriceService } from 'src/app/@core/services/rest/effect-price.service';
 
 @Component({
   selector: 'app-add-wash-order-detail',
@@ -34,6 +35,7 @@ export class AddWashOrderDetailComponent extends ProtectedComponent implements O
   isOnlyTimeSave: boolean = true;
   resetListPickerEvent: EventEmitter<void> = new EventEmitter();
 
+  availableEffectItems: Array<Effect> = [];
   alreadySelectedItems: Array<Effect> = [];
 
   isCalcPrices: boolean = false;
@@ -54,6 +56,7 @@ export class AddWashOrderDetailComponent extends ProtectedComponent implements O
     public clothTypeService: ClothTypeService,
     public clothSizeService: ClothSizeService,
     public effectService: EffectService,
+    private _clientEffectService: EffectPriceService,
     private _messageService: MessageService,
     private _ref: DynamicDialogRef,
     private _config: DynamicDialogConfig,
@@ -64,6 +67,7 @@ export class AddWashOrderDetailComponent extends ProtectedComponent implements O
 
   ngOnInit(): void {
     this.initializeForm();
+    this.retrieveEffectsWithClientPrices();
 
     this.washOrderDetailForm.valueChanges
       .subscribe((formValues) => this.updateCalcRequest(formValues));
@@ -73,6 +77,12 @@ export class AddWashOrderDetailComponent extends ProtectedComponent implements O
       .subscribe((request) => this.getWashOrderDetailPreCalc(request));
 
     this.updateCalcRequest(this.washOrderDetailForm.value);
+  }
+
+  async retrieveEffectsWithClientPrices(): Promise<void> {
+    const clientId = this._config.data?.clientId;
+
+    this.availableEffectItems = await this._clientEffectService.getWithClientPrices(clientId);
   }
 
   initializeForm(): void {
@@ -96,7 +106,7 @@ export class AddWashOrderDetailComponent extends ProtectedComponent implements O
       cloth_size_id: new FormControl<number | null>(washOrderDetail?.cloth_size_id ?? null, [Validators.required]),
       is_focalizado_active: new FormControl<boolean>(washOrderDetail?.is_focalizado_active ?? false, [Validators.required]),
       is_nevado_active: new FormControl<boolean>(washOrderDetail?.is_nevado_active ?? false, [Validators.required]),
-      quantity: new FormControl<number>(washOrderDetail?.quantity ?? 0, [Validators.required, Validators.min(0)]),
+      quantity: new FormControl<number>(washOrderDetail?.quantity ?? 0, [Validators.required, Validators.min(1)]),
       num_buttonholes: new FormControl<number>(washOrderDetail?.num_buttonholes ?? 0, [Validators.required, Validators.min(0)]),
       observations: new FormControl<string>(washOrderDetail?.observations ?? '', []),
       effects: new FormControl<Array<string>>(selectedEffects, [])
