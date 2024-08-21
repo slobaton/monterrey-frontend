@@ -62,7 +62,9 @@ export class FormInputSearchComponent<TEntity> implements OnInit {
   }
 
   ngOnInit(): void {
-    this.onSelect.subscribe((selectedValue) => this.onSelectValue(selectedValue));
+    if (this.onSelect) {
+      this.onSelect.subscribe((selectedValue) => this.onSelectValue(selectedValue));
+    }
   }
 
   openSearchOverlay(): void {
@@ -106,7 +108,6 @@ export class FormInputSearchComponent<TEntity> implements OnInit {
   private onSelectValue(selectedValue: any): void {
     const defaultProp = 'id';
     const selectionProp = this.selectionProp ?? defaultProp;
-
     const shouldReplaceValue = !this.formControl?.value || this.formControl?.value === selectedValue[selectionProp];
 
     if (!this.confirmExistingReplace || shouldReplaceValue) {

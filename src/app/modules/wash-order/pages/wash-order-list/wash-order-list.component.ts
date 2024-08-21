@@ -86,7 +86,7 @@ export class WashOrderListComponent extends ProtectedComponent {
         selectionConfig: {
           isRequired: false
         },
-        hiddenFn: (selectedRows) => !this.ableTo('create', 'wash-order'),
+        hiddenFn: (selectedRow) => !this.ableTo('create', 'wash-order'),
         callback: () => {
           this._router.navigate(['/wash-orders/new']);
         }
@@ -99,7 +99,19 @@ export class WashOrderListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => !this.ableTo('update', 'wash-order') || (selectedRows && selectedRows[0]?.status !== OrderStatus.CREATED),
+        hiddenFn: (selectedRow) => {
+          if (!this.ableTo('update', 'wash-order')) {
+            return true;
+          }
+
+          const washOrder = selectedRow;
+
+          if (washOrder) {
+            return washOrder.status !== OrderStatus.CREATED;
+          }
+
+          return false;
+        },
         callback: (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
           this._router.navigate([`/wash-orders/edit/${washOrderId}`]);
@@ -114,7 +126,19 @@ export class WashOrderListComponent extends ProtectedComponent {
           maxSelectedRows: 1
         },
         hasLoadingEnabled: true,
-        hiddenFn: (selectedRows) => !this.ableTo('delete', 'wash-order') || (selectedRows && selectedRows[0]?.status !== OrderStatus.CREATED),
+        hiddenFn: (selectedRow) => {
+          if (!this.ableTo('delete', 'wash-order')) {
+            return true;
+          }
+
+          const washOrder = selectedRow;
+
+          if (washOrder) {
+            return washOrder.status !== OrderStatus.CREATED;
+          }
+
+          return false;
+        },
         callback: (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
 
@@ -147,7 +171,7 @@ export class WashOrderListComponent extends ProtectedComponent {
         selectionConfig: {
           maxSelectedRows: 1
         },
-        hiddenFn: (selectedRows) => !this.ableTo('read', 'wash-order'),
+        hiddenFn: (selectedRow) => !this.ableTo('read', 'wash-order'),
         callback: (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
 

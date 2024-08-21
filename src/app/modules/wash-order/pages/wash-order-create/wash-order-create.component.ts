@@ -25,7 +25,6 @@ import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { AppAbility } from 'src/app/@core/auth/ability';
 import { DateService } from 'src/app/@core/services/common/date.service';
 import { PrintService } from 'src/app/@core/services/common/print.service';
-import { ClientDataService } from 'src/app/@core/services/common/client-data.service';
 
 @Component({
   selector: 'app-wash-order-create',
@@ -89,7 +88,6 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
     private _confirmationService: ConfirmationService,
     private _messageService: MessageService,
     private _validationService: ValidationService,
-    private _clientDataService: ClientDataService,
     private _dialogService: DialogService,
     private _dateService: DateService,
     private _printService: PrintService) {
@@ -494,26 +492,20 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   }
 
   initializeClient() {
-    const selectedClient = this._clientDataService.getData();
-
     this._route.params.subscribe(params => {
       this.clientId = params['clientId'];
+
+      if (this.clientId) {
+        this.clientService.getById(this.clientId)
+          .then((client) => {
+            setTimeout(() => {
+              this.onClientCreated.emit(client);
+            }, 500);
+          })
+          .catch(() => {
+            this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
+          });
+      }
     });
-
-    if (!selectedClient) {
-      this.clientService.getById(this.clientId)
-        .then((client) => {
-          this._clientDataService.setData(client);
-        })
-        .catch(() => {
-          this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
-        })
-    }
-
-    if (this.clientId) {
-      setTimeout(() => {
-        this.onClientCreated.emit(this._clientDataService.getData());
-      }, 500);
-    }
   }
 }

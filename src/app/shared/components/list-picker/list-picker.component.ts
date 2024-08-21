@@ -82,7 +82,6 @@ export class ListPickerComponent<TEntity> implements OnInit, OnChanges {
   }
 
   private resetSelection(): void {
-    console.log('original options:', this._originalOptions);
     if (this.isLazy && this.sourceDataService) {
       this.fetchData();
     } else {

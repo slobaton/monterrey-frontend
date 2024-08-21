@@ -8,6 +8,7 @@ export class Client {
     public phone: string,
     public cellphone: string,
     public address: string,
+    public debt_balance: number,
     public observations: string,
     public is_active: boolean,
     public created_at: string,
