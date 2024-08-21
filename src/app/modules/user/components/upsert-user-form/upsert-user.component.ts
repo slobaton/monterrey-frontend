@@ -42,9 +42,9 @@ export class UpsertUserComponent {
       paternal_surname: new FormControl<string>(user?.paternal_surname ?? '', [Validators.required, Validators.maxLength(150)]),
       maternal_surname: new FormControl<string>(user?.maternal_surname ?? '', [Validators.maxLength(150)]),
       username: new FormControl<string>(user?.username ?? '', [Validators.required, Validators.maxLength(150)]),
-      email: new FormControl<string>(user?.email ?? '', [Validators.required, Validators.maxLength(150), Validators.email]),
+      email: new FormControl<string>(user?.email ?? '', [Validators.maxLength(150), Validators.email]),
       password: new FormControl<string>(user?.password ?? '', !this.isThereAUser ? [Validators.required] : []),
-      password_confirmation : new FormControl<string>(user?.password ?? '', !this.isThereAUser ? [Validators.required] : []),
+      password_confirmation: new FormControl<string>(user?.password ?? '', !this.isThereAUser ? [Validators.required] : []),
     }, { validators: passwordMatchValidator() });
   }
 

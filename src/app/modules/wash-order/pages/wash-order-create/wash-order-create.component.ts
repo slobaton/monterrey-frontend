@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { WashOrderCreateRequest } from 'src/app/@core/models/request/wash-order-create-request';
@@ -25,7 +25,6 @@ import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { AppAbility } from 'src/app/@core/auth/ability';
 import { DateService } from 'src/app/@core/services/common/date.service';
 import { PrintService } from 'src/app/@core/services/common/print.service';
-import { ClientDataService } from 'src/app/@core/services/common/client-data.service';
 
 @Component({
   selector: 'app-wash-order-create',
@@ -86,9 +85,9 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
     private _washOrderService: WashOrderService,
     private _washOrderDetailService: WashOrderDetailService,
     private _reportService: ReportService,
+    private _confirmationService: ConfirmationService,
     private _messageService: MessageService,
     private _validationService: ValidationService,
-    private _clientDataService: ClientDataService,
     private _dialogService: DialogService,
     private _dateService: DateService,
     private _printService: PrintService) {
@@ -285,9 +284,11 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   }
 
   addWashOrderDetail(): void {
+    const clientId = this.washOrder?.client_id || this.clientId;
+
     const dialogProps = {
       header: 'Agregar Detalle de lavado',
-      data: { washOrderId: this.washOrderId }
+      data: { washOrderId: this.washOrderId, clientId }
     };
 
     this.ref = this._dialogService.open(AddWashOrderDetailComponent, dialogProps);
@@ -313,9 +314,11 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   }
 
   updateWashOrderDetail(washOrderDetailId: string, washOrderDetail: WashOrderDetail): void {
+    const clientId = this.washOrder?.client_id || this.clientId;
+
     const dialogProps = {
       header: 'Actualizar Detalle de Lavado',
-      data: { washOrderId: this.washOrderId, washOrderDetailId, washOrderDetail }
+      data: { washOrderId: this.washOrderId, clientId, washOrderDetailId, washOrderDetail }
     }
 
     this.ref = this._dialogService.open(AddWashOrderDetailComponent, dialogProps);
@@ -361,35 +364,48 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
       const washOrderId = this.washOrderId;
       this.reportLoading = true;
 
-      this._washOrderService.approveById(washOrderId)
-        .then((updatedWashOrder) => {
-          this.washOrder = updatedWashOrder;
+      this._confirmationService.confirm({
+        key: 'confirm-action',
+        header: 'Aprobar Orden',
+        message: 'Una vez aprobado ya no se podrá actualizar, ¿Desea continuar?',
+        accept: () => {
+          this._washOrderService.approveById(washOrderId)
+            .then((updatedWashOrder) => {
+              this.washOrder = updatedWashOrder;
 
-          this._messageService.add({
-            severity: 'success',
-            summary: `Orden COD: ${updatedWashOrder.code}`,
-            detail: 'Orden de Lavado actualizada con éxito',
-            life: 3500
-          });
-        })
-        .catch(err => {
-          if (err instanceof HttpErrorResponse) {
-            this._messageService.add({
-              severity: 'error',
-              summary: 'Error!',
-              detail: 'La acción no se pudo realizar, intente nuevamente...'
+              this._messageService.add({
+                severity: 'success',
+                summary: `Orden COD: ${updatedWashOrder.code}`,
+                detail: 'Orden de Lavado actualizada con éxito',
+                life: 3500
+              });
+            })
+            .catch(err => {
+              if (err instanceof HttpErrorResponse) {
+                this._messageService.add({
+                  severity: 'error',
+                  summary: 'Error!',
+                  detail: 'La acción no se pudo realizar, intente nuevamente...'
+                });
+              } else {
+                this._messageService.add({
+                  severity: 'error',
+                  summary: 'Error!',
+                  detail: 'Error inesperado, intente nuevamente...'
+                });
+              }
+            })
+            .finally(() => {
+              this.reportLoading = false;
             });
-          } else {
-            this._messageService.add({
-              severity: 'error',
-              summary: 'Error!',
-              detail: 'Error inesperado, intente nuevamente...'
-            });
-          }
-        })
-        .finally(() => {
+        },
+        reject: () => {
+          this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Cancelado', detail: 'Operacion cancelada!' });
           this.reportLoading = false;
-        });
+        }
+      });
+
+
     }
   }
 
@@ -424,7 +440,6 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   }
 
   showClientSelectedLabel(selectedClient: any) {
-    console.log(selectedClient);
     return `${selectedClient.nit ?? ''} - ${selectedClient.name ?? ''} ${selectedClient.paternal_surname ?? ''} ${selectedClient.maternal_surname ?? ''}`;
   }
 
@@ -477,26 +492,20 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   }
 
   initializeClient() {
-    const selectedClient = this._clientDataService.getData();
-
     this._route.params.subscribe(params => {
       this.clientId = params['clientId'];
+
+      if (this.clientId) {
+        this.clientService.getById(this.clientId)
+          .then((client) => {
+            setTimeout(() => {
+              this.onClientCreated.emit(client);
+            }, 500);
+          })
+          .catch(() => {
+            this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
+          });
+      }
     });
-
-    if (!selectedClient) {
-      this.clientService.getById(this.clientId)
-        .then((client) => {
-          this._clientDataService.setData(client);
-        })
-        .catch(() => {
-          this._messageService.add({ key: 'confirmDelete', severity: 'error', summary: 'Error', detail: 'No se pudo completar la accion.' });
-        })
-    }
-
-    if (this.clientId) {
-      setTimeout(() => {
-        this.onClientCreated.emit(this._clientDataService.getData());
-      }, 500);
-    }
   }
 }
