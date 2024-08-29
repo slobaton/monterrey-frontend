@@ -52,7 +52,7 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
         title: 'T. Lavado',
         propertyRef: 'wash_type.name',
         sortable: false,
-        customValue: (washOrder: WashOrder) => washOrder.wash_type.name,
+        customValue: (washOrder: WashOrder) => washOrder.wash_type?.name,
         type: DataTableColumnType.CUSTOM
       },
       { title: 'Cantidad Total', propertyRef: 'total_quantity', sortable: true, type: DataTableColumnType.TEXT },
@@ -69,6 +69,12 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
         sortable: false,
         customValue: (status) => WashOrder.getStatusFriendlyName(status),
         type: DataTableColumnType.BADGE
+      },
+      {
+        title: 'Relavado',
+        propertyRef: 'is_rewash',
+        sortable: true,
+        type: DataTableColumnType.BOOLEAN
       },
       {
         title: '# Impresiones',

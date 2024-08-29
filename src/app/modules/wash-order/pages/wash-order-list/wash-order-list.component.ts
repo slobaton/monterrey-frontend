@@ -48,7 +48,7 @@ export class WashOrderListComponent extends ProtectedComponent {
         title: 'T. Lavado',
         propertyRef: 'wash_type.name',
         sortable: false,
-        customValue: (washOrder: WashOrder) => washOrder.wash_type.name,
+        customValue: (washOrder: WashOrder) => washOrder.wash_type?.name,
         type: DataTableColumnType.CUSTOM
       },
       { title: 'Cantidad Total', propertyRef: 'total_quantity', sortable: true, type: DataTableColumnType.TEXT },
@@ -65,6 +65,19 @@ export class WashOrderListComponent extends ProtectedComponent {
         sortable: false,
         customValue: (status) => WashOrder.getStatusFriendlyName(status),
         type: DataTableColumnType.BADGE
+      },
+      {
+        title: 'Relavado',
+        propertyRef: 'is_rewash',
+        sortable: true,
+        type: DataTableColumnType.BOOLEAN
+      },
+      {
+        title: 'Precio Relavado ($)',
+        propertyRef: 'rewash_price',
+        sortable: true,
+        type: DataTableColumnType.TEXT,
+        visible: !this.authService.hasRole(Role.RECEPTIONIST)
       },
       {
         title: '# Impresiones',

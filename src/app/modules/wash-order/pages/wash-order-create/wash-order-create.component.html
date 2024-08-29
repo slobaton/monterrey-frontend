@@ -65,7 +65,8 @@
               >
               </app-form-input-search>
             </div>
-            <div class="col-3">
+
+            <div class="col-3" *ngIf="!isRewashOrder(); else isReWash">
               <app-form-label
                 id="wash_type_id"
                 text="Tipo de Lavado"
@@ -84,6 +85,22 @@
               >
               </app-form-select>
             </div>
+            <ng-template #isReWash>
+              <div class="col-3">
+                <app-form-label
+                  id="rewash_price"
+                  text="Precio Relavado"
+                  [required]="true"
+                />
+                <app-form-input-number
+                  [form]="washOrderForm"
+                  id="rewash_price"
+                  controlName="rewash_price"
+                  placeholder="Ingrese un Precio de relavado"
+                />
+              </div>
+            </ng-template>
+
             <div class="col-3">
               <app-form-label id="date" text="Fecha" [required]="true" />
               <app-form-datetime-picker
@@ -95,7 +112,7 @@
               />
             </div>
 
-            <div class="col-4 text-center">
+            <div class="col-3 text-center">
               <h6>¿Precio Especial?</h6>
               <app-form-switch
                 [form]="washOrderForm"
@@ -103,7 +120,15 @@
                 controlName="is_special_price"
               ></app-form-switch>
             </div>
-            <div class="col-8">
+            <div class="col-3 text-center">
+              <h6>Relavado</h6>
+              <app-form-switch
+                [form]="washOrderForm"
+                id="is_rewash"
+                controlName="is_rewash"
+              ></app-form-switch>
+            </div>
+            <div class="col-6">
               <app-form-label id="observations" text="Observaciones" />
               <app-form-textarea
                 [form]="washOrderForm"
