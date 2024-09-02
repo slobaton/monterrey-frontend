@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { WashOrder } from 'src/app/@core/models/wash-order';
 import {
   DataTableActionStatus,
@@ -161,8 +161,9 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
         callback: (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
 
-          const dialogProps = {
+          const dialogProps: DynamicDialogConfig = {
             header: 'Detalles de la Orden de Lavado',
+            width: '80%',
             data: { washOrderId }
           };
 

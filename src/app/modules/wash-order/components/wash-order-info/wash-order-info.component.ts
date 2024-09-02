@@ -27,19 +27,49 @@ export class WashOrderInfoComponent extends ProtectedComponent implements OnInit
   washOrderDetailsTableConfig: SimpleTableConfiguration = {
     columns: [
       {
-        title: 'Tipo Ropa',
+        title: 'T. Ropa',
         type: SimpleTableColumnType.CUSTOM,
         propertyRef: 'cloth_type.name',
         customValue: (row) => row.cloth_type.name,
       },
       {
-        title: 'Tamaño Ropa',
+        title: 'Tam. Ropa',
         type: SimpleTableColumnType.CUSTOM,
         propertyRef: 'cloth_size.name',
         customValue: (row) => row.cloth_size.name,
       },
       {
-        title: 'Precio Unidad ($)',
+        title: 'Precio L. ($)',
+        type: SimpleTableColumnType.TEXT,
+        propertyRef: 'wash_price',
+        visible: !this.hasReceptionistRole()
+      },
+      {
+        title: 'Precio Ef. ($)',
+        type: SimpleTableColumnType.TEXT,
+        propertyRef: 'effect_price',
+        visible: !this.hasReceptionistRole()
+      },
+      {
+        title: 'Precio Foc. ($)',
+        type: SimpleTableColumnType.TEXT,
+        propertyRef: 'focalizado_price',
+        visible: !this.hasReceptionistRole()
+      },
+      {
+        title: 'Precio Nev. ($)',
+        type: SimpleTableColumnType.TEXT,
+        propertyRef: 'nevado_price',
+        visible: !this.hasReceptionistRole()
+      },
+      {
+        title: 'Precio Oj. ($)',
+        type: SimpleTableColumnType.TEXT,
+        propertyRef: 'buttonhole_unit_price',
+        visible: !this.hasReceptionistRole()
+      },
+      {
+        title: 'Precio U. ($)',
         type: SimpleTableColumnType.TEXT,
         propertyRef: 'unit_price',
         visible: !this.hasReceptionistRole()
