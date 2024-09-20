@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
-import { LazyLoadEvent } from 'primeng/api';
+import { LazyLoadEvent, MenuItem } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { DataTableActionProps, DataTableColumnProps, DataTableColumnType, DataTableConfiguration, DataTableSelectionType } from 'src/app/@core/types/data-table-definition';
 import { IFetchPaginatedData } from 'src/app/@core/services/interfaces/fetch-paginated-data';
@@ -21,6 +21,8 @@ export class DataTableComponent<TEntity> implements OnInit {
 
   @ViewChild('dataTableRef') dataTable!: Table;
 
+  readonly MAX_ACTION_BUTTONS = 4;
+
   public isLoading: boolean = false;
 
   public data: Array<TEntity> = [];
@@ -35,6 +37,11 @@ export class DataTableComponent<TEntity> implements OnInit {
 
   public checked: boolean = true;
 
+  public mainActionItems: DataTableActionProps[] = [];
+  public groupedActionItems: DataTableActionProps[] = [];
+
+  public otherActionMenuItems: MenuItem[] = [];
+
   constructor() { }
 
   ngOnInit(): void {
@@ -46,6 +53,14 @@ export class DataTableComponent<TEntity> implements OnInit {
       .subscribe(value => {
         this.dataTable.filterGlobal(value, 'contains');
       });
+
+    if (this.tableConfig.actions && this.tableConfig.actions.length > this.MAX_ACTION_BUTTONS) {
+      const groupedActions = this.retrieveActionGroups();
+      this.mainActionItems = groupedActions.mainActions;
+      this.groupedActionItems = groupedActions.groupedActions;
+
+      this.otherActionMenuItems = this.generateGroupedActionItems(this.groupedActionItems);
+    }
   }
 
   reset(): void {
@@ -106,6 +121,40 @@ export class DataTableComponent<TEntity> implements OnInit {
     const actions = this.tableConfig.actions ?? [];
 
     return actions && actions.length > 0;
+  }
+
+  retrieveActionGroups(): { mainActions: DataTableActionProps[], groupedActions: DataTableActionProps[] } {
+    const actions = this.tableConfig.actions ?? [];
+    const filteredActions = actions.filter((action) => this.isActionVisible(action));
+
+    return {
+      mainActions: filteredActions.slice(0, this.MAX_ACTION_BUTTONS),
+      groupedActions: filteredActions.slice(this.MAX_ACTION_BUTTONS)
+    };
+  }
+
+  generateGroupedActionItems(groupedActions: DataTableActionProps[]): MenuItem[] {
+    const items = groupedActions.map((gAction) => {
+      const item: MenuItem = {
+        label: gAction.title,
+        icon: this.generateActionIcon(gAction),
+        command: () => {
+          if (this.isActionEnabled(gAction)) {
+            this.executeActionCallback(gAction);
+          }
+        },
+        tooltip: gAction.tooltip,
+      };
+
+      return item;
+    });
+
+    return items;
+  }
+
+  //TODO: It's not working
+  public get groupedActionMenuItems(): MenuItem[] {
+    return this.generateGroupedActionItems(this.groupedActionItems);
   }
 
   isActionVisible(action: DataTableActionProps): boolean {
