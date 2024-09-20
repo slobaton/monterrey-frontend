@@ -38,6 +38,7 @@ import { SearchOverlayComponent } from './components/search-overlay/search-overl
 import { FormInputSearchComponent } from './components/form-input-search/form-input-search.component';
 import { PageCardComponent } from './components/page-card/page-card.component';
 import { MenuModule } from 'primeng/menu';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 
 
@@ -82,7 +83,8 @@ import { MenuModule } from 'primeng/menu';
     CalendarModule,
     PickListModule,
     PasswordModule,
-    MenuModule
+    MenuModule,
+    SplitButtonModule
   ],
   exports: [
     DataTableComponent,

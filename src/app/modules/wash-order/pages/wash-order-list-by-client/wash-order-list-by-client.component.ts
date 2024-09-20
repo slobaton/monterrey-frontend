@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { WashOrder } from 'src/app/@core/models/wash-order';
 import {
   DataTableActionStatus,
@@ -52,7 +52,7 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
         title: 'T. Lavado',
         propertyRef: 'wash_type.name',
         sortable: false,
-        customValue: (washOrder: WashOrder) => washOrder.wash_type.name,
+        customValue: (washOrder: WashOrder) => washOrder.wash_type?.name,
         type: DataTableColumnType.CUSTOM
       },
       { title: 'Cantidad Total', propertyRef: 'total_quantity', sortable: true, type: DataTableColumnType.TEXT },
@@ -69,6 +69,12 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
         sortable: false,
         customValue: (status) => WashOrder.getStatusFriendlyName(status),
         type: DataTableColumnType.BADGE
+      },
+      {
+        title: 'Relavado',
+        propertyRef: 'is_rewash',
+        sortable: true,
+        type: DataTableColumnType.BOOLEAN
       },
       {
         title: '# Impresiones',
@@ -155,8 +161,9 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
         callback: (action, selectedRows) => {
           const washOrderId = selectedRows[0].id;
 
-          const dialogProps = {
+          const dialogProps: DynamicDialogConfig = {
             header: 'Detalles de la Orden de Lavado',
+            width: '80%',
             data: { washOrderId }
           };
 

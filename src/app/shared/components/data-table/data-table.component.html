@@ -23,9 +23,30 @@
     <div class="flex align-items-center justify-content-between">
       <div class="table-actions_container">
         <ng-container *ngIf="hasActions()">
-          <ng-container *ngFor="let action of tableConfig.actions">
+          <ng-container
+            *ngIf="
+              tableConfig.actions &&
+                tableConfig.actions.length <= MAX_ACTION_BUTTONS;
+              else actionGroups
+            "
+          >
+            <ng-container *ngFor="let action of tableConfig.actions">
+              <p-button
+                *ngIf="isActionVisible(action)"
+                [styleClass]="'p-button-sm mx-1 ' + generateActionColor(action)"
+                [icon]="generateActionIcon(action)"
+                [label]="action.title ?? ''"
+                [disabled]="!isActionEnabled(action)"
+                [loading]="
+                  action.hasLoadingEnabled ? action.loading ?? false : false
+                "
+                (onClick)="executeActionCallback(action)"
+              ></p-button>
+            </ng-container>
+          </ng-container>
+          <ng-template #actionGroups>
             <p-button
-              *ngIf="isActionVisible(action)"
+              *ngFor="let action of mainActionItems"
               [styleClass]="'p-button-sm mx-1 ' + generateActionColor(action)"
               [icon]="generateActionIcon(action)"
               [label]="action.title ?? ''"
@@ -35,7 +56,15 @@
               "
               (onClick)="executeActionCallback(action)"
             ></p-button>
-          </ng-container>
+            <p-splitButton
+              #otherOptions
+              label="Otras Acciones"
+              icon="pi pi-cog"
+              (onClick)="otherOptions.onDropdownButtonClick($event)"
+              styleClass="p-button-sm mx-1 p-button-secondary"
+              [model]="otherActionMenuItems"
+            ></p-splitButton>
+          </ng-template>
         </ng-container>
       </div>
       <span *ngIf="searchEnabled" class="p-input-icon-left">
