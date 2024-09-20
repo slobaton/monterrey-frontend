@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { availableDarkThemes, availableLightThemes, LayoutService, ThemeConfig } from "../service/app.layout.service";
+import { Component, Input, OnInit } from '@angular/core';
+import { availableDarkThemes, availableLightThemes, DEFAULT_THEME, LayoutService, ThemeConfig } from "../service/app.layout.service";
 import { MenuService } from "../app.menu.service";
 import { OverlayOptions, SelectItemGroup } from 'primeng/api';
 
@@ -7,7 +7,7 @@ import { OverlayOptions, SelectItemGroup } from 'primeng/api';
   selector: 'app-config',
   templateUrl: './app.config.component.html'
 })
-export class AppConfigComponent {
+export class AppConfigComponent implements OnInit {
 
   @Input() minimal: boolean = false;
 
@@ -35,6 +35,10 @@ export class AppConfigComponent {
     ]
   }
 
+  ngOnInit(): void {
+    this.changeTheme(this.layoutService.config.theme, this.layoutService.config.colorScheme);
+  }
+
   get visible(): boolean {
     return this.layoutService.state.configSidebarVisible;
   }
@@ -57,6 +61,7 @@ export class AppConfigComponent {
 
   set menuMode(_val: string) {
     this.layoutService.config.menuMode = _val;
+    this.layoutService.onConfigUpdate();
   }
 
   get inputStyle(): string {
@@ -65,6 +70,7 @@ export class AppConfigComponent {
 
   set inputStyle(_val: string) {
     this.layoutService.config.inputStyle = _val;
+    this.layoutService.onConfigUpdate();
   }
 
   get ripple(): boolean {
@@ -73,6 +79,7 @@ export class AppConfigComponent {
 
   set ripple(_val: boolean) {
     this.layoutService.config.ripple = _val;
+    this.layoutService.onConfigUpdate();
   }
 
   get theme(): ThemeConfig {
@@ -103,10 +110,17 @@ export class AppConfigComponent {
     this.changeTheme(this.selectedTheme.theme, this.selectedTheme.colorScheme);
   }
 
+  onResetConfig() {
+    this.layoutService.resetConfig();
+    this.changeTheme(this.layoutService.config.theme, this.layoutService.config.colorScheme);
+  }
+
   changeTheme(theme: string, colorScheme: string) {
     const themeLink = <HTMLLinkElement>document.getElementById('theme-css');
-    const newHref = themeLink.getAttribute('href')!.replace(this.layoutService.config.theme, theme);
-    this.layoutService.config.colorScheme
+    const originalHref = themeLink.getAttribute('href');
+    const availableThemes = availableLightThemes.concat(availableDarkThemes);
+    const valueToReplace = availableThemes.find(t => originalHref?.includes(t.theme))?.theme ?? DEFAULT_THEME;
+    const newHref = themeLink.getAttribute('href')!.replace(valueToReplace, theme);
     this.replaceThemeLink(newHref, () => {
       this.layoutService.config.theme = theme;
       this.layoutService.config.colorScheme = colorScheme;
@@ -143,5 +157,7 @@ export class AppConfigComponent {
 
   applyScale() {
     document.documentElement.style.fontSize = this.scale + 'px';
+    this.layoutService.config.scale = this.scale;
+    this.layoutService.onConfigUpdate();
   }
 }

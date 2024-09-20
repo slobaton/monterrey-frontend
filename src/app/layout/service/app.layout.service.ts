@@ -1,13 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { parseStringToBool, parseStringToNumber } from 'src/app/@core/helpers/parse-helpers';
 
 export enum ColorSchemeType {
   LIGHT = 'light',
   DARK = 'dark'
 }
 
-const DEFAULT_THEME: string = 'bootstrap4-dark-blue';
-const DEFAULT_COLOR_SCHEME: string = ColorSchemeType.DARK;
+export const DEFAULT_THEME: string = 'bootstrap4-dark-blue';
+export const DEFAULT_COLOR_SCHEME: string = ColorSchemeType.DARK;
+export const DEFAULT_SCALE: number = 13;
+export const DEFAULT_INPUT_STYLE: string = 'outlined'
+export const DEFAULT_MENU_MODE: string = 'static'
+export const DEFAULT_RIPPLE: boolean = false
 
 export type ThemeConfig = {
   name: string,
@@ -186,6 +191,15 @@ export const availableDarkThemes: ThemeConfig[] = [
   }
 ];
 
+export const configStorageKeys = {
+  inputStyle: 'config:input-style',
+  colorScheme: 'config:color-sheme',
+  theme: 'config:theme',
+  ripple: 'config:ripple',
+  menuMode: 'config:menu-mode',
+  scale: 'config:scale'
+};
+
 export interface AppConfig {
   inputStyle: string;
   colorScheme: string;
@@ -210,12 +224,12 @@ interface LayoutState {
 export class LayoutService {
 
   config: AppConfig = {
-    ripple: false,
-    inputStyle: 'outlined',
-    menuMode: 'static',
+    ripple: DEFAULT_RIPPLE,
+    inputStyle: DEFAULT_INPUT_STYLE,
+    menuMode: DEFAULT_MENU_MODE,
     colorScheme: DEFAULT_COLOR_SCHEME,
     theme: DEFAULT_THEME,
-    scale: 13,
+    scale: DEFAULT_SCALE,
   };
 
   state: LayoutState = {
@@ -234,6 +248,32 @@ export class LayoutService {
   configUpdate$ = this.configUpdate.asObservable();
 
   overlayOpen$ = this.overlayOpen.asObservable();
+
+  constructor() {
+    this.loadConfig();
+  }
+
+  loadConfig() {
+    const storedRipple = localStorage.getItem(configStorageKeys.ripple);
+    this.config.ripple = storedRipple ? parseStringToBool(storedRipple) : this.config.ripple;
+
+    const storedInputStyle = localStorage.getItem(configStorageKeys.inputStyle);
+    this.config.inputStyle = storedInputStyle ?? this.config.inputStyle;
+
+    const storedMenuMode = localStorage.getItem(configStorageKeys.menuMode);
+    this.config.menuMode = storedMenuMode ?? this.config.menuMode;
+
+    const storedColorScheme = localStorage.getItem(configStorageKeys.colorScheme);
+    this.config.colorScheme = storedColorScheme ?? this.config.colorScheme;
+
+    const storedTheme = localStorage.getItem(configStorageKeys.theme);
+    this.config.theme = storedTheme ?? this.config.theme;
+
+    const storedScale = localStorage.getItem(configStorageKeys.scale);
+    this.config.scale = storedScale ? parseStringToNumber(storedScale) : this.config.scale;
+
+    this.onConfigUpdate();
+  }
 
   onMenuToggle() {
     if (this.isOverlay()) {
@@ -279,7 +319,24 @@ export class LayoutService {
   }
 
   onConfigUpdate() {
+    localStorage.setItem(configStorageKeys.ripple, this.config.ripple.toString());
+    localStorage.setItem(configStorageKeys.inputStyle, this.config.inputStyle);
+    localStorage.setItem(configStorageKeys.menuMode, this.config.menuMode);
+    localStorage.setItem(configStorageKeys.theme, this.config.theme);
+    localStorage.setItem(configStorageKeys.colorScheme, this.config.colorScheme);
+    localStorage.setItem(configStorageKeys.scale, this.config.scale.toString());
+
     this.configUpdate.next(this.config);
   }
 
+  resetConfig() {
+    this.config.ripple = DEFAULT_RIPPLE;
+    this.config.inputStyle = DEFAULT_INPUT_STYLE;
+    this.config.menuMode = DEFAULT_MENU_MODE;
+    this.config.theme = DEFAULT_THEME;
+    this.config.colorScheme = DEFAULT_COLOR_SCHEME;
+    this.config.scale = DEFAULT_SCALE;
+
+    this.onConfigUpdate();
+  }
 }
