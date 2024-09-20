@@ -112,7 +112,9 @@ export class AppConfigComponent implements OnInit {
 
   onResetConfig() {
     this.layoutService.resetConfig();
+    this.selectedTheme = this.theme;
     this.changeTheme(this.layoutService.config.theme, this.layoutService.config.colorScheme);
+    this.applyScale();
   }
 
   changeTheme(theme: string, colorScheme: string) {
@@ -148,16 +150,17 @@ export class AppConfigComponent implements OnInit {
   decrementScale() {
     this.scale--;
     this.applyScale();
+    this.layoutService.onConfigUpdate();
   }
 
   incrementScale() {
     this.scale++;
     this.applyScale();
+    this.layoutService.onConfigUpdate();
   }
 
   applyScale() {
     document.documentElement.style.fontSize = this.scale + 'px';
     this.layoutService.config.scale = this.scale;
-    this.layoutService.onConfigUpdate();
   }
 }
