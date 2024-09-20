@@ -36,7 +36,6 @@ export class AppComponent implements OnInit {
       monthNamesShort: this._constantsService.mothNamesShort
     });
 
-    this._layoutService.config.scale = 13;
     this._layoutService.onConfigUpdate();
 
     document.documentElement.style.fontSize = this._layoutService.config.scale + 'px';

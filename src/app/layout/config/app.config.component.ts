@@ -1,102 +1,147 @@
 import { Component, Input } from '@angular/core';
-import { LayoutService } from "../service/app.layout.service";
+import { availableDarkThemes, availableLightThemes, LayoutService, ThemeConfig } from "../service/app.layout.service";
 import { MenuService } from "../app.menu.service";
+import { OverlayOptions, SelectItemGroup } from 'primeng/api';
 
 @Component({
-    selector: 'app-config',
-    templateUrl: './app.config.component.html'
+  selector: 'app-config',
+  templateUrl: './app.config.component.html'
 })
 export class AppConfigComponent {
 
-    @Input() minimal: boolean = false;
+  @Input() minimal: boolean = false;
 
-    scales: number[] = [12, 13, 14, 15, 16];
+  scales: number[] = [12, 13, 14, 15, 16];
 
-    constructor(public layoutService: LayoutService, public menuService: MenuService) { }
+  selectedTheme: ThemeConfig;
 
-    get visible(): boolean {
-        return this.layoutService.state.configSidebarVisible;
-    }
+  themeOptions: any[];
+  themeSelectorOptions: OverlayOptions = {
+    appendTo: 'body',
+  };
 
-    set visible(_val: boolean) {
-        this.layoutService.state.configSidebarVisible = _val;
-    }
+  constructor(public layoutService: LayoutService, public menuService: MenuService) {
+    this.selectedTheme = this.theme;
 
-    get scale(): number {
-        return this.layoutService.config.scale;
-    }
+    this.themeOptions = [
+      {
+        name: 'Temas Claros',
+        themes: availableLightThemes
+      },
+      {
+        name: 'Temas Oscuros',
+        themes: availableDarkThemes
+      }
+    ]
+  }
 
-    set scale(_val: number) {
-        this.layoutService.config.scale = _val;
-    }
+  get visible(): boolean {
+    return this.layoutService.state.configSidebarVisible;
+  }
 
-    get menuMode(): string {
-        return this.layoutService.config.menuMode;
-    }
+  set visible(_val: boolean) {
+    this.layoutService.state.configSidebarVisible = _val;
+  }
 
-    set menuMode(_val: string) {
-        this.layoutService.config.menuMode = _val;
-    }
+  get scale(): number {
+    return this.layoutService.config.scale;
+  }
 
-    get inputStyle(): string {
-        return this.layoutService.config.inputStyle;
-    }
+  set scale(_val: number) {
+    this.layoutService.config.scale = _val;
+  }
 
-    set inputStyle(_val: string) {
-        this.layoutService.config.inputStyle = _val;
-    }
+  get menuMode(): string {
+    return this.layoutService.config.menuMode;
+  }
 
-    get ripple(): boolean {
-        return this.layoutService.config.ripple;
-    }
+  set menuMode(_val: string) {
+    this.layoutService.config.menuMode = _val;
+  }
 
-    set ripple(_val: boolean) {
-        this.layoutService.config.ripple = _val;
-    }
+  get inputStyle(): string {
+    return this.layoutService.config.inputStyle;
+  }
 
-    onConfigButtonClick() {
-        this.layoutService.showConfigSidebar();
-    }
+  set inputStyle(_val: string) {
+    this.layoutService.config.inputStyle = _val;
+  }
 
-    changeTheme(theme: string, colorScheme: string) {
-        const themeLink = <HTMLLinkElement>document.getElementById('theme-css');
-        const newHref = themeLink.getAttribute('href')!.replace(this.layoutService.config.theme, theme);
-        this.layoutService.config.colorScheme
-        this.replaceThemeLink(newHref, () => {
-            this.layoutService.config.theme = theme;
-            this.layoutService.config.colorScheme = colorScheme;
-            this.layoutService.onConfigUpdate();
-        });
-    }
+  get ripple(): boolean {
+    return this.layoutService.config.ripple;
+  }
 
-    replaceThemeLink(href: string, onComplete: Function) {
-        const id = 'theme-css';
-        const themeLink = <HTMLLinkElement>document.getElementById('theme-css');
-        const cloneLinkElement = <HTMLLinkElement>themeLink.cloneNode(true);
+  set ripple(_val: boolean) {
+    this.layoutService.config.ripple = _val;
+  }
 
-        cloneLinkElement.setAttribute('href', href);
-        cloneLinkElement.setAttribute('id', id + '-clone');
+  get theme(): ThemeConfig {
+    const themes = availableLightThemes.concat(...availableDarkThemes);
 
-        themeLink.parentNode!.insertBefore(cloneLinkElement, themeLink.nextSibling);
+    const selectedTheme = this.layoutService.config.theme;
+    const selectedColorScheme = this.layoutService.config.colorScheme;
 
-        cloneLinkElement.addEventListener('load', () => {
-            themeLink.remove();
-            cloneLinkElement.setAttribute('id', id);
-            onComplete();
-        });
-    }
+    const selectedConfig = themes.find(t => t.theme === selectedTheme && t.colorScheme === selectedColorScheme);
 
-    decrementScale() {
-        this.scale--;
-        this.applyScale();
-    }
+    return {
+      name: selectedConfig?.name ?? '',
+      theme: selectedConfig?.theme ?? '',
+      colorScheme: selectedConfig?.colorScheme ?? ''
+    };
+  }
 
-    incrementScale() {
-        this.scale++;
-        this.applyScale();
-    }
+  set theme(_val: ThemeConfig) {
+    this.layoutService.config.theme = _val.theme;
+    this.layoutService.config.colorScheme = _val.colorScheme;
+  }
 
-    applyScale() {
-        document.documentElement.style.fontSize = this.scale + 'px';
-    }
+  onConfigButtonClick() {
+    this.layoutService.showConfigSidebar();
+  }
+
+  onChangeTheme() {
+    this.changeTheme(this.selectedTheme.theme, this.selectedTheme.colorScheme);
+  }
+
+  changeTheme(theme: string, colorScheme: string) {
+    const themeLink = <HTMLLinkElement>document.getElementById('theme-css');
+    const newHref = themeLink.getAttribute('href')!.replace(this.layoutService.config.theme, theme);
+    this.layoutService.config.colorScheme
+    this.replaceThemeLink(newHref, () => {
+      this.layoutService.config.theme = theme;
+      this.layoutService.config.colorScheme = colorScheme;
+      this.layoutService.onConfigUpdate();
+    });
+  }
+
+  replaceThemeLink(href: string, onComplete: Function) {
+    const id = 'theme-css';
+    const themeLink = <HTMLLinkElement>document.getElementById('theme-css');
+    const cloneLinkElement = <HTMLLinkElement>themeLink.cloneNode(true);
+
+    cloneLinkElement.setAttribute('href', href);
+    cloneLinkElement.setAttribute('id', id + '-clone');
+
+    themeLink.parentNode!.insertBefore(cloneLinkElement, themeLink.nextSibling);
+
+    cloneLinkElement.addEventListener('load', () => {
+      themeLink.remove();
+      cloneLinkElement.setAttribute('id', id);
+      onComplete();
+    });
+  }
+
+  decrementScale() {
+    this.scale--;
+    this.applyScale();
+  }
+
+  incrementScale() {
+    this.scale++;
+    this.applyScale();
+  }
+
+  applyScale() {
+    document.documentElement.style.fontSize = this.scale + 'px';
+  }
 }
