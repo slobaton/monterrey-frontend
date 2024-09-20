@@ -129,7 +129,7 @@ export class ClientListComponent extends ProtectedComponent {
         }
       },
       {
-        title: 'Precios Lavado',
+        title: 'P. Lavado',
         tooltip: 'Ver Precios Lavado',
         icon: 'dollar',
         status: DataTableActionStatus.INFO,
@@ -143,7 +143,7 @@ export class ClientListComponent extends ProtectedComponent {
         }
       },
       {
-        title: 'Precios Efecto',
+        title: 'P. Efecto',
         tooltip: 'Ver Precios Efectos',
         icon: 'dollar',
         status: DataTableActionStatus.INFO,
@@ -157,7 +157,7 @@ export class ClientListComponent extends ProtectedComponent {
         }
       },
       {
-        title: 'Ordenes de lavado',
+        title: 'Ordenes',
         tooltip: 'Lista las ordenes de lavado del cliente',
         icon: 'list',
         status: DataTableActionStatus.INFO,
@@ -172,7 +172,7 @@ export class ClientListComponent extends ProtectedComponent {
       },
       {
         title: 'Estado Cuenta',
-        tooltip: 'Estado cuenta',
+        tooltip: 'Estado de cuenta',
         icon: 'money-bill',
         status: DataTableActionStatus.PRIMARY,
         selectionConfig: {
@@ -185,7 +185,7 @@ export class ClientListComponent extends ProtectedComponent {
         }
       },
       {
-        title: 'Registrar Pago',
+        title: 'Reg. Pago',
         tooltip: 'Registrar nuevo pago',
         icon: 'dollar',
         status: DataTableActionStatus.SUCCESS,
@@ -212,7 +212,7 @@ export class ClientListComponent extends ProtectedComponent {
         }
       },
       {
-        title: 'Registrar Descuento',
+        title: 'Reg. Descuento',
         tooltip: 'Registrar descuento',
         icon: 'dollar',
         status: DataTableActionStatus.WARNING,

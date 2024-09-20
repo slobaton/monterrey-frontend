@@ -25,6 +25,7 @@ import { AuthService } from 'src/app/@core/services/rest/auth.service';
 import { AppAbility } from 'src/app/@core/auth/ability';
 import { DateService } from 'src/app/@core/services/common/date.service';
 import { PrintService } from 'src/app/@core/services/common/print.service';
+import { conditionalValidator, conditionalValidators } from 'src/app/shared/validators/conditional-validator';
 
 @Component({
   selector: 'app-wash-order-create',
@@ -160,15 +161,28 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
 
     this.washOrderForm = new FormGroup({
       client_id: new FormControl<string>(this.washOrder?.client_id || this.clientId || '', [Validators.required]),
-      wash_type_id: new FormControl<number | null>(this.washOrder?.wash_type_id ?? null, [Validators.required]),
+      wash_type_id: new FormControl<number | null>(
+        this.washOrder?.wash_type_id ?? null,
+        [conditionalValidator(() => !this.washOrderForm?.get('is_rewash')?.value, Validators.required)]
+      ),
       date: new FormControl<Date>(existingDate ?? todayDate, [Validators.required]),
       is_special_price: new FormControl<boolean>(this.washOrder?.is_special_price ?? false, [Validators.required]),
+      is_rewash: new FormControl<boolean>(this.washOrder?.is_rewash ?? false, [Validators.required]),
+      rewash_price: new FormControl<number | null>(
+        this.washOrder?.rewash_price ?? null,
+        [conditionalValidators(() => this.washOrderForm?.get('is_rewash')?.value, [Validators.required, Validators.min(0)])]
+      ),
       observations: new FormControl<string>(this.washOrder?.observations ?? '', [])
     });
 
     if (this.washOrder) {
       this.washOrderLoaded = true;
     }
+
+    this.washOrderForm.get('is_rewash')?.valueChanges.subscribe((isRewash: boolean) => {
+      this.washOrderForm.get('wash_type_id')?.reset(null);
+      this.washOrderForm.get('rewash_price')?.reset(null);
+    });
   }
 
   onSubmitForm(washOrderFormValue: any): void {
@@ -437,6 +451,10 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
     }
 
     return status !== OrderStatus.CREATED;
+  }
+
+  isRewashOrder(): boolean {
+    return this.washOrderForm?.get('is_rewash')?.value ?? false;
   }
 
   showClientSelectedLabel(selectedClient: any) {
