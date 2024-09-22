@@ -12,6 +12,9 @@ import { Role } from '../../enums/role.enum';
 import { AuthPublicKey } from '../../models/auth-public-key';
 import { AppAbility, defineAbilitiesFor } from '../../auth/ability';
 
+const LSTORAGE_AUTH_USER = 'authUser';
+const LSTORAGE_PUBLIC_KEY = 'publicKey';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,10 +25,9 @@ export class AuthService extends BaseService implements IAuthService {
   private userSubject: BehaviorSubject<AuthUser | null>;
   public user: Observable<AuthUser | null>;
 
-
   constructor(_http: HttpClient, private _ability: AppAbility) {
     super(_http);
-    this.userSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('authUser')!));
+    this.userSubject = new BehaviorSubject(JSON.parse(localStorage.getItem(LSTORAGE_AUTH_USER)!));
     this.user = this.userSubject.asObservable();
   }
 
@@ -36,7 +38,7 @@ export class AuthService extends BaseService implements IAuthService {
   async login(request: LoginRequest): Promise<AuthUser> {
     try {
       const authUser = await firstValueFrom(this.post<AuthUser>('login', request));
-      localStorage.setItem('authUser', JSON.stringify(authUser));
+      localStorage.setItem(LSTORAGE_AUTH_USER, JSON.stringify(authUser));
       this.userSubject.next(authUser);
       this.updateAbilities(authUser);
 
@@ -58,7 +60,16 @@ export class AuthService extends BaseService implements IAuthService {
 
   async getPublicKey(): Promise<AuthPublicKey> {
     try {
-      return await firstValueFrom(this.get<AuthPublicKey>('auth/key'));
+      const publicKey = localStorage.getItem(LSTORAGE_PUBLIC_KEY);
+
+      if (publicKey) {
+        return new AuthPublicKey(publicKey);
+      }
+
+      const authPublicKey = await firstValueFrom(this.get<AuthPublicKey>('auth/key'));
+      localStorage.setItem(LSTORAGE_PUBLIC_KEY, authPublicKey.key);
+
+      return authPublicKey;
     } catch (error) {
       return this.handleError(error);
     }
@@ -79,7 +90,8 @@ export class AuthService extends BaseService implements IAuthService {
   }
 
   cleanSession(): void {
-    localStorage.removeItem('authUser');
+    localStorage.removeItem(LSTORAGE_AUTH_USER);
+    localStorage.removeItem(LSTORAGE_PUBLIC_KEY);
     this.userSubject.next(null);
   }
 
