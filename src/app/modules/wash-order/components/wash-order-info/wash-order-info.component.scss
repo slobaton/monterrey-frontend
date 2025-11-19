@@ -1,0 +1,129 @@
+/* ==================== orden-lavado-detalle.component.css ==================== */
+
+/* ======== Contenedor general (simula la hoja de lavado) ======== */
+.ficha-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 16px;
+  border: 2px solid #0055a5;
+  border-radius: 8px;
+  background: #fafafa;
+  font-family: "Courier New", Courier, monospace;
+  color: #003366;
+  font-size: 14px;
+}
+
+/* ======== Encabezado estilo “ficha” ======== */
+.header-ficha {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+/* Logo centrado dentro del header */
+.header-ficha .logo-ficha {
+  display: block;
+  margin: 0 auto 0.5rem;
+  max-width: 200px;
+  height: auto;
+}
+
+/* Línea punteada separator */
+.separator {
+  width: 100%;
+  border-top: 2px dashed #003366;
+  margin: 0.25rem 0;
+}
+
+/* Título “FICHA LAVADO N° …” */
+.header-ficha .titulo-ficha {
+  display: inline-block;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  padding: 0.25rem 1rem;
+  font-size: 1.1rem;
+}
+
+/* ======== Datos Generales ======== */
+.info-general {
+  width: 100%;
+  border-collapse: collapse;
+}
+.info-general td {
+  vertical-align: top;
+  padding: 4px 8px;
+}
+.info-general .label {
+  width: 40%;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.info-general .valor {
+  width: 60%;
+}
+
+/* Línea punteada que separa secciones */
+.info-general .line-separator {
+  border-top: 2px dashed #003366;
+  margin: 0.25rem 0;
+}
+
+/* ======== Encabezado DETALLES ======== */
+.detalle-header {
+  font-weight: bold;
+  text-align: center;
+  border-top: 1px dashed #003366;
+  border-bottom: 1px dashed #003366;
+  padding: 4px 0;
+  margin: 8px 0;
+  font-size: 16px;
+}
+
+/* ======== Tabla de Detalles ======== */
+.tabla-detalle {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+.tabla-detalle th,
+.tabla-detalle td {
+  padding: 6px 8px;
+  text-align: center;
+}
+.tabla-detalle th {
+  font-weight: bold;
+}
+.tabla-detalle tr {
+  border-bottom: 1px dashed #ddd;
+}
+
+/* ======== Tabla de Totales ======== */
+.totales {
+  width: 100%;
+  border-top: 1px dashed #003366;
+  padding-top: 4px;
+  margin-top: 4px;
+  font-weight: bold;
+}
+.totales td {
+  padding: 4px 8px;
+}
+.totales .label-total {
+  width: 70%;
+  text-align: left;
+  text-transform: uppercase;
+}
+.totales .valor-total {
+  width: 30%;
+  text-align: right;
+}
+
+/* ======== Pie de página ======== */
+.footer {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 10px;
+  line-height: 12px;
+  border-top: 1px dashed #003366;
+  padding-top: 4px;
+}
