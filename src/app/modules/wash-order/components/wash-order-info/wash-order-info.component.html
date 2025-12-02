@@ -38,7 +38,7 @@
           </td>
         </tr>
         <tr>
-          <td class="label">Tipo Lavado:</td>
+          <td class="label">Color de Lavado:</td>
           <td class="valor">
             {{ washOrder?.wash_type?.name }}
           </td>
@@ -55,7 +55,7 @@
             {{ washOrder?.is_rewash ? 'Si' : 'No' }}
           </td>
         </tr>
-        <tr *ngIf="washOrder?.is_rewash">
+        <tr *ngIf="washOrder?.is_rewash && hasAdminRole()">
           <td class="label">Precio Relavado:</td>
           <td class="valor">
             {{ washOrder?.rewash_price }} $
@@ -67,7 +67,7 @@
             {{ washOrder?.total_quantity }}
           </td>
         </tr>
-        <tr *ngIf="!hasReceptionistRole()">
+        <tr *ngIf="hasAdminRole()">
           <td class="label">Precio Total:</td>
           <td class="valor">
             {{ washOrder?.total_price }} $
@@ -86,33 +86,33 @@
       <!-- ======== DETALLES ======== -->
       <div class="detalle-header">DETALLES</div>
       <table class="tabla-detalle">
-        <thead>
-        <tr>
-          <th>TIPO</th>
-          <th>TAM.</th>
-          <th>PRECIO c/u ($)</th>
-          <th>CANTIDAD</th>
-          <th>SUBTOTAL ($)</th>
-        </tr>
-        </thead>
         <tbody>
-        <tr *ngFor="let detail of washOrderDetails">
-          <td>{{ detail.cloth_type?.name }}</td>
-          <td>{{ detail.cloth_size?.name }}</td>
-          <td>{{ detail.unit_price }}</td>
-          <td>{{ detail.quantity }}</td>
-          <td>{{ detail.subtotal_price }}</td>
-        </tr>
+        <ng-container *ngFor="let detail of washOrderDetails">
+          <tr>
+            <td colspan="5">
+              <div class="detail-row-2col">
+                <div class="detail-left">
+                  <div><b>TIPO:</b> {{ detail.cloth_type.name }}</div>
+                  <div><b>TAM:</b> {{ detail.cloth_size.name }}</div>
+                  <div><b>CANT:</b> {{ detail.quantity }}</div>
+                </div>
+                <div class="detail-right">
+                  <div class="efectos-header">EFECTOS</div>
+                  <div class="efectos-list">
+                    <ul>
+                      <li *ngFor="let effect of detail.effects" class="efecto-item">
+                        <i class="pi pi-check-square"></i>
+                        <span class="efecto-name">{{ effect.name }}</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
         </tbody>
       </table>
-<!--      <pre>-->
-<!--        {{ washOrderDetails }}-->
-<!--      </pre>-->
-<!--      <app-simple-table-->
-<!--        [tableConfig]="washOrderDetailsTableConfig"-->
-<!--        [data]="washOrderDetails"-->
-<!--      >-->
-<!--      </app-simple-table>-->
 
       <!-- ======== TOTALES (EN CASO DE LISTADO MUY LARGO, PUEDE IR EN PÍE) ======== -->
       <table class="totales">
@@ -120,7 +120,7 @@
           <td class="label-total">TOTAL CANTIDAD:</td>
           <td class="valor-total">{{ washOrder?.total_quantity }}</td>
         </tr>
-        <tr *ngIf="!hasReceptionistRole()">
+        <tr *ngIf="hasAdminRole()">
           <td class="label-total">TOTAL PRECIO:</td>
           <td class="valor-total">{{ washOrder?.total_price }} $</td>
         </tr>

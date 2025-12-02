@@ -10,13 +10,15 @@
       </div>
     </app-page-card>
     <ng-template #washOrderSection>
-      <div class="card mb-0">
+      <div class="grid">
+        <div class="col-6">
+          <div class="card mb-0">
         <div class="p-card-title">
           <div class="flex justify-content-between align-items-center">
             <h6 class="mb-0">
               {{
                 existingWashOrder
-                  ? "Modificar Orden de Lavado"
+                  ? "Modificar Orden de Lavado: N° " + code
                   : "Nueva Orden de Lavado"
               }}
             </h6>
@@ -34,17 +36,7 @@
           [customSubmit]="true"
         >
           <div class="form-container p-fluid p-formgrid grid">
-            <div class="col-3">
-              <app-form-label id="client_id" text="Código" />
-              <input
-                pInputText
-                type="text"
-                [(ngModel)]="code"
-                [readOnly]="true"
-              />
-            </div>
-
-            <div class="col-3">
+            <div class="col-6">
               <app-form-label id="client_id" text="Cliente" [required]="true" />
               <app-form-input-search
                 [form]="washOrderForm"
@@ -66,17 +58,17 @@
               </app-form-input-search>
             </div>
 
-            <div class="col-3" *ngIf="!isRewashOrder(); else isReWash">
+            <div class="col-6" *ngIf="!isRewashOrder(); else isReWash">
               <app-form-label
                 id="wash_type_id"
-                text="Tipo de Lavado"
+                text="Color de Lavado"
                 [required]="true"
               />
               <app-form-select
                 [form]="washOrderForm"
                 id="wash_type_id"
                 controlName="wash_type_id"
-                placeholder="Seleccione un tipo de Lavado..."
+                placeholder="Seleccione un color de Lavado..."
                 optionLabel="name"
                 optionValue="id"
                 [filterEnabled]="true"
@@ -86,7 +78,7 @@
               </app-form-select>
             </div>
             <ng-template #isReWash>
-              <div class="col-3">
+              <div class="col-3" *ngIf="!hasReceptionistRole()">
                 <app-form-label
                   id="rewash_price"
                   text="Precio Relavado"
@@ -102,7 +94,7 @@
               </div>
             </ng-template>
 
-            <div class="col-3">
+            <div class="col-6">
               <app-form-label id="date" text="Fecha" [required]="true" />
               <app-form-datetime-picker
                 [form]="washOrderForm"
@@ -129,7 +121,7 @@
                 controlName="is_rewash"
               ></app-form-switch>
             </div>
-            <div class="col-6">
+            <div class="col-12">
               <app-form-label id="observations" text="Observaciones" />
               <app-form-textarea
                 [form]="washOrderForm"
@@ -140,51 +132,59 @@
             </div>
 
             <div class="col-12 my-0 py-0">
-              <div class="flex align-items-center justify-content-end gap-2">
-                <p-button
-                  styleClass="p-button-sm p-button-secondary"
-                  routerLink="/wash-orders"
-                  icon="pi pi-arrow-circle-left"
-                  [label]="!washOrderCreated ? 'Cancelar' : 'Volver'"
-                >
-                </p-button>
-                <p-button
-                  *ngIf="washOrderCreated"
-                  type="button"
-                  styleClass="p-button-sm"
-                  icon="pi pi-plus"
-                  label="Agregar Detalle"
-                  (onClick)="addWashOrderDetail()"
-                ></p-button>
-                <p-button
-                  type="submit"
-                  styleClass="p-button-sm p-button-success"
-                  icon="pi pi-save"
-                  [disabled]="!washOrderForm.valid || isProcessing"
-                  [label]="!washOrderCreated ? 'Generar' : 'Actualizar'"
-                  [loading]="isProcessing"
-                >
-                </p-button>
-                <p-button
-                  *ngIf="isReadyToApprove()"
-                  type="button"
-                  styleClass="p-button-sm p-button-success"
-                  icon="pi pi-check"
-                  label="Aprobar"
-                  (onClick)="approveOrder()"
-                  [loading]="reportLoading"
-                >
-                </p-button>
-                <p-button
-                  *ngIf="isReadyToPrint()"
-                  type="button"
-                  styleClass="p-button-sm p-button-info"
-                  icon="pi pi-print"
-                  label="Imprimir"
-                  (onClick)="printOrder()"
-                  [loading]="reportLoading"
-                >
-                </p-button>
+              <div class="grid">
+                <div class="col-3">
+                  <div class="flex align-items-center">
+                    <p-button
+                      styleClass="p-button-sm p-button-secondary"
+                      routerLink="/wash-orders"
+                      icon="pi pi-arrow-circle-left"
+                      [label]="!washOrderCreated ? 'Cancelar' : 'Volver'"
+                    >
+                    </p-button>
+                  </div>
+                </div>
+                <div class="col-9">
+                  <div class="flex align-items-center justify-content-end gap-2">
+                    <p-button
+                      *ngIf="washOrderCreated"
+                      type="button"
+                      styleClass="p-button-sm"
+                      icon="pi pi-plus"
+                      label="Agregar Detalle"
+                      (onClick)="addWashOrderDetail()"
+                    ></p-button>
+                    <p-button
+                      type="submit"
+                      styleClass="p-button-sm p-button-success"
+                      icon="pi pi-save"
+                      [disabled]="!washOrderForm.valid || isProcessing"
+                      [label]="!washOrderCreated ? 'Generar' : 'Actualizar'"
+                      [loading]="isProcessing"
+                    >
+                    </p-button>
+                    <p-button
+                      *ngIf="isReadyToApprove()"
+                      type="button"
+                      styleClass="p-button-sm p-button-success"
+                      icon="pi pi-check"
+                      label="Aprobar"
+                      (onClick)="approveOrder()"
+                      [loading]="reportLoading"
+                    >
+                    </p-button>
+                    <p-button
+                      *ngIf="isReadyToPrint()"
+                      type="button"
+                      styleClass="p-button-sm p-button-info"
+                      icon="pi pi-print"
+                      label="Imprimir"
+                      (onClick)="printOrder()"
+                      [loading]="reportLoading"
+                    >
+                    </p-button>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -328,6 +328,11 @@
             </div>
           </div>
         </app-form>
+          </div>
+        </div>
+        <div class="col-6">
+          <app-wash-order-info [washOrderId]="washOrderId" [refreshKey]="detailsRefreshKey"></app-wash-order-info>
+        </div>
       </div>
     </ng-template>
   </div>

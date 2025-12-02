@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Optional, OnChanges, SimpleChanges } from '@angular/core';
 import { AbilityService } from '@casl/angular';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -18,6 +18,16 @@ import { SimpleTableColumnType, SimpleTableConfiguration } from 'src/app/@core/t
   styleUrls: ['./wash-order-info.component.scss']
 })
 export class WashOrderInfoComponent extends ProtectedComponent implements OnInit {
+  @Input() refreshKey?: number;
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['refreshKey'] && !changes['refreshKey'].firstChange) {
+      const washOrderId = this.washOrderId ?? this._config?.data?.washOrderId;
+      if (washOrderId) {
+        this.loadWashOrder(washOrderId);
+      }
+    }
+  }
 
   loading: boolean = true;
 
@@ -89,60 +99,66 @@ export class WashOrderInfoComponent extends ProtectedComponent implements OnInit
     identifierPropRef: 'id'
   }
 
+  @Input() washOrderId?: string;
+
   constructor(
     abilityService: AbilityService<AppAbility>,
     authService: AuthService,
     private _washOrderService: WashOrderService,
     private _washOrderDetailService: WashOrderDetailService,
     private _messageService: MessageService,
-    private _ref: DynamicDialogRef,
-    private _config: DynamicDialogConfig) {
+    @Optional() private _ref?: DynamicDialogRef,
+    @Optional() private _config?: DynamicDialogConfig) {
     super(abilityService, authService);
   }
 
   ngOnInit(): void {
-    const washOrderId = this._config.data?.washOrderId;
+    const washOrderId = this.washOrderId ?? this._config?.data?.washOrderId;
 
     if (!washOrderId) {
-      throw new Error('invalid wash order ID');
+      // If no id provided, keep loading state false and return silently
+      this.loading = false;
+      return;
     }
 
-    this._washOrderService.getById(washOrderId)
-      .then(async (washOrder: WashOrder) => {
-        this.washOrder = washOrder;
-        this.washOrderDetails = (await this._washOrderDetailService.fetchPaginatedResource({
-          filter: this.washOrder.id,
-          page: 1,
-          pageSize: 1000,
-          sort: '',
-          sortOrder: ''
-        })).data;
+    this.loadWashOrder(washOrderId);
+  }
 
-        this.loading = false;
-      })
-      .catch((err) => {
-        if (err instanceof HttpErrorResponse) {
-          if (err.status === 404) {
-            this._messageService.add({
-              severity: 'error',
-              summary: `Orden invalida`,
-              detail: 'La Orden de Lavado es invalida o no existe',
-              life: 2000
-            });
-          }
-        } else {
+  private async loadWashOrder(washOrderId: string) {
+    try {
+      this.loading = true;
+      const washOrder = await this._washOrderService.getById(washOrderId);
+      this.washOrder = washOrder;
+      this.washOrderDetails = (await this._washOrderDetailService.fetchPaginatedResource({
+        filter: this.washOrder.id,
+        page: 1,
+        pageSize: 1000,
+        sort: '',
+        sortOrder: ''
+      })).data;
+    } catch (err: any) {
+      if (err instanceof HttpErrorResponse) {
+        if (err.status === 404) {
           this._messageService.add({
             severity: 'error',
-            summary: `Error inesperado`,
-            detail: 'Ocurrio un error inesperado al intentar obtener la order de lavado.',
+            summary: `Orden invalida`,
+            detail: 'La Orden de Lavado es invalida o no existe',
             life: 2000
           });
         }
+      } else {
+        this._messageService.add({
+          severity: 'error',
+          summary: `Error inesperado`,
+          detail: 'Ocurrio un error inesperado al intentar obtener la order de lavado.',
+          life: 2000
+        });
+      }
 
-        setTimeout(() => {
-          this._ref.close();
-        }, 2000);
-      });
+      setTimeout(() => { if (this._ref) this._ref.close(); }, 2000);
+    } finally {
+      this.loading = false;
+    }
   }
 
   getClientFullName() {

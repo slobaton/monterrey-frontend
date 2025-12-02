@@ -59,6 +59,8 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   clientId: string = '';
 
   ref: DynamicDialogRef | undefined;
+  // Used to trigger refresh in embedded child components
+  detailsRefreshKey: number = 0;
 
   public tableConfig: DataTableConfiguration = {
     columns: [
@@ -117,6 +119,9 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
               sort: '',
               sortOrder: ''
             })).data;
+
+              // notify embedded components to refresh
+              this.detailsRefreshKey++;
 
             setTimeout(() => {
               this.onClientCreated.emit(washOrder.client);
@@ -213,6 +218,9 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
 
         this.totalQuantity = createdWashOrder.total_quantity;
         this.totalPrice = createdWashOrder.total_price;
+
+        // fetch details (will be empty initially) and notify panel
+        this.retrieveWashOrderDetails();
 
         this._messageService.add({
           severity: 'success',
@@ -318,6 +326,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
       .then(() => {
         this.washOrderDetails = this.washOrderDetails.filter((x) => x.id !== washOrderDetailId);
         this.updateWashOrderTotal();
+        this.detailsRefreshKey++;
         this._messageService.add({
           severity: 'success',
           summary: 'Eliminado!',
@@ -346,6 +355,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
         if (index > -1) {
           this.washOrderDetails[index] = updatedWashOrderDetail;
           this.updateWashOrderTotal();
+          this.detailsRefreshKey++;
         }
       }
     });
@@ -486,6 +496,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
     }).then((result) => {
       this.washOrderDetails = result.data
       this.updateWashOrderTotal();
+      this.detailsRefreshKey++;
     }).catch(() => {
       this._messageService.add({
         severity: 'error',

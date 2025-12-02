@@ -1,3 +1,21 @@
+.detail-row-2col {
+  display: flex;
+  flex-direction: row;
+  gap: 45px;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 8px 0;
+}
+.detail-left {
+  min-width: 120px;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.detail-right {
+  flex: 1;
+}
 /* ==================== orden-lavado-detalle.component.css ==================== */
 
 /* ======== Contenedor general (simula la hoja de lavado) ======== */
@@ -95,6 +113,36 @@
 }
 .tabla-detalle tr {
   border-bottom: 1px dashed #ddd;
+}
+
+.effects-cell {
+  padding: 8px 12px;
+  background: transparent;
+}
+.efectos-header {
+  font-weight: bold;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.efectos-list {
+  margin-top: 6px;
+}
+.efectos-list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.efectos-list ul li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+.efecto-item .pi {
+  color: #0066cc;
+}
+.efecto-name {
+  font-size: 13px;
 }
 
 /* ======== Tabla de Totales ======== */
