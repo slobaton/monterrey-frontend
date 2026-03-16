@@ -171,7 +171,6 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
         [conditionalValidator(() => !this.washOrderForm?.get('is_rewash')?.value, Validators.required)]
       ),
       date: new FormControl<Date>(existingDate ?? todayDate, [Validators.required]),
-      is_special_price: new FormControl<boolean>(this.washOrder?.is_special_price ?? false, [Validators.required]),
       is_rewash: new FormControl<boolean>(this.washOrder?.is_rewash ?? false, [Validators.required]),
       rewash_price: new FormControl<number | null>(
         this.washOrder?.rewash_price ?? null,
@@ -465,6 +464,10 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
 
   isRewashOrder(): boolean {
     return this.washOrderForm?.get('is_rewash')?.value ?? false;
+  }
+
+  isDetailsVisible(): boolean {
+    return !this.washOrder || this.washOrder.status !== OrderStatus.CREATED
   }
 
   showClientSelectedLabel(selectedClient: any) {

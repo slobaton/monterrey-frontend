@@ -5,11 +5,6 @@
 
       <!-- ======== ENCABEZADO ======== -->
       <div class="header-ficha">
-        <img
-          src="assets/logo.png"
-          alt="Logo"
-          class="logo-ficha"
-        />
         <div class="separator"></div>
         <div class="titulo-ficha">
           FICHA LAVADO N° {{ washOrder?.code || '000000' }}
@@ -44,18 +39,12 @@
           </td>
         </tr>
         <tr>
-          <td class="label">Precio Especial:</td>
-          <td class="valor">
-            {{ washOrder?.is_special_price ? 'Si' : 'No' }}
-          </td>
-        </tr>
-        <tr>
           <td class="label">Relavado:</td>
           <td class="valor">
             {{ washOrder?.is_rewash ? 'Si' : 'No' }}
           </td>
         </tr>
-        <tr *ngIf="washOrder?.is_rewash && hasAdminRole()">
+        <tr *ngIf="washOrder?.is_rewash && !hasReceptionistRole()">
           <td class="label">Precio Relavado:</td>
           <td class="valor">
             {{ washOrder?.rewash_price }} $
@@ -67,7 +56,7 @@
             {{ washOrder?.total_quantity }}
           </td>
         </tr>
-        <tr *ngIf="hasAdminRole()">
+        <tr *ngIf="!hasReceptionistRole()">
           <td class="label">Precio Total:</td>
           <td class="valor">
             {{ washOrder?.total_price }} $
@@ -120,7 +109,7 @@
           <td class="label-total">TOTAL CANTIDAD:</td>
           <td class="valor-total">{{ washOrder?.total_quantity }}</td>
         </tr>
-        <tr *ngIf="hasAdminRole()">
+        <tr *ngIf="!hasReceptionistRole()">
           <td class="label-total">TOTAL PRECIO:</td>
           <td class="valor-total">{{ washOrder?.total_price }} $</td>
         </tr>
