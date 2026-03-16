@@ -9,14 +9,14 @@
     <div class="col-3">
       <app-form-label
         id="cloth_type_id"
-        text="Tipo de Ropa"
+        text="Tipo de Prenda"
         [required]="true"
       />
       <app-form-select
         [form]="washOrderDetailForm"
         id="cloth_type_id"
         controlName="cloth_type_id"
-        placeholder="Seleccione un tipo de ropa..."
+        placeholder="Seleccione un tipo de prenda..."
         optionLabel="name"
         optionValue="id"
         [filterEnabled]="true"
@@ -66,7 +66,7 @@
       />
     </div>
     <div class="col-2">
-      <app-form-label id="price_per_buttonhole" text="Precio Ojal (Bs.)" />
+      <app-form-label id="price_per_buttonhole" text="Precio Ojal ($)" />
       <p-inputNumber
         id="price_per_buttonhole"
         [(ngModel)]="washOrderDetailCalcResult.price_per_buttonhole"

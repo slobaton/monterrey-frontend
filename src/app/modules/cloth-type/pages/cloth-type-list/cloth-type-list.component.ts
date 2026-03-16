@@ -34,7 +34,7 @@ export class ClothTypeListComponent extends ProtectedComponent {
     actions: [
       {
         title: 'Nuevo',
-        tooltip: 'Nuevo Tipo Ropa',
+        tooltip: 'Nuevo Tipo Prenda',
         icon: 'plus',
         status: DataTableActionStatus.SUCCESS,
         selectionConfig: {
@@ -42,7 +42,7 @@ export class ClothTypeListComponent extends ProtectedComponent {
         },
         hiddenFn: (selectedRows) => !this.ableTo('create', 'cloth-type'),
         callback: () => {
-          this.ref = this.dialogService.open(UpsertClothTypeComponent, { header: 'Crear nuevo Tipo Ropa' });
+          this.ref = this.dialogService.open(UpsertClothTypeComponent, { header: 'Crear nuevo Tipo Prenda' });
           this.ref.onClose.subscribe((result) => {
             if (result) {
               this.table.reset();
@@ -52,7 +52,7 @@ export class ClothTypeListComponent extends ProtectedComponent {
       },
       {
         title: 'Editar',
-        tooltip: 'Editar Tipo Ropa',
+        tooltip: 'Editar Tipo Prenda',
         icon: 'pencil',
         status: DataTableActionStatus.WARNING,
         selectionConfig: {
@@ -61,7 +61,7 @@ export class ClothTypeListComponent extends ProtectedComponent {
         hiddenFn: (selectedRows) => !this.ableTo('update', 'cloth-type'),
         callback: (action, selectedRows) => {
           const clothType = selectedRows[0];
-          this.ref = this.dialogService.open(UpsertClothTypeComponent, { header: 'Editar Tipo de ropa', data: { clothType: clothType } });
+          this.ref = this.dialogService.open(UpsertClothTypeComponent, { header: 'Editar Tipo de prenda', data: { clothType: clothType } });
           this.ref.onClose.subscribe((result) => {
             if (result) {
               this.table.reset();
@@ -71,7 +71,7 @@ export class ClothTypeListComponent extends ProtectedComponent {
       },
       {
         title: 'Eliminar',
-        tooltip: 'Eliminar Tipo Ropa',
+        tooltip: 'Eliminar Tipo Prenda',
         icon: 'trash',
         status: DataTableActionStatus.DANGER,
         selectionConfig: {
@@ -86,7 +86,7 @@ export class ClothTypeListComponent extends ProtectedComponent {
             accept: () => {
               this.clothTypeService.deleteById(clothTypeId)
                 .then(() => {
-                  this.messageService.add({ key: 'confirmDelete', severity: 'success', summary: 'Eliminado!', detail: 'El tipo ropa ha sido eliminado!.' });
+                  this.messageService.add({ key: 'confirmDelete', severity: 'success', summary: 'Eliminado!', detail: 'El tipo prenda ha sido eliminado!.' });
                   this.table.reset();
                 })
                 .catch((err) => {

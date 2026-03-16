@@ -1,10 +1,10 @@
 <div *ngIf="ability$ | async as ab" class="grid">
   <div *ngIf="ab.can('read', 'cloth-type')" class="col-12">
-    <app-page-card title="Tipos de Ropa">
+    <app-page-card title="Tipos de Prenda">
       <app-confirm-dialog
         id="confirmDelete"
-        title="Eliminar Tipo de Ropa"
-        message="¿Estas seguro de eliminar el tipo de ropa?"
+        title="Eliminar Tipo de Prenda"
+        message="¿Estas seguro de eliminar el tipo de prenda?"
       ></app-confirm-dialog>
       <app-data-table
         #clothTypeTable
