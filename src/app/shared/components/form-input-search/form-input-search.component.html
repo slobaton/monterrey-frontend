@@ -26,14 +26,6 @@
         (keydown)="openSearchOverlay()"
       />
     </span>
-    <button
-      *ngIf="hasCustomAction"
-      type="button"
-      pButton
-      [icon]="getCustomActionIcon"
-      styleClass="p-button-primary"
-      (click)="executeCustomAction()"
-    ></button>
   </div>
   <input [id]="id" [formControlName]="controlName" type="hidden" />
   <div

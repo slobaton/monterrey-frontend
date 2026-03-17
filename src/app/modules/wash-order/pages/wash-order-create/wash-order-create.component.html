@@ -48,8 +48,6 @@
                 [service]="clientService"
                 selectionProp="id"
                 [selectedLabelFn]="showClientSelectedLabel"
-                [hasCustomAction]="ab.can('create', 'client')"
-                (onClickCustomAction)="openNewClientModal()"
                 [onSelect]="onClientCreated"
                 [confirmExistingReplace]="true"
                 confirmMessage="Se esta cambiando el cliente de uno previamente seleccionado, ¿desea proceder?"
