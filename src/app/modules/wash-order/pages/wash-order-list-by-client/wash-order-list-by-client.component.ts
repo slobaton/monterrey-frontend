@@ -57,7 +57,7 @@ export class WashOrderListByClientComponent extends ProtectedComponent {
       },
       { title: 'Cantidad Total', propertyRef: 'total_quantity', sortable: true, type: DataTableColumnType.TEXT },
       {
-        title: 'Precio Total (Bs.)',
+        title: 'Precio Total ($)',
         propertyRef: 'total_price',
         sortable: true,
         type: DataTableColumnType.TEXT,
