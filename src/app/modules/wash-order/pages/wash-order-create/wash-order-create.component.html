@@ -126,12 +126,12 @@
                 <div class="col-3">
                   <div class="flex align-items-center">
                     <p-button
-                      styleClass="p-button-sm p-button-secondary"
-                      routerLink="/wash-orders"
-                      icon="pi pi-arrow-circle-left"
-                      [label]="!washOrderCreated ? 'Cancelar' : 'Volver'"
-                    >
-                    </p-button>
+                      *ngIf="washOrderCreated"
+                      styleClass="p-button-sm p-button-primary"
+                      icon="pi pi-plus"
+                      label="Nueva Orden"
+                      (onClick)="newOrderForSameClient()"
+                    ></p-button>
                   </div>
                 </div>
                 <div class="col-9">

@@ -523,6 +523,11 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
     this.totalQuantity = totalQuantity;
   }
 
+  newOrderForSameClient(): void {
+    const clientId = this.washOrder?.client_id || this.clientId;
+    this._router.navigate([`wash-orders/${clientId}/new`]);
+  }
+
   initializeClient() {
     this._route.params.subscribe(params => {
       this.clientId = params['clientId'];
