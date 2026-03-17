@@ -163,8 +163,11 @@ export class WashOrderInfoComponent extends ProtectedComponent implements OnInit
 
   getClientFullName() {
     const client = this.washOrder?.client;
+    if (!client) return '—';
 
-    return `${client?.name} ${client?.paternal_surname ?? ''} ${client?.maternal_surname ?? ''}`;
+    return [client.name, client.paternal_surname, client.maternal_surname]
+      .filter(p => p?.trim())
+      .join(' ') || '—';
   }
 
   getStatusName() {
