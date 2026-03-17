@@ -3,7 +3,6 @@ import { ClientUpsertRequest } from 'src/app/@core/models/request/client-upsert-
 import { AccountBalance } from '../../models/account-balance';
 import { AddPaymentRequest } from './../../models/request/add-payment-request';
 import { AddDiscountRequest } from '../../models/request/add-discount-request';
-import { CurrencyRate } from '../../models/currency-rate';
 export interface IClientService {
   getById(id: string): Promise<Client>;
   createClient(request: ClientUpsertRequest): Promise<Client>;
@@ -12,5 +11,4 @@ export interface IClientService {
   getMovements(id: string): Promise<AccountBalance>;
   addPayment(id: string, request: AddPaymentRequest): Promise<void>;
   addDiscount(id: string, request: AddDiscountRequest): Promise<void>;
-  getCurrencyRate(id: string): Promise<CurrencyRate>;
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { TagModule } from 'primeng/tag';
@@ -18,8 +18,6 @@ import { CancelIncomeReceiptComponent } from '../cancel-income-receipt/cancel-in
   ]
 })
 export class PaymentInfoComponent {
-  @Input() currencyRateValue: number = 0;
-
   @Output() incomeReceiptCanceled: EventEmitter<boolean> = new EventEmitter();
 
   ref: DynamicDialogRef | undefined;

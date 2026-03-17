@@ -6,7 +6,6 @@
   <div class="form-container p-fluid p-formgrid grid">
     <div class="col-12">
       <app-payment-info
-        [currencyRateValue]="currencyRateValue"
         (incomeReceiptCanceled)="onReceiptCanceled($event)"
       />
     </div>
@@ -63,7 +62,7 @@
         />
       </ng-template>
     </div>
-    <div class="col-6">
+    <div class="col-12">
       <app-form-label id="amount" text="Monto ($)" [required]="true" />
       <app-form-input-number
         [form]="incomeForm"
@@ -71,18 +70,6 @@
         mode="decimal"
         controlName="amount"
         placeholder="Ingrese el monto de pago en $us.."
-      />
-    </div>
-    <div class="col-6">
-      <app-form-label id="amount-currency" text="Monto (Bs.)" />
-      <p-inputNumber
-        id="amount-currency"
-        [(ngModel)]="amountCurrency"
-        (ngModelChange)="onAmountCurrencyChanged($event)"
-        mode="decimal"
-        [minFractionDigits]="2"
-        [maxFractionDigits]="2"
-        placeholder="Ingrese el monto de pago en Bs..."
       />
     </div>
   </div>
