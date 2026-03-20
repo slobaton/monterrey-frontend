@@ -57,6 +57,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   washOrderDetails: Array<WashOrderDetail> = [];
 
   clientId: string = '';
+  selectedClient: any = null;
 
   ref: DynamicDialogRef | undefined;
   // Used to trigger refresh in embedded child components
@@ -98,6 +99,10 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   }
 
   ngOnInit(): void {
+    this.onClientCreated.subscribe((client: any) => {
+      this.selectedClient = client;
+    });
+
     this._route.params.subscribe(params => {
       this.washOrderId = params['id'];
 
@@ -430,6 +435,14 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
 
 
     }
+  }
+
+  getHeaderTitle(): string {
+    if (this.washOrderCreated && this.selectedClient) {
+      const clientName = `${this.selectedClient.name ?? ''} ${this.selectedClient.paternal_surname ?? ''}`.trim();
+      return `${clientName} - N° ${this.code}`;
+    }
+    return 'Nueva Orden de Lavado';
   }
 
   getWashOrderStatus(): string {

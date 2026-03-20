@@ -15,13 +15,7 @@
           <div class="card mb-0">
         <div class="p-card-title">
           <div class="flex justify-content-between align-items-center">
-            <h6 class="mb-0">
-              {{
-                existingWashOrder
-                  ? "Modificar Orden de Lavado: N° " + code
-                  : "Nueva Orden de Lavado"
-              }}
-            </h6>
+            <h6 class="mb-0">{{ getHeaderTitle() }}</h6>
             <div>
               <div class="p-tag"><b>Estado:</b> {{ getWashOrderStatus() }}</div>
             </div>
