@@ -56,6 +56,24 @@
               </app-form-input-search>
             </div>
 
+            <div class="col-6">
+              <app-form-label id="date" text="Fecha" [required]="true" />
+              <app-form-datetime-picker
+                [form]="washOrderForm"
+                id="date"
+                controlName="date"
+                placeholder="Seleccione una fecha válida..."
+                [showIcon]="true"
+              />
+            </div>
+            <div class="col-6 text-center">
+              <h6>Relavado</h6>
+              <app-form-switch
+                [form]="washOrderForm"
+                id="is_rewash"
+                controlName="is_rewash"
+              ></app-form-switch>
+            </div>
             <div class="col-6" *ngIf="!isRewashOrder(); else isReWash">
               <app-form-label
                 id="wash_type_id"
@@ -76,7 +94,7 @@
               </app-form-select>
             </div>
             <ng-template #isReWash>
-              <div class="col-3" *ngIf="!hasReceptionistRole()">
+              <div class="col-6" *ngIf="!hasReceptionistRole()">
                 <app-form-label
                   id="rewash_price"
                   text="Precio Relavado"
@@ -92,25 +110,6 @@
               </div>
             </ng-template>
 
-            <div class="col-6">
-              <app-form-label id="date" text="Fecha" [required]="true" />
-              <app-form-datetime-picker
-                [form]="washOrderForm"
-                id="date"
-                controlName="date"
-                placeholder="Seleccione una fecha válida..."
-                [showIcon]="true"
-              />
-            </div>
-
-            <div class="col-3 text-center">
-              <h6>Relavado</h6>
-              <app-form-switch
-                [form]="washOrderForm"
-                id="is_rewash"
-                controlName="is_rewash"
-              ></app-form-switch>
-            </div>
             <div class="col-12">
               <app-form-label id="observations" text="Observaciones" />
               <app-form-textarea
