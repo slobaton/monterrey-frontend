@@ -23,13 +23,24 @@
         <tr>
           <td class="label">Cliente:</td>
           <td class="valor">
-            {{ getClientFullName() }}
+            {{ getClientFullName() | uppercase }}
           </td>
         </tr>
         <tr>
           <td class="label">Fecha:</td>
           <td class="valor">
             {{ washOrder?.date | date : 'dd/MM/yyyy' }}
+          </td>
+        </tr>
+        <tr>
+          <td class="label">Hora de Registro:</td>
+          <td class="valor">
+            {{ washOrder?.created_at | date : 'HH:mm' }}
+          </td>
+        </tr>
+        <tr *ngIf="washOrder?.print_count && washOrder!.print_count > 0">
+          <td colspan="2" class="valor" style="text-align:center; font-weight:bold;">
+            *** ES UNA REIMPRESIÓN ***
           </td>
         </tr>
         <tr>

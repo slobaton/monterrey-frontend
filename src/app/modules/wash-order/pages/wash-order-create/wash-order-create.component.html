@@ -60,7 +60,7 @@
                 [showIcon]="true"
               />
             </div>
-            <div class="col-6 text-center">
+            <div class="col-6 text-center" *ngIf="!hasReceptionistRole()">
               <h6>Relavado</h6>
               <app-form-switch
                 [form]="washOrderForm"
