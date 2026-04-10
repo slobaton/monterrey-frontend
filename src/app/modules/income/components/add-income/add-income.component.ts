@@ -18,10 +18,6 @@ export class AddIncomeComponent implements OnInit {
   incomeForm!: FormGroup;
   formProcessEvent: EventEmitter<boolean> = new EventEmitter();
 
-  currencyRateValue: number = 0;
-
-  amountCurrency: number = 0;
-
   isFallbackConcept: boolean = false;
   fallbackConceptValue: string = 'Otro';
   conceptOptions = [
@@ -43,7 +39,6 @@ export class AddIncomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.currencyRateValue = this._config.data?.currencyRate?.value;
     this.initializeForm();
   }
 
@@ -56,7 +51,6 @@ export class AddIncomeComponent implements OnInit {
       client_name: new FormControl<string>('', [])
     });
 
-    this.incomeForm.get('amount')?.valueChanges.subscribe(() => this.onAmountChanged());
     this.incomeForm.get('concept')?.valueChanges.subscribe(() => this.onConceptChanged());
   }
 
@@ -87,18 +81,6 @@ export class AddIncomeComponent implements OnInit {
         }
       })
       .finally(() => this.formProcessEvent.emit(false));
-  }
-
-  onAmountChanged() {
-    const currentValue = this.incomeForm.get('amount')?.value;
-    const convertedValue = currentValue * this.currencyRateValue;
-    this.amountCurrency = convertedValue;
-  }
-
-  onAmountCurrencyChanged(amount?: number) {
-    const currentValue = this.amountCurrency;
-    const convertedValue = currentValue / this.currencyRateValue;
-    this.incomeForm.get('amount')?.setValue(convertedValue);
   }
 
   onConceptChanged() {

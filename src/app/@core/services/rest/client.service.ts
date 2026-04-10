@@ -12,7 +12,6 @@ import { BaseResponse } from '../../models/response/base-response';
 import { AddPaymentRequest } from '../../models/request/add-payment-request';
 import { AccountBalance } from '../../models/account-balance';
 import { AddDiscountRequest } from '../../models/request/add-discount-request';
-import { CurrencyRate } from '../../models/currency-rate';
 
 @Injectable({
   providedIn: 'root'
@@ -97,11 +96,4 @@ export class ClientService extends BaseService implements IClientService, IFetch
     }
   }
 
-  async getCurrencyRate(id: string): Promise<CurrencyRate> {
-    try {
-      return await firstValueFrom(this.get<CurrencyRate>(`clients/${id}/currency-rate`));
-    } catch (error) {
-      return this.handleError(error);
-    }
-  }
 }

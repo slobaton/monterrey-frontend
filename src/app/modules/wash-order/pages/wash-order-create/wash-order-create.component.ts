@@ -57,8 +57,11 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   washOrderDetails: Array<WashOrderDetail> = [];
 
   clientId: string = '';
+  selectedClient: any = null;
 
   ref: DynamicDialogRef | undefined;
+  // Used to trigger refresh in embedded child components
+  detailsRefreshKey: number = 0;
 
   public tableConfig: DataTableConfiguration = {
     columns: [
@@ -96,6 +99,10 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
   }
 
   ngOnInit(): void {
+    this.onClientCreated.subscribe((client: any) => {
+      this.selectedClient = client;
+    });
+
     this._route.params.subscribe(params => {
       this.washOrderId = params['id'];
 
@@ -117,6 +124,9 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
               sort: '',
               sortOrder: ''
             })).data;
+
+              // notify embedded components to refresh
+              this.detailsRefreshKey++;
 
             setTimeout(() => {
               this.onClientCreated.emit(washOrder.client);
@@ -166,7 +176,6 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
         [conditionalValidator(() => !this.washOrderForm?.get('is_rewash')?.value, Validators.required)]
       ),
       date: new FormControl<Date>(existingDate ?? todayDate, [Validators.required]),
-      is_special_price: new FormControl<boolean>(this.washOrder?.is_special_price ?? false, [Validators.required]),
       is_rewash: new FormControl<boolean>(this.washOrder?.is_rewash ?? false, [Validators.required]),
       rewash_price: new FormControl<number | null>(
         this.washOrder?.rewash_price ?? null,
@@ -213,6 +222,9 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
 
         this.totalQuantity = createdWashOrder.total_quantity;
         this.totalPrice = createdWashOrder.total_price;
+
+        // fetch details (will be empty initially) and notify panel
+        this.retrieveWashOrderDetails();
 
         this._messageService.add({
           severity: 'success',
@@ -318,6 +330,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
       .then(() => {
         this.washOrderDetails = this.washOrderDetails.filter((x) => x.id !== washOrderDetailId);
         this.updateWashOrderTotal();
+        this.detailsRefreshKey++;
         this._messageService.add({
           severity: 'success',
           summary: 'Eliminado!',
@@ -346,6 +359,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
         if (index > -1) {
           this.washOrderDetails[index] = updatedWashOrderDetail;
           this.updateWashOrderTotal();
+          this.detailsRefreshKey++;
         }
       }
     });
@@ -423,6 +437,14 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
     }
   }
 
+  getHeaderTitle(): string {
+    if (this.washOrderCreated && this.selectedClient) {
+      const clientName = `${this.selectedClient.name ?? ''} ${this.selectedClient.paternal_surname ?? ''}`.trim();
+      return `${clientName} - N° ${this.code}`;
+    }
+    return 'Nueva Orden de Lavado';
+  }
+
   getWashOrderStatus(): string {
     return WashOrder.getStatusFriendlyName(this.washOrder?.status ?? OrderStatus.UNKNOWN);
   }
@@ -457,6 +479,10 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
     return this.washOrderForm?.get('is_rewash')?.value ?? false;
   }
 
+  isDetailsVisible(): boolean {
+    return !this.washOrder || this.washOrder.status !== OrderStatus.CREATED
+  }
+
   showClientSelectedLabel(selectedClient: any) {
     return `${selectedClient.nit ?? ''} - ${selectedClient.name ?? ''} ${selectedClient.paternal_surname ?? ''} ${selectedClient.maternal_surname ?? ''}`;
   }
@@ -486,6 +512,7 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
     }).then((result) => {
       this.washOrderDetails = result.data
       this.updateWashOrderTotal();
+      this.detailsRefreshKey++;
     }).catch(() => {
       this._messageService.add({
         severity: 'error',
@@ -507,6 +534,11 @@ export class WashOrderCreateComponent extends ProtectedComponent implements OnIn
 
     this.totalPrice = totalPrice;
     this.totalQuantity = totalQuantity;
+  }
+
+  newOrderForSameClient(): void {
+    const clientId = this.washOrder?.client_id || this.clientId;
+    this._router.navigate([`wash-orders/${clientId}/new`]);
   }
 
   initializeClient() {

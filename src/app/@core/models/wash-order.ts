@@ -19,7 +19,6 @@ export class WashOrder {
     public deliver_date: string,
     public deliver_quantity: number,
     public observations: string,
-    public is_special_price: boolean,
     public is_rewash: boolean,
     public rewash_price: number,
     public created_at: string,

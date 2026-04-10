@@ -30,7 +30,7 @@ export class AppMenuComponent implements OnInit {
           { label: 'Clientes', icon: 'pi pi-fw pi-database', routerLink: ['/clients'], roles: [Role.ADMIN, Role.SECRETARY, Role.RECEPTIONIST] },
           { label: 'Tipos Lavado', icon: 'pi pi-fw pi-sync', routerLink: ['/wash-types'], roles: [Role.ADMIN, Role.SECRETARY] },
           { label: 'Efectos', icon: 'pi pi-fw pi-filter-fill', routerLink: ['/effects'], roles: [Role.ADMIN, Role.SECRETARY] },
-          { label: 'Tipos de Ropa', icon: 'pi pi-fw pi-shopping-bag', routerLink: ['/cloth-types'], roles: [Role.ADMIN, Role.SECRETARY] },
+          { label: 'Tipos de Prenda', icon: 'pi pi-fw pi-shopping-bag', routerLink: ['/cloth-types'], roles: [Role.ADMIN, Role.SECRETARY] },
           { label: 'Tamaños de Ropa', icon: 'pi pi-fw pi-sort-alpha-up-alt', routerLink: ['/cloth-sizes'], roles: [Role.ADMIN, Role.SECRETARY] },
         ]
       },

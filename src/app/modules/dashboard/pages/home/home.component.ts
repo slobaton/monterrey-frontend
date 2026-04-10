@@ -33,7 +33,14 @@ export class HomeComponent extends ProtectedComponent implements OnInit {
   }
 
   getUserFullName() {
-    return this.authUser ? `${this.authUser.name} ${this.authUser.paternal_surname} ${this.authUser.maternal_surname}` : '';
+    if (!this.authUser) {
+      return '';
+    }
+    const parts = [this.authUser.name, this.authUser.paternal_surname, this.authUser.maternal_surname]
+      .filter(p => p !== null && p !== undefined)
+      .map(p => (typeof p === 'string' ? p.trim() : ''))
+      .filter(p => p.length > 0);
+    return parts.length ? parts.join(' ') : '';
   }
 
   async retrieveReports(): Promise<void> {
